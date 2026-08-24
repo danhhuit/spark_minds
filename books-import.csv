@@ -1,0 +1,6 @@
+isbn,title,description,publisher,publishedDate,totalQuantity,category,authors
+978-1491950357,Building Microservices,"Designing fine-grained systems",O'Reilly Media,2015-02-20,8,Technology,Sam Newman
+978-0134494166,Effective Java,"Best practices for Java programming",Addison-Wesley,2018-01-06,12,Technology,Joshua Bloch
+978-0553380163,A Brief History of Time,"Cosmology for general readers",Bantam,1998-09-01,6,Science,Stephen Hawking
+978-0141439518,Pride and Prejudice,"Classic English literature",Penguin Classics,2002-12-31,5,Literature,Jane Austen
+978-0201633610,Design Patterns,"Reusable object-oriented software",Addison-Wesley,1994-10-31,10,Technology,Erich Gamma|Richard Helm|Ralph Johnson|John Vlissides

@@ -1,0 +1,30 @@
+spring:
+  main:
+    banner-mode: off
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+
+  mail:
+    host: localhost
+    port: 1025
+
+app:
+  jwt:
+    issuer: library-management-test
+    secret: MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDE=
+    access-token-minutes: 15
+    refresh-token-days: 7
+
+  admin:
+    username: admin
+    password: admin
+    email: admin@library.test
+
+logging:
+  level:
+    root: WARN
+    com.sparkminds.library: INFO
+    com.sparkminds.library.common.logging: OFF

@@ -1,0 +1,3 @@
+isbn,title,description,publisher,publishedDate,totalQuantity,category,authors
+999-0000000001,Temporary Book,This row should rollback,Test Publisher,2020-01-01,5,Technology,Test Author
+978-1491950357,Duplicated ISBN,This ISBN already exists,Test Publisher,2020-01-01,3,Technology,Other Author

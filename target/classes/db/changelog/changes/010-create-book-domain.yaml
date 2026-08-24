@@ -1,0 +1,299 @@
+databaseChangeLog:
+  - changeSet:
+      id: 010-create-book-domain
+      author: danh
+      changes:
+        - createTable:
+            tableName: categories
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_categories
+                    nullable: false
+
+              - column:
+                  name: name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: description
+                  type: VARCHAR(1000)
+
+              - column:
+                  name: active
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - addUniqueConstraint:
+            tableName: categories
+            columnNames: name
+            constraintName: uk_categories_name
+
+        - createTable:
+            tableName: authors
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_authors
+                    nullable: false
+
+              - column:
+                  name: name
+                  type: VARCHAR(150)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: biography
+                  type: VARCHAR(2000)
+
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - addUniqueConstraint:
+            tableName: authors
+            columnNames: name
+            constraintName: uk_authors_name
+
+        - createTable:
+            tableName: books
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_books
+                    nullable: false
+
+              - column:
+                  name: isbn
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: description
+                  type: VARCHAR(2000)
+
+              - column:
+                  name: publisher
+                  type: VARCHAR(255)
+
+              - column:
+                  name: published_date
+                  type: DATE
+
+              - column:
+                  name: total_quantity
+                  type: INTEGER
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: available_quantity
+                  type: INTEGER
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: active
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: category_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - addUniqueConstraint:
+            tableName: books
+            columnNames: isbn
+            constraintName: uk_books_isbn
+
+        - addForeignKeyConstraint:
+            baseTableName: books
+            baseColumnNames: category_id
+            referencedTableName: categories
+            referencedColumnNames: id
+            constraintName: fk_books_category
+
+        - createIndex:
+            tableName: books
+            indexName: idx_books_title
+            columns:
+              - column:
+                  name: title
+
+        - createIndex:
+            tableName: books
+            indexName: idx_books_publisher
+            columns:
+              - column:
+                  name: publisher
+
+        - createIndex:
+            tableName: books
+            indexName: idx_books_category
+            columns:
+              - column:
+                  name: category_id
+
+        - sql:
+            sql: >
+              ALTER TABLE books
+              ADD CONSTRAINT ck_books_quantities
+              CHECK (
+                total_quantity >= 0
+                AND available_quantity >= 0
+                AND available_quantity <= total_quantity
+              )
+
+        - createTable:
+            tableName: book_authors
+            columns:
+              - column:
+                  name: book_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: author_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+        - addPrimaryKey:
+            tableName: book_authors
+            columnNames: book_id, author_id
+            constraintName: pk_book_authors
+
+        - addForeignKeyConstraint:
+            baseTableName: book_authors
+            baseColumnNames: book_id
+            referencedTableName: books
+            referencedColumnNames: id
+            constraintName: fk_book_authors_book
+            onDelete: CASCADE
+
+        - addForeignKeyConstraint:
+            baseTableName: book_authors
+            baseColumnNames: author_id
+            referencedTableName: authors
+            referencedColumnNames: id
+            constraintName: fk_book_authors_author
+            onDelete: CASCADE
+
+        - insert:
+            tableName: categories
+            columns:
+              - column:
+                  name: name
+                  value: Technology
+              - column:
+                  name: description
+                  value: Technology and programming books
+
+        - insert:
+            tableName: categories
+            columns:
+              - column:
+                  name: name
+                  value: Science
+              - column:
+                  name: description
+                  value: Science books
+
+        - insert:
+            tableName: categories
+            columns:
+              - column:
+                  name: name
+                  value: Literature
+              - column:
+                  name: description
+                  value: Literature books
+
+        - insert:
+            tableName: categories
+            columns:
+              - column:
+                  name: name
+                  value: Business
+              - column:
+                  name: description
+                  value: Business and economics books
+
+        - insert:
+            tableName: categories
+            columns:
+              - column:
+                  name: name
+                  value: Other
+              - column:
+                  name: description
+                  value: Other categories

@@ -1,0 +1,11 @@
+com\sparkminds\library\systemconfig\controller\SystemConfigControllerIntegrationTest.class
+com\sparkminds\library\borrowing\controller\BorrowingControllerIntegrationTest$MemberFixture.class
+com\sparkminds\library\book\controller\BookControllerIntegrationTest.class
+com\sparkminds\library\auth\controller\AccountLifecycleIntegrationTest.class
+com\sparkminds\library\borrowing\controller\BorrowingControllerIntegrationTest.class
+com\sparkminds\library\integration\AbstractIntegrationTest.class
+com\sparkminds\library\member\controller\MemberControllerIntegrationTest.class
+com\sparkminds\library\config\DocumentationIntegrationTest.class
+com\sparkminds\library\auth\controller\TokenLifecycleIntegrationTest.class
+com\sparkminds\library\auth\controller\AuthControllerIntegrationTest.class
+com\sparkminds\library\book\controller\BookCsvImportIntegrationTest.class

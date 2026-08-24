@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.sparkminds.library.borrowing.controller.BorrowingControllerIntegrationTest
+-------------------------------------------------------------------------------
+Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.785 s -- in com.sparkminds.library.borrowing.controller.BorrowingControllerIntegrationTest

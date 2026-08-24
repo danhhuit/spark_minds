@@ -1,0 +1,8 @@
+# Runtime logs
+logs/
+*.log
+
+# Environment secrets
+.env
+.env.*
+!.env.example

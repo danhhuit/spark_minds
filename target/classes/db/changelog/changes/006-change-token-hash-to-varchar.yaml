@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006-change-token-hash-to-varchar
+      author: danh
+      changes:
+        - modifyDataType:
+            tableName: refresh_tokens
+            columnName: token_hash
+            newDataType: VARCHAR(64)

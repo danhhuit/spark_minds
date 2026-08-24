@@ -1,0 +1,88 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-create-member-profiles
+      author: danh
+      changes:
+        - createTable:
+            tableName: member_profiles
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_member_profiles
+                    nullable: false
+
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: membership_code
+                  type: VARCHAR(50)
+
+              - column:
+                  name: full_name
+                  type: VARCHAR(150)
+
+              - column:
+                  name: date_of_birth
+                  type: DATE
+
+              - column:
+                  name: phone
+                  type: VARCHAR(20)
+
+              - column:
+                  name: address
+                  type: VARCHAR(500)
+
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - addUniqueConstraint:
+            tableName: member_profiles
+            columnNames: user_id
+            constraintName: uk_member_profiles_user_id
+
+        - addUniqueConstraint:
+            tableName: member_profiles
+            columnNames: membership_code
+            constraintName: uk_member_profiles_membership_code
+
+        - addForeignKeyConstraint:
+            baseTableName: member_profiles
+            baseColumnNames: user_id
+            referencedTableName: user_accounts
+            referencedColumnNames: id
+            constraintName: fk_member_profiles_user
+            onDelete: CASCADE
+
+        - createIndex:
+            tableName: member_profiles
+            indexName: idx_member_profiles_full_name
+            columns:
+              - column:
+                  name: full_name
+
+        - createIndex:
+            tableName: member_profiles
+            indexName: idx_member_profiles_date_of_birth
+            columns:
+              - column:
+                  name: date_of_birth
