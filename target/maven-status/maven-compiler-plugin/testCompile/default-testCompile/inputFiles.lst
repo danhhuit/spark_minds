@@ -3,9 +3,12 @@ D:\sparkminds\src\src\test\java\com\sparkminds\library\auth\controller\AuthContr
 D:\sparkminds\src\src\test\java\com\sparkminds\library\auth\controller\TokenLifecycleIntegrationTest.java
 D:\sparkminds\src\src\test\java\com\sparkminds\library\book\controller\BookControllerIntegrationTest.java
 D:\sparkminds\src\src\test\java\com\sparkminds\library\book\controller\BookCsvImportIntegrationTest.java
+D:\sparkminds\src\src\test\java\com\sparkminds\library\book\controller\CatalogSeedIntegrationTest.java
 D:\sparkminds\src\src\test\java\com\sparkminds\library\borrowing\controller\BorrowingControllerIntegrationTest.java
 D:\sparkminds\src\src\test\java\com\sparkminds\library\config\DocumentationIntegrationTest.java
 D:\sparkminds\src\src\test\java\com\sparkminds\library\config\FrontendIntegrationTest.java
 D:\sparkminds\src\src\test\java\com\sparkminds\library\integration\AbstractIntegrationTest.java
 D:\sparkminds\src\src\test\java\com\sparkminds\library\member\controller\MemberControllerIntegrationTest.java
+D:\sparkminds\src\src\test\java\com\sparkminds\library\profile\controller\ProfileControllerIntegrationTest.java
+D:\sparkminds\src\src\test\java\com\sparkminds\library\savedbook\controller\SavedBookControllerIntegrationTest.java
 D:\sparkminds\src\src\test\java\com\sparkminds\library\systemconfig\controller\SystemConfigControllerIntegrationTest.java

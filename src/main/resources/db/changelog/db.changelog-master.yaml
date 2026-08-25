@@ -38,3 +38,9 @@ databaseChangeLog:
   - include:
       file: changes/012-create-system-config.yaml
       relativeToChangelogFile: true
+  - include:
+      file: changes/013-create-saved-books.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: changes/014-seed-extended-book-catalog.yaml
+      relativeToChangelogFile: true

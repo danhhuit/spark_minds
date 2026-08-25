@@ -46,10 +46,36 @@ class FrontendIntegrationTest
                         "text/css"
                 ));
 
+        mockMvc.perform(get("/assets/css/library.css"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(
+                        "text/css"
+                ));
+
         mockMvc.perform(get("/assets/js/app.js"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(
                         "text/javascript"
+                ))
+                .andExpect(content().string(
+                        containsString(
+                                "renderBookDetailPage"
+                        )
+                ))
+                .andExpect(content().string(
+                        containsString(
+                                "/api/saved-books"
+                        )
+                ))
+                .andExpect(content().string(
+                        containsString(
+                                "item.returnedAt"
+                        )
+                ))
+                .andExpect(content().string(
+                        containsString(
+                                "second: \"2-digit\""
+                        )
                 ));
     }
 }

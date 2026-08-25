@@ -93,6 +93,16 @@ D:\sparkminds\src\src\main\java\com\sparkminds\library\member\repository\RoleRep
 D:\sparkminds\src\src\main\java\com\sparkminds\library\member\repository\UserAccountRepository.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\member\service\MemberService.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\member\specification\MemberSpecification.java
+D:\sparkminds\src\src\main\java\com\sparkminds\library\profile\controller\ProfileController.java
+D:\sparkminds\src\src\main\java\com\sparkminds\library\profile\dto\request\UpdateProfileRequest.java
+D:\sparkminds\src\src\main\java\com\sparkminds\library\profile\dto\response\ProfileResponse.java
+D:\sparkminds\src\src\main\java\com\sparkminds\library\profile\service\ProfileService.java
+D:\sparkminds\src\src\main\java\com\sparkminds\library\savedbook\controller\SavedBookController.java
+D:\sparkminds\src\src\main\java\com\sparkminds\library\savedbook\dto\response\SavedBookResponse.java
+D:\sparkminds\src\src\main\java\com\sparkminds\library\savedbook\dto\response\SavedBookStatusResponse.java
+D:\sparkminds\src\src\main\java\com\sparkminds\library\savedbook\entity\SavedBook.java
+D:\sparkminds\src\src\main\java\com\sparkminds\library\savedbook\repository\SavedBookRepository.java
+D:\sparkminds\src\src\main\java\com\sparkminds\library\savedbook\service\SavedBookService.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\security\jwt\JwtTokenService.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\security\jwt\RevokedTokenValidator.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\security\SecurityConfig.java

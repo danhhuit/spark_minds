@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: 014-seed-extended-book-catalog
+      author: codex
+      changes:
+        - sqlFile:
+            path: ../data/catalog-50.sql
+            relativeToChangelogFile: true
+            encoding: UTF-8
+            splitStatements: true
+            stripComments: true
+            endDelimiter: ;

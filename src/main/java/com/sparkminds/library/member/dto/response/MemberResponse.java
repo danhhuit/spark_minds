@@ -17,6 +17,7 @@ public record MemberResponse(
         boolean enabled,
         boolean emailVerified,
         boolean accountNonLocked,
+        boolean passwordConfigured,
         List<String> roles,
         OffsetDateTime createdAt,
         OffsetDateTime updatedAt

@@ -7,7 +7,8 @@
           content="Hệ thống quản lý thư viện Spark Minds">
     <title>Spark Library</title>
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="stylesheet" href="/assets/css/app.css?v=20260825-6">
+    <link rel="stylesheet" href="/assets/css/library.css?v=20260825-6">
 </head>
 <body>
 <svg class="svg-sprite" aria-hidden="true">
@@ -101,6 +102,9 @@
         <path d="M6.2 6.3C3.8 8.1 2.5 12 2.5 12s3.5 6 9.5 6c1.5 0 2.9-.4 4.1-1"/>
         <path d="M10.2 10.2a2.6 2.6 0 0 0 3.6 3.6"/>
     </symbol>
+    <symbol id="i-bookmark" viewBox="0 0 24 24">
+        <path d="M6 3h12v18l-6-4-6 4V3z"/>
+    </symbol>
 </svg>
 
 <div id="loading-screen" class="loading-screen">
@@ -109,31 +113,57 @@
 </div>
 
 <section id="auth-view" class="auth-layout hidden">
+    <label class="language-picker language-picker--auth">
+        <span class="sr-only">Ngôn ngữ / Language</span>
+        <select id="auth-language-select" aria-label="Ngôn ngữ / Language">
+            <option value="vi">Tiếng Việt</option>
+            <option value="en">English</option>
+        </select>
+    </label>
     <div class="auth-showcase">
         <div class="auth-brand">
-            <span>Spark Library</span>
-            <small>Hệ thống nội bộ</small>
+            <a href="/" class="brand-logo-link"
+               aria-label="Về trang chủ">
+                <span class="brand-logo-crop brand-logo-crop--auth">
+                    <img src="/assets/images/sparkminds-logo.png"
+                         alt="Sparkminds">
+                </span>
+            </a>
+            <small>Thư viện cộng đồng</small>
         </div>
         <div class="showcase-content">
-            <span class="eyebrow eyebrow--light">Quản lý lưu thông</span>
-            <h1>Sách, thành viên và lượt mượn trong một quy trình rõ ràng.</h1>
+            <span class="eyebrow eyebrow--light">Đọc · Mượn · Khám phá</span>
+            <h1>Mỗi cuốn sách mở ra một lối đi mới.</h1>
             <p>
-                Không gian làm việc dành cho thủ thư và thành viên,
-                tập trung vào tra cứu nhanh và xử lý chính xác.
+                Tìm sách trong bộ sưu tập, theo dõi những cuốn đang mượn
+                và quay lại kệ sách của riêng bạn bất cứ lúc nào.
             </p>
-            <div class="showcase-points">
-                <div><span>Danh mục</span> Tra cứu và cập nhật kho sách</div>
-                <div><span>Lưu thông</span> Theo dõi mượn, trả và quá hạn</div>
-                <div><span>Thành viên</span> Quản lý hồ sơ và tài khoản</div>
+            <div class="auth-shelf-preview" aria-hidden="true">
+                <img class="cover-slot cover-slot--tall"
+                     src="/assets/images/books/9780451524935.jpg" alt="">
+                <img class="cover-slot"
+                     src="/assets/images/books/9780553380163.jpg" alt="">
+                <img class="cover-slot cover-slot--short"
+                     src="/assets/images/books/9781942788331.jpg" alt="">
+                <img class="cover-slot cover-slot--wide"
+                     src="/assets/images/books/9780735211292.jpg" alt="">
+                <img class="cover-slot cover-slot--tall"
+                     src="/assets/images/books/9780132350884.jpg" alt="">
             </div>
         </div>
-        <p class="auth-copyright">Hệ thống quản lý thư viện · 2026</p>
+        <p class="auth-copyright">Tra cứu bộ sưu tập · Mượn và trả sách · 2026</p>
     </div>
 
     <div class="auth-panel">
         <div class="auth-card">
             <div class="auth-mobile-brand">
-                <span>Spark Library</span>
+                <a href="/" class="brand-logo-link"
+                   aria-label="Về trang chủ">
+                    <span class="brand-logo-crop">
+                        <img src="/assets/images/sparkminds-logo.png"
+                             alt="Sparkminds">
+                    </span>
+                </a>
             </div>
 
             <div id="auth-message" class="auth-message hidden"></div>
@@ -218,34 +248,60 @@
 
 <section id="app-view" class="app-shell hidden">
     <div id="sidebar-overlay" class="sidebar-overlay"></div>
-    <aside id="sidebar" class="sidebar">
-        <div class="sidebar-brand">
-            <div>
-                <strong>Spark Library</strong>
-                <small>Library operations</small>
+    <header id="sidebar" class="sidebar site-header">
+        <div class="site-header-main">
+            <div class="sidebar-brand">
+                <a href="/" class="brand-logo-link"
+                   aria-label="Về trang chủ">
+                    <span class="brand-logo-crop">
+                        <img src="/assets/images/sparkminds-logo.png"
+                             alt="Sparkminds">
+                    </span>
+                </a>
+                <button id="sidebar-close" class="icon-button sidebar-close"
+                        aria-label="Đóng menu">
+                    <svg><use href="#i-close"></use></svg>
+                </button>
             </div>
-            <button id="sidebar-close" class="icon-button sidebar-close"
-                    aria-label="Đóng menu">
-                <svg><use href="#i-close"></use></svg>
-            </button>
+
+            <form id="global-search-form" class="global-search-form"
+                  role="search">
+                <label class="sr-only" for="global-search-input">
+                    Tìm kiếm sách
+                </label>
+                <input id="global-search-input" name="keyword"
+                       autocomplete="off"
+                       placeholder="Tìm theo tên sách, tác giả hoặc ISBN">
+                <button type="submit">Tìm sách</button>
+            </form>
+
+            <div class="sidebar-footer">
+                <label class="language-picker language-picker--header">
+                    <span class="sr-only">Ngôn ngữ / Language</span>
+                    <select id="app-language-select"
+                            aria-label="Ngôn ngữ / Language">
+                        <option value="vi">VI</option>
+                        <option value="en">EN</option>
+                    </select>
+                </label>
+                <button id="topbar-profile" class="header-account">
+                    <span id="sidebar-avatar" class="avatar avatar--person">
+                        <svg aria-hidden="true"><use href="#i-user"></use></svg>
+                    </span>
+                    <span>
+                        <strong id="sidebar-user-name">Admin</strong>
+                        <small id="sidebar-user-role">Quản trị viên</small>
+                    </span>
+                </button>
+                <button id="logout-button" class="header-logout"
+                        aria-label="Đăng xuất" title="Đăng xuất">
+                    Đăng xuất
+                </button>
+            </div>
         </div>
 
         <nav id="sidebar-nav" class="sidebar-nav"></nav>
-
-        <div class="sidebar-footer">
-            <div class="sidebar-user">
-                <span id="sidebar-avatar" class="avatar">A</span>
-                <div>
-                    <strong id="sidebar-user-name">Admin</strong>
-                    <small id="sidebar-user-role">Quản trị viên</small>
-                </div>
-            </div>
-            <button id="logout-button" class="icon-button"
-                    aria-label="Đăng xuất" title="Đăng xuất">
-                <svg><use href="#i-logout"></use></svg>
-            </button>
-        </div>
-    </aside>
+    </header>
 
     <main class="main-area">
         <header class="topbar">
@@ -264,10 +320,7 @@
                       class="status-pill status-pill--warning hidden">
                     Đang bảo trì
                 </span>
-                <button id="topbar-profile" class="profile-button">
-                    <span id="topbar-avatar" class="avatar">A</span>
-                    <span id="topbar-user-name">Admin</span>
-                </button>
+                <span class="collection-note">Kho sách cộng đồng</span>
             </div>
         </header>
 
@@ -279,6 +332,6 @@
 <div id="toast-root" class="toast-root"
      aria-live="polite" aria-atomic="true"></div>
 
-<script src="/assets/js/app.js" defer></script>
+<script src="/assets/js/app.js?v=20260825-6" defer></script>
 </body>
 </html>

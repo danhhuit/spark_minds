@@ -3,15 +3,307 @@
 
     const TOKEN_KEY = "sparkLibrary.accessToken";
     const REFRESH_KEY = "sparkLibrary.refreshToken";
+    const LANGUAGE_KEY = "sparkLibrary.language";
+    const COVER_ASSET_VERSION = "20260825-5";
+
+    /*
+     * The Vietnamese copy remains the canonical copy in the templates.
+     * Keeping translations here gives every dynamically rendered view and
+     * modal the same language source instead of scattering language checks.
+     */
+    const EN_TEXT = {
+        "Đang tải": "Loading",
+        "Đang mở thư viện": "Opening the library",
+        "Thư viện cộng đồng": "Community library",
+        "Đọc · Mượn · Khám phá": "Read · Borrow · Discover",
+        "Mỗi cuốn sách mở ra một lối đi mới.": "Every book opens a new path.",
+        "Tìm sách trong bộ sưu tập, theo dõi những cuốn đang mượn và quay lại kệ sách của riêng bạn bất cứ lúc nào.": "Explore the collection, track borrowed books, and return to your personal shelf at any time.",
+        "Tra cứu bộ sưu tập · Mượn và trả sách · 2026": "Browse the collection · Borrow and return books · 2026",
+        "Chào mừng trở lại": "Welcome back",
+        "Đăng nhập": "Sign in",
+        "Nhập tài khoản để tiếp tục vào thư viện.": "Enter your account to continue to the library.",
+        "Tên đăng nhập hoặc email": "Username or email",
+        "Mật khẩu": "Password",
+        "Nhập mật khẩu": "Enter password",
+        "Quên mật khẩu?": "Forgot password?",
+        "Chưa có tài khoản?": "New to the library?",
+        "Đăng ký ngay": "Create an account",
+        "Thành viên mới": "New member",
+        "Tạo tài khoản": "Create account",
+        "Chúng tôi sẽ gửi liên kết xác minh đến email của bạn.": "We will send a verification link to your email.",
+        "Tối thiểu 8 ký tự": "At least 8 characters",
+        "Gồm chữ hoa, chữ thường, số và ký tự đặc biệt.": "Use uppercase, lowercase, a number, and a special character.",
+        "Đã có tài khoản?": "Already have an account?",
+        "Tìm kiếm sách": "Search books",
+        "Tìm theo tên sách, tác giả hoặc ISBN": "Search by title, author, or ISBN",
+        "Tìm sách": "Search books",
+        "Đăng xuất": "Sign out",
+        "Đóng menu": "Close menu",
+        "Mở menu": "Open menu",
+        "Tổng quan": "Overview",
+        "Đang bảo trì": "Maintenance mode",
+        "Kho sách cộng đồng": "Community collection",
+        "Trang chủ": "Home",
+        "Kho sách": "Catalog",
+        "Mượn & trả": "Loans",
+        "Mượn & trả sách": "Borrow & return",
+        "Sách của tôi": "My books",
+        "Thành viên": "Members",
+        "Hệ thống": "System",
+        "Tài khoản": "Account",
+        "Thư viện": "Library",
+        "Khám phá": "Discover",
+        "Quản trị": "Administration",
+        "Lưu thông": "Circulation",
+        "Cá nhân": "Personal",
+        "Tài khoản của tôi": "My account",
+        "Quản trị viên": "Administrator",
+        "Quản trị viên hệ thống": "System administrator",
+        "Thành viên thư viện": "Library member",
+        "Quản lý thành viên": "Member management",
+        "Tìm kiếm và cập nhật tài khoản thư viện.": "Search and update library accounts.",
+        "Thêm thành viên": "Add member",
+        "Từ khóa": "Keyword",
+        "Tên, email, mã thành viên": "Name, email, member code",
+        "Tên thành viên": "Member name",
+        "Tìm gần đúng": "Partial name",
+        "Tên sách đã mượn": "Borrowed book title",
+        "Tên sách": "Book title",
+        "Trạng thái": "Status",
+        "Tất cả": "All",
+        "Đang hoạt động": "Active",
+        "Đã vô hiệu hóa": "Disabled",
+        "Sinh từ ngày": "Born from",
+        "Sinh đến ngày": "Born to",
+        "Xác minh email": "Email verification",
+        "Đã xác minh": "Verified",
+        "Chưa xác minh": "Not verified",
+        "Tài khoản khóa": "Account lock",
+        "Đang khóa": "Locked",
+        "Không khóa": "Unlocked",
+        "Tìm kiếm": "Search",
+        "Không tìm thấy thành viên": "No members found",
+        "Thử thay đổi các điều kiện tìm kiếm.": "Try changing the search criteria.",
+        "Mã thành viên": "Member code",
+        "Ngày sinh": "Date of birth",
+        "Liên hệ": "Contact",
+        "Thao tác": "Actions",
+        "Họ và tên": "Full name",
+        "Số điện thoại": "Phone number",
+        "Địa chỉ": "Address",
+        "Thông tin mật khẩu": "Password status",
+        "Đã thiết lập": "Configured",
+        "Chưa thiết lập": "Not configured",
+        "Mật khẩu đã được mã hóa và không thể xem.": "The password is encrypted and cannot be viewed.",
+        "Chỉnh sửa": "Edit",
+        "Vô hiệu hóa": "Disable",
+        "Cập nhật thành viên": "Update member",
+        "Tạo thành viên": "Create member",
+        "Tài khoản mới có thể đăng nhập ngay.": "The new account can sign in immediately.",
+        "Email *": "Email *",
+        "Mật khẩu *": "Password *",
+        "Họ và tên *": "Full name *",
+        "Trạng thái tài khoản *": "Account status *",
+        "Khóa tài khoản *": "Account lock *",
+        "Lưu thay đổi": "Save changes",
+        "Hoạt động mượn trả": "Loan activity",
+        "Theo dõi toàn bộ giao dịch trong thư viện.": "Track all borrowing activity in the library.",
+        "Theo dõi thời hạn và lịch sử mượn sách.": "Track due dates and your borrowing history.",
+        "Chưa có lượt mượn sách": "No loans yet",
+        "Các giao dịch mới sẽ xuất hiện tại đây.": "New transactions will appear here.",
+        "Hãy khám phá thư viện và chọn một cuốn sách.": "Explore the catalog and choose a book.",
+        "Sách": "Book",
+        "Người mượn": "Borrower",
+        "Ngày mượn": "Borrowed date",
+        "Hạn trả": "Due date",
+        "Ngày trả": "Returned date",
+        "Chưa trả": "Not returned",
+        "Trả sách": "Return book",
+        "Đã trả": "Returned",
+        "Quá hạn": "Overdue",
+        "Đang mượn": "Borrowed",
+        "Xác nhận trả sách?": "Confirm book return?",
+        "Hệ thống sẽ ghi nhận thời gian trả sách hiện tại.": "The system will record the current return time.",
+        "Xác nhận trả": "Confirm return",
+        "Trạng thái hệ thống": "System status",
+        "Kiểm soát khả năng truy cập API khi bảo trì.": "Control API access during maintenance.",
+        "Chế độ bảo trì": "Maintenance mode",
+        "Khi bật, toàn bộ API nghiệp vụ sẽ tạm dừng. API đăng nhập và cấu hình vẫn hoạt động.": "When enabled, business APIs are paused. Login and configuration APIs remain available.",
+        "Bật/tắt bảo trì": "Enable/disable maintenance",
+        "Thông báo bảo trì": "Maintenance message",
+        "Thông điệp trả về khi hệ thống tạm dừng.": "Message returned while the system is paused.",
+        "Nội dung thông báo": "Message",
+        "Hệ thống đang được bảo trì...": "The system is under maintenance...",
+        "Lưu cấu hình": "Save configuration",
+        "Cập nhật bởi": "Updated by",
+        "Cập nhật lúc": "Updated at",
+        "Cách thức hoạt động": "How it works",
+        "Khi bật chế độ bảo trì": "When maintenance is enabled",
+        "Các API sách, thành viên và mượn trả sẽ trả về HTTP 503 Service Unavailable cùng thông báo ở bên dưới.": "Book, member, and loan APIs return HTTP 503 Service Unavailable with the message below.",
+        "API vẫn được phép": "APIs that remain available",
+        "Đăng nhập, kiểm tra trạng thái và API cấu hình vẫn hoạt động để quản trị viên có thể quay lại trang này và tắt bảo trì.": "Login, status checks, and configuration APIs remain available so an administrator can return here and disable maintenance.",
+        "Cách sử dụng an toàn": "Safe usage",
+        "Nhập thông báo cho người dùng, bật công tắc rồi nhấn Lưu cấu hình. Khi hoàn tất bảo trì, tắt công tắc và lưu lại.": "Enter a user-facing message, enable the switch, and save. When maintenance is complete, disable the switch and save again.",
+        "Thông tin và bảo mật": "Profile & security",
+        "Quản lý hồ sơ, email và mật khẩu đăng nhập.": "Manage your profile, email, and sign-in password.",
+        "Thông tin cá nhân chưa đầy đủ": "Your profile is incomplete",
+        "Vui lòng cập nhật số điện thoại và ngày sinh để thư viện có thể liên hệ và hỗ trợ việc mượn trả sách.": "Please add your phone number and date of birth so the library can contact you and support loan services.",
+        "Thông tin tài khoản": "Account information",
+        "Cập nhật thông tin hiển thị và thông tin liên hệ của bạn.": "Update your display and contact information.",
+        "Tên người dùng": "Username",
+        "Lưu hồ sơ": "Save profile",
+        "Quyền": "Role",
+        "Đổi mật khẩu": "Change password",
+        "Bạn sẽ cần đăng nhập lại sau khi đổi.": "You will need to sign in again after changing it.",
+        "Mật khẩu hiện tại": "Current password",
+        "Mật khẩu mới": "New password",
+        "Đổi địa chỉ email": "Change email address",
+        "Mã xác minh sẽ được gửi tới email mới.": "A verification code will be sent to the new email.",
+        "Email mới": "New email",
+        "Gửi mã xác minh": "Send verification code",
+        "Xác minh email mới": "Verify new email",
+        "Nhập mã gồm 6 chữ số trong email.": "Enter the 6-digit code from the email.",
+        "Mã xác minh": "Verification code",
+        "Xác nhận đổi email": "Confirm email change",
+        "Hiển thị mật khẩu": "Show password",
+        "Ẩn mật khẩu": "Hide password",
+        "Hiển thị trạng thái mật khẩu": "Show password status",
+        "Ẩn trạng thái mật khẩu": "Hide password status",
+        "Đóng": "Close",
+        "Hủy": "Cancel",
+        "Xác nhận": "Confirm",
+        "Kết quả": "Results",
+        "kết quả": "results",
+        "Trang trước": "Previous page",
+        "Trang sau": "Next page",
+        "Tạm hết sách": "Unavailable",
+        "Hoạt động": "Active",
+        "Không thể tải dữ liệu": "Unable to load data",
+        "Hệ thống đang bảo trì": "System is under maintenance"
+        ,"Đầu sách": "Titles"
+        ,"Trong danh mục": "In the catalog"
+        ,"Tài khoản đang quản lý": "Managed accounts"
+        ,"Lượt mượn": "Loans"
+        ,"Tổng lịch sử lưu thông": "All circulation records"
+        ,"Cần xử lý": "Needs attention"
+        ,"Không có cảnh báo": "No alerts"
+        ,"Có thể tra cứu": "Available to browse"
+        ,"Lịch sử": "History"
+        ,"Tổng lượt mượn": "Total loans"
+        ,"Chưa hoàn trả": "Not yet returned"
+        ,"Vui lòng hoàn trả": "Please return"
+        ,"Không có sách quá hạn": "No overdue books"
+        ,"Kho sách & lưu thông": "Catalog & circulation"
+        ,"Tìm nhanh trong toàn bộ thư viện": "Search the entire library"
+        ,"Bạn muốn đọc gì hôm nay?": "What would you like to read today?"
+        ,"Tra cứu đầu sách trước khi cập nhật kho, mượn hoặc trả.": "Find a title before updating inventory, borrowing, or returning it."
+        ,"Tìm theo tên sách, tác giả hoặc mã ISBN trong bộ sưu tập.": "Search the collection by title, author, or ISBN."
+        ,"Nhập tên sách, tác giả hoặc ISBN": "Enter a title, author, or ISBN"
+        ,"Tìm trong thư viện": "Search the library"
+        ,"Bộ sưu tập": "Collection"
+        ,"Sách trên kệ": "Books on the shelf"
+        ,"Xem toàn bộ kho sách": "View the full catalog"
+        ,"Hoạt động gần đây": "Recent activity"
+        ,"Xem lịch sử mượn trả": "View loan history"
+        ,"Danh mục thư viện": "Library catalog"
+        ,"Khám phá kho sách": "Explore the catalog"
+        ,"Tra cứu, cập nhật và bổ sung tài liệu vào bộ sưu tập.": "Search, update, and add materials to the collection."
+        ,"Duyệt sách theo từ khóa, tác giả, danh mục và tình trạng.": "Browse by keyword, author, category, and availability."
+        ,"Nhập CSV": "Import CSV"
+        ,"Thêm sách": "Add book"
+        ,"Lọc kết quả": "Filter results"
+        ,"Xóa lọc": "Clear filters"
+        ,"Tên, ISBN, tác giả...": "Title, ISBN, author..."
+        ,"Danh mục": "Category"
+        ,"Tất cả danh mục": "All categories"
+        ,"Nhà xuất bản": "Publisher"
+        ,"Nhập nhà xuất bản": "Enter publisher"
+        ,"Tình trạng": "Availability"
+        ,"Có thể mượn": "Available"
+        ,"Đang hết sách": "Out of stock"
+        ,"Áp dụng bộ lọc": "Apply filters"
+        ,"Không tìm thấy sách": "No books found"
+        ,"Thử thay đổi từ khóa hoặc bộ lọc tìm kiếm.": "Try changing the keyword or filters."
+        ,"Khác": "Other"
+        ,"Mượn sách": "Borrow book"
+        ,"Chưa có dữ liệu sách": "No book data yet"
+        ,"Thêm sách mới hoặc nhập danh sách từ CSV.": "Add a new book or import a CSV list."
+        ,"Số lượng": "Quantity"
+        ,"Tên sách *": "Book title *"
+        ,"Tác giả *": "Authors *"
+        ,"Danh mục *": "Category *"
+        ,"ISBN *": "ISBN *"
+        ,"Ngày xuất bản": "Published date"
+        ,"Tổng số lượng *": "Total quantity *"
+        ,"Mô tả": "Description"
+        ,"Chọn file CSV *": "Choose CSV file *"
+        ,"Chế độ bảo trì được sử dụng như thế nào?": "How is maintenance mode used?"
+        ,"Dùng chế độ này khi nâng cấp ứng dụng, sửa dữ liệu hoặc thực hiện công việc cần tạm dừng giao dịch.": "Use this mode during upgrades, data repairs, or work that requires transactions to pause."
+        ,"Tên người dùng *": "Username *"
+        ,"Số điện thoại *": "Phone number *"
+        ,"Ngày sinh *": "Date of birth *"
+        ,"Cập nhật ngay": "Update now"
+        ,"Đã cập nhật hồ sơ": "Profile updated"
+        ,"Thông tin cá nhân đã được lưu.": "Your personal information has been saved."
+        ,"Đang cập nhật...": "Updating..."
+        ,"Đặt mật khẩu mới": "Set a new password"
+        ,"Liên kết đã được xác nhận. Hãy tạo mật khẩu mới.": "The link has been verified. Create a new password."
+        ,"Quên mật khẩu": "Forgot password"
+        ,"Nhập email đăng ký để nhận liên kết đặt lại mật khẩu.": "Enter your registered email to receive a password reset link."
+        ,"Nhập lại mật khẩu mới": "Confirm new password"
+        ,"Nhập mật khẩu mới": "Enter a new password"
+        ,"Nhập lại mật khẩu": "Enter the password again"
+        ,"Cập nhật mật khẩu": "Update password"
+        ,"Nhập email đăng ký": "Enter your registered email"
+        ,"Mở liên kết trong email": "Open the link in the email"
+        ,"Tạo mật khẩu mới": "Create a new password"
+        ,"Email đăng ký": "Registered email"
+        ,"Gửi liên kết đặt lại mật khẩu": "Send password reset link"
+        ,"Hãy kiểm tra hộp thư của bạn": "Check your inbox"
+        ,"Nếu email thuộc một tài khoản hợp lệ, hệ thống đã gửi liên kết có hiệu lực trong 30 phút. Kiểm tra cả thư mục spam hoặc thư rác.": "If the email belongs to a valid account, a link valid for 30 minutes has been sent. Check your spam or junk folder too."
+        ,"Mở hộp thư thử nghiệm Mailpit": "Open the Mailpit test inbox"
+        ,"Đã gửi hướng dẫn": "Instructions sent"
+        ,"Hãy kiểm tra email để tiếp tục.": "Check your email to continue."
+        ,"Mật khẩu nhập lại không khớp.": "The password confirmation does not match."
+        ,"Đặt lại mật khẩu thành công. Bạn có thể đăng nhập bằng mật khẩu mới.": "Your password has been reset. You can now sign in with the new password."
+        ,"Chi tiết sách": "Book details"
+        ,"Trở lại kho sách": "Back to catalog"
+        ,"Lưu": "Save"
+        ,"Đã lưu": "Saved"
+        ,"Lưu sách": "Save book"
+        ,"Bỏ lưu": "Remove from saved"
+        ,"Đã lưu sách": "Book saved"
+        ,"Đã bỏ khỏi danh sách lưu": "Removed from saved books"
+        ,"Giới thiệu về cuốn sách": "About this book"
+        ,"Thông tin xuất bản": "Publication details"
+        ,"Ngày phát hành": "Published date"
+        ,"Số bản hiện có": "Available copies"
+        ,"Tổng số bản": "Total copies"
+        ,"Sách đã lưu": "Saved books"
+        ,"Bộ sưu tập bạn muốn đọc sau": "Your reading list for later"
+        ,"Bạn chưa lưu cuốn sách nào.": "You have not saved any books yet."
+        ,"Mở chi tiết": "View details"
+        ,"Chỉnh sửa sách": "Edit book"
+        ,"Mô tả đang được cập nhật.": "The description is being updated."
+    };
+    const VI_TEXT = Object.fromEntries(
+        Object.entries(EN_TEXT).map(([vi, en]) => [en, vi])
+    );
 
     const state = {
         user: null,
+        profile: null,
         isAdmin: false,
+        locale: localStorage.getItem(LANGUAGE_KEY) === "en" ? "en" : "vi",
         currentView: "dashboard",
         categories: [],
         books: new Map(),
         members: new Map(),
-        maintenance: null
+        maintenance: null,
+        pendingBookSearch: "",
+        selectedBookId: null,
+        dashboardShelfBooks: [],
+        dashboardShelfIndex: 0
     };
 
     const elements = {
@@ -30,10 +322,11 @@
     };
 
     const viewMeta = {
-        dashboard: ["Tổng quan", "Dashboard"],
-        books: ["Kho tài nguyên", "Sách"],
+        dashboard: ["Thư viện", "Trang chủ"],
+        books: ["Khám phá", "Kho sách"],
+        bookDetail: ["Khám phá", "Chi tiết sách"],
         members: ["Quản trị", "Thành viên"],
-        borrowings: ["Hoạt động", "Mượn & trả sách"],
+        borrowings: ["Lưu thông", "Mượn & trả sách"],
         system: ["Quản trị", "Cấu hình hệ thống"],
         account: ["Cá nhân", "Tài khoản của tôi"]
     };
@@ -41,6 +334,7 @@
     document.addEventListener("DOMContentLoaded", bootstrap);
 
     async function bootstrap() {
+        initializeLanguage();
         bindGlobalEvents();
 
         const parameters = new URLSearchParams(window.location.search);
@@ -66,7 +360,7 @@
         if (accessToken) {
             try {
                 state.user = await api("/api/auth/me");
-                enterApplication();
+                await enterApplication();
                 return;
             } catch (error) {
                 clearTokens();
@@ -76,7 +370,113 @@
         showAuth();
     }
 
+    function initializeLanguage() {
+        document.documentElement.lang = state.locale;
+        document.querySelectorAll(
+            "#auth-language-select, #app-language-select"
+        ).forEach((select) => {
+            select.value = state.locale;
+        });
+        translateTree(document.body);
+    }
+
+    function t(value) {
+        const text = String(value ?? "");
+        if (state.locale === "en") {
+            return EN_TEXT[text] || text;
+        }
+        return VI_TEXT[text] || text;
+    }
+
+    function translateTree(root) {
+        if (!root) {
+            return;
+        }
+        const translateNode = (node) => {
+            const original = node.textContent;
+            const normalized = original.replace(/\s+/g, " ").trim();
+            if (!normalized) {
+                return;
+            }
+            const translated = t(normalized);
+            if (translated === normalized) {
+                return;
+            }
+            const leading = /^\s/.test(original) ? " " : "";
+            const trailing = /\s$/.test(original) ? " " : "";
+            node.textContent = `${leading}${translated}${trailing}`;
+        };
+
+        if (root.nodeType === Node.TEXT_NODE) {
+            translateNode(root);
+            return;
+        }
+        if (!(root instanceof Element) && root !== document.body) {
+            return;
+        }
+
+        const walker = document.createTreeWalker(
+            root,
+            NodeFilter.SHOW_TEXT,
+            {
+                acceptNode(node) {
+                    return ["SCRIPT", "STYLE"].includes(
+                        node.parentElement?.tagName
+                    )
+                        ? NodeFilter.FILTER_REJECT
+                        : NodeFilter.FILTER_ACCEPT;
+                }
+            }
+        );
+        while (walker.nextNode()) {
+            translateNode(walker.currentNode);
+        }
+
+        const elementsToTranslate = root instanceof Element
+            ? [root, ...root.querySelectorAll("*")]
+            : [...document.body.querySelectorAll("*")];
+        elementsToTranslate.forEach((element) => {
+            ["placeholder", "title", "aria-label"].forEach((attributeName) => {
+                if (!element.hasAttribute(attributeName)) {
+                    return;
+                }
+                const value = element.getAttribute(attributeName);
+                const translated = t(value);
+                if (translated !== value) {
+                    element.setAttribute(attributeName, translated);
+                }
+            });
+        });
+    }
+
+    async function applyLanguage(locale, rerender = true) {
+        state.locale = locale === "en" ? "en" : "vi";
+        localStorage.setItem(LANGUAGE_KEY, state.locale);
+        document.documentElement.lang = state.locale;
+        document.querySelectorAll(
+            "#auth-language-select, #app-language-select"
+        ).forEach((select) => {
+            select.value = state.locale;
+        });
+        translateTree(document.body);
+
+        if (rerender && state.user
+                && !elements.appView.classList.contains("hidden")) {
+            hydrateUserIdentity();
+            renderNavigation();
+            await navigate(state.currentView);
+        }
+    }
+
     function bindGlobalEvents() {
+        document.querySelectorAll(
+            "#auth-language-select, #app-language-select"
+        ).forEach((select) => {
+            select.addEventListener("change", (event) => {
+                applyLanguage(event.currentTarget.value);
+            });
+        });
+
         document.querySelector("#login-form")
             .addEventListener("submit", handleLogin);
         document.querySelector("#register-form")
@@ -90,11 +490,22 @@
             });
 
         document.querySelector("#forgot-password-link")
-            .addEventListener("click", openPasswordRecoveryModal);
+            .addEventListener(
+                "click",
+                () => openPasswordRecoveryModal()
+            );
         document.querySelector("#logout-button")
             .addEventListener("click", logout);
         document.querySelector("#topbar-profile")
             .addEventListener("click", () => navigate("account"));
+        document.querySelector("#global-search-form")
+            .addEventListener("submit", async (event) => {
+                event.preventDefault();
+                state.pendingBookSearch = event.currentTarget
+                    .querySelector("[name='keyword']").value.trim();
+                await navigate("books");
+                closeSidebar();
+            });
 
         document.querySelector("#sidebar-open")
             .addEventListener("click", openSidebar);
@@ -106,6 +517,46 @@
             if (event.key === "Escape" && elements.modalRoot.firstChild) {
                 closeModal();
             }
+        });
+        document.addEventListener("error", (event) => {
+            if (!event.target.matches?.("[data-book-cover]")) {
+                return;
+            }
+            const image = event.target;
+            const candidates = (image.dataset.coverCandidates || "")
+                .split("|")
+                .filter(Boolean);
+            const nextIndex = Number(image.dataset.coverIndex || "0") + 1;
+            if (nextIndex < candidates.length) {
+                image.dataset.coverIndex = String(nextIndex);
+                image.src = candidates[nextIndex];
+                return;
+            }
+            image.hidden = true;
+            image.closest("[data-cover-frame]")
+                ?.classList.add("is-empty");
+        }, true);
+        document.addEventListener("load", (event) => {
+            if (!event.target.matches?.("[data-book-cover]")) {
+                return;
+            }
+            event.target.hidden = false;
+            event.target.closest("[data-cover-frame]")
+                ?.classList.remove("is-empty");
+        }, true);
+
+        new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                mutation.addedNodes.forEach((node) => {
+                    if (node.nodeType === Node.ELEMENT_NODE
+                            || node.nodeType === Node.TEXT_NODE) {
+                        translateTree(node);
+                    }
+                });
+            });
+        }).observe(document.body, {
+            childList: true,
+            subtree: true
         });
 
         setupPasswordToggles();
@@ -221,7 +672,7 @@
             storeTokens(tokens);
             state.user = await api("/api/auth/me");
             form.reset();
-            enterApplication();
+            await enterApplication();
             toast("Đăng nhập thành công", "Chào mừng bạn trở lại.");
         } catch (error) {
             setAuthMessage(error.message, "error");
@@ -274,51 +725,55 @@
         showAuthPanel("login");
     }
 
-    function enterApplication() {
+    async function enterApplication() {
         state.isAdmin = state.user.roles.includes("ROLE_ADMIN");
+        state.profile = await safeApi("/api/profile");
         elements.loading.classList.add("hidden");
         elements.authView.classList.add("hidden");
         elements.appView.classList.remove("hidden");
         hydrateUserIdentity();
         renderNavigation();
-        navigate("dashboard");
+        await navigate("dashboard");
+        if (state.profile
+                && (!state.profile.phone || !state.profile.dateOfBirth)) {
+            toast(
+                t("Thông tin cá nhân chưa đầy đủ"),
+                t("Vui lòng cập nhật số điện thoại và ngày sinh để thư viện có thể liên hệ và hỗ trợ việc mượn trả sách.")
+            );
+        }
     }
 
     function hydrateUserIdentity() {
-        const name = state.user.username || state.user.email;
-        const initial = name.slice(0, 1).toUpperCase();
-        const role = state.isAdmin ? "Quản trị viên" : "Thành viên";
+        const name = state.profile?.fullName
+            || state.profile?.username
+            || state.user.username
+            || state.user.email;
+        const role = t(state.isAdmin ? "Quản trị viên" : "Thành viên");
 
         document.querySelector("#sidebar-user-name").textContent = name;
-        document.querySelector("#topbar-user-name").textContent = name;
         document.querySelector("#sidebar-user-role").textContent = role;
-        document.querySelector("#sidebar-avatar").textContent = initial;
-        document.querySelector("#topbar-avatar").textContent = initial;
+        document.querySelector("#sidebar-avatar").innerHTML = icon("i-user");
     }
 
     function renderNavigation() {
         const generalItems = [
-            navItem("dashboard", "Tổng quan"),
-            navItem("books",
-                state.isAdmin ? "Quản lý sách" : "Khám phá sách"),
+            navItem("dashboard", t("Trang chủ")),
+            navItem("books", t("Kho sách")),
             navItem("borrowings",
-                state.isAdmin ? "Quản lý mượn trả" : "Sách đang mượn")
+                t(state.isAdmin ? "Mượn & trả" : "Sách của tôi"))
         ];
 
         const adminItems = state.isAdmin
             ? [
-                `<p class="nav-section-label">Quản trị</p>`,
-                navItem("members", "Thành viên"),
-                navItem("system", "Cấu hình hệ thống")
+                navItem("members", t("Thành viên")),
+                navItem("system", t("Hệ thống"))
             ]
             : [];
 
         elements.sidebarNav.innerHTML = `
-            <p class="nav-section-label">Thư viện</p>
             ${generalItems.join("")}
             ${adminItems.join("")}
-            <p class="nav-section-label">Cá nhân</p>
-            ${navItem("account", "Tài khoản")}
+            ${navItem("account", t("Tài khoản"))}
         `;
 
         elements.sidebarNav.querySelectorAll("[data-view]")
@@ -343,14 +798,17 @@
         if (!viewMeta[view]) {
             view = "dashboard";
         }
+        if (view === "bookDetail" && !state.selectedBookId) {
+            view = "books";
+        }
         if (!state.isAdmin && ["members", "system"].includes(view)) {
             view = "dashboard";
         }
 
         state.currentView = view;
         const [eyebrow, title] = viewMeta[view];
-        elements.pageEyebrow.textContent = eyebrow;
-        elements.pageTitle.textContent = title;
+        elements.pageEyebrow.textContent = t(eyebrow);
+        elements.pageTitle.textContent = t(title);
         elements.sidebarNav.querySelectorAll("[data-view]")
             .forEach((item) => {
                 item.classList.toggle(
@@ -363,6 +821,7 @@
         const renderers = {
             dashboard: renderDashboard,
             books: renderBooksPage,
+            bookDetail: renderBookDetailPage,
             members: renderMembersPage,
             borrowings: renderBorrowingsPage,
             system: renderSystemPage,
@@ -371,6 +830,7 @@
 
         try {
             await renderers[view]();
+            translateTree(elements.pageContent);
         } catch (error) {
             renderPageError(error);
         }
@@ -378,7 +838,7 @@
 
     async function renderDashboard() {
         const requests = [
-            safeApi("/api/books?page=0&size=1&active=true"),
+            safeApi("/api/books?page=0&size=10&active=true&sortBy=title&direction=asc"),
             safeApi(state.isAdmin
                 ? "/api/admin/borrowings?page=0&size=5"
                 : "/api/borrowings/my?page=0&size=5")
@@ -393,6 +853,9 @@
 
         const [books, borrowings, members, systemConfig] =
             await Promise.all(requests);
+        state.dashboardShelfBooks =
+                await loadDashboardShelfBooks(books);
+        state.dashboardShelfIndex = 0;
 
         if (systemConfig) {
             state.maintenance = systemConfig;
@@ -427,88 +890,96 @@
             ];
 
         elements.pageContent.innerHTML = `
-            <section class="page-section">
-                <div class="welcome-banner">
-                    <div>
+            <section class="library-home">
+                <section class="library-hero">
+                    <div class="library-hero-copy">
                         <span class="eyebrow">
-                            ${state.isAdmin ? "Bàn điều hành" : "Tài khoản thư viện"}
+                            ${state.isAdmin
+                                ? "Kho sách & lưu thông"
+                                : `Xin chào ${escapeHtml(displayName())}`}
                         </span>
                         <h2>${state.isAdmin
-                            ? "Tổng quan vận hành hôm nay"
-                            : `Chào ${escapeHtml(displayName())}`}</h2>
-                        <p>
-                            ${state.isAdmin
-                                ? "Theo dõi kho sách, thành viên và các giao dịch cần chú ý."
-                                : "Tra cứu danh mục và theo dõi thời hạn trả sách của bạn."}
-                        </p>
+                            ? "Tìm nhanh trong toàn bộ thư viện"
+                            : "Bạn muốn đọc gì hôm nay?"}</h2>
+                        <p>${state.isAdmin
+                            ? "Tra cứu đầu sách trước khi cập nhật kho, mượn hoặc trả."
+                            : "Tìm theo tên sách, tác giả hoặc mã ISBN trong bộ sưu tập."}</p>
+                        <form id="dashboard-search-form"
+                              class="library-hero-search" role="search">
+                            <input name="keyword" autocomplete="off"
+                                   placeholder="Nhập tên sách, tác giả hoặc ISBN">
+                            <button type="submit">Tìm trong thư viện</button>
+                        </form>
                     </div>
-                    <time>${formatLongDate(new Date())}</time>
-                </div>
+                    ${dashboardHeroShelf(books?.content || [])}
+                </section>
 
-                <div class="stat-grid">
-                    ${stats.map(statCard).join("")}
-                </div>
-
-                <div class="dashboard-grid">
-                    <div class="card">
-                        <div class="card-heading">
-                            <div>
-                                <h2>Hoạt động gần đây</h2>
-                                <p>Các lượt mượn và trả sách mới nhất.</p>
-                            </div>
+                <section class="shelf-section">
+                    <div class="shelf-heading">
+                        <div>
+                            <span class="section-kicker">Bộ sưu tập</span>
+                            <h2>Sách trên kệ</h2>
+                        </div>
+                        <div class="shelf-heading-actions">
+                            <span class="shelf-carousel-controls">
+                                <button type="button"
+                                        class="icon-button"
+                                        data-shelf-step="-1"
+                                        aria-label="Sách trước">
+                                    ${icon("i-chevron-left")}
+                                </button>
+                                <button type="button"
+                                        class="icon-button"
+                                        data-shelf-step="1"
+                                        aria-label="Sách tiếp theo">
+                                    ${icon("i-chevron-right")}
+                                </button>
+                            </span>
                             <button class="text-button"
-                                    data-go-view="borrowings">
-                                Xem tất cả
+                                    data-go-view="books">
+                                Xem toàn bộ kho sách
                             </button>
                         </div>
+                    </div>
+                    <div id="dashboard-shelf-host">
+                        ${dashboardBookShelf(
+                            dashboardShelfWindow()
+                        )}
+                    </div>
+                </section>
+
+                <section class="library-metrics">
+                    ${stats.map(statCard).join("")}
+                </section>
+
+                <section class="circulation-section">
+                    <div class="shelf-heading">
+                        <div>
+                            <span class="section-kicker">Lưu thông</span>
+                            <h2>Hoạt động gần đây</h2>
+                        </div>
+                        <button class="text-button"
+                                data-go-view="borrowings">
+                            Xem lịch sử mượn trả
+                        </button>
+                    </div>
+                    <div class="card">
                         ${borrowingTable(
                             borrowings?.content || [],
                             { compact: true, canReturn: false }
                         )}
                     </div>
-
-                    <div class="card">
-                        <div class="card-heading">
-                            <div>
-                                <h2>Truy cập nhanh</h2>
-                                <p>Thao tác thường dùng.</p>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="activity-list">
-                                ${quickAction(
-                                    state.isAdmin
-                                        ? "Thêm sách mới"
-                                        : "Tìm một cuốn sách",
-                                    state.isAdmin
-                                        ? "Cập nhật kho tài nguyên"
-                                        : "Khám phá thư viện",
-                                    "books"
-                                )}
-                                ${quickAction(
-                                    state.isAdmin
-                                        ? "Theo dõi mượn trả"
-                                        : "Xem sách đang mượn",
-                                    "Kiểm tra trạng thái hiện tại",
-                                    "borrowings"
-                                )}
-                                ${state.isAdmin
-                                    ? quickAction(
-                                        "Tạo thành viên",
-                                        "Thêm tài khoản thư viện",
-                                        "members"
-                                    )
-                                    : quickAction(
-                                        "Bảo mật tài khoản",
-                                        "Đổi mật khẩu hoặc email",
-                                        "account"
-                                    )}
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                </section>
             </section>
         `;
+
+        document.querySelector("#dashboard-search-form")
+            .addEventListener("submit", async (event) => {
+                event.preventDefault();
+                state.pendingBookSearch = event.currentTarget
+                    .querySelector("[name='keyword']").value.trim();
+                await navigate("books");
+            });
 
         elements.pageContent.querySelectorAll("[data-go-view]")
             .forEach((button) => {
@@ -516,6 +987,134 @@
                     navigate(button.dataset.goView);
                 });
             });
+        elements.pageContent.querySelectorAll("[data-book-query]")
+            .forEach((button) => {
+                button.addEventListener("click", async () => {
+                    state.pendingBookSearch = button.dataset.bookQuery;
+                    await navigate("books");
+                });
+            });
+        elements.pageContent.querySelectorAll("[data-shelf-step]")
+            .forEach((button) => {
+                button.addEventListener("click", () => {
+                    shiftDashboardShelf(
+                        Number(button.dataset.shelfStep)
+                    );
+                });
+            });
+        bindBookDetailLinks(elements.pageContent);
+    }
+
+    async function loadDashboardShelfBooks(firstPage) {
+        if (!firstPage?.content?.length) {
+            return [];
+        }
+        if (firstPage.totalPages <= 1) {
+            return firstPage.content;
+        }
+
+        const remainingPages = await Promise.all(
+            Array.from(
+                {length: firstPage.totalPages - 1},
+                (_, index) => safeApi(
+                    `/api/books?page=${index + 1}`
+                        + "&size=10&active=true"
+                        + "&sortBy=title&direction=asc"
+                )
+            )
+        );
+
+        return [
+            ...firstPage.content,
+            ...remainingPages
+                .filter(Boolean)
+                .flatMap((page) => page.content || [])
+        ];
+    }
+
+    function dashboardShelfWindow() {
+        const books = state.dashboardShelfBooks;
+        if (!books.length) {
+            return [];
+        }
+        const visibleCount = Math.min(8, books.length);
+        return Array.from(
+            {length: visibleCount},
+            (_, offset) => books[
+                (state.dashboardShelfIndex + offset)
+                    % books.length
+            ]
+        );
+    }
+
+    function shiftDashboardShelf(step) {
+        const books = state.dashboardShelfBooks;
+        if (books.length <= 1) {
+            return;
+        }
+        state.dashboardShelfIndex =
+            (state.dashboardShelfIndex + step + books.length)
+                % books.length;
+
+        const host = document.querySelector(
+            "#dashboard-shelf-host"
+        );
+        if (!host) {
+            return;
+        }
+        host.innerHTML = dashboardBookShelf(
+            dashboardShelfWindow()
+        );
+        bindBookDetailLinks(host);
+    }
+
+    function dashboardHeroShelf(books) {
+        const items = books.slice(0, 4);
+        if (!items.length) {
+            return "";
+        }
+        return `
+            <div class="library-hero-shelf" aria-hidden="true">
+                ${items.map((book) =>
+                    bookCover(
+                        book,
+                        "book-cover-frame--hero"
+                    )
+                ).join("")}
+            </div>
+        `;
+    }
+
+    function dashboardBookShelf(books) {
+        if (!books.length) {
+            return `
+                <div class="book-shelf book-shelf--empty" aria-hidden="true">
+                    ${Array.from({length: 7}, (_, index) => `
+                        <span class="book-cover-frame is-empty
+                            ${index % 3 === 0 ? "book-cover-frame--short" : ""}">
+                            <span class="book-cover-empty"></span>
+                        </span>
+                    `).join("")}
+                </div>
+            `;
+        }
+
+        return `
+            <div class="book-shelf">
+                ${books.slice(0, 8).map((book) => `
+                    <button type="button" class="shelf-book"
+                            data-book-detail="${book.id}">
+                        ${bookCover(book, "book-cover-frame--shelf")}
+                        <span class="shelf-book-title">
+                            ${escapeHtml(book.title)}
+                        </span>
+                        <span class="shelf-book-author">
+                            ${escapeHtml(authorNames(book))}
+                        </span>
+                    </button>
+                `).join("")}
+            </div>
+        `;
     }
 
     function statCard([label, value, note]) {
@@ -550,11 +1149,11 @@
                 <div class="section-heading">
                     <div>
                         <h2>${state.isAdmin
-                            ? "Quản lý kho sách"
-                            : "Khám phá thư viện"}</h2>
+                            ? "Danh mục thư viện"
+                            : "Khám phá kho sách"}</h2>
                         <p>${state.isAdmin
-                            ? "Tìm kiếm, cập nhật và nhập dữ liệu sách."
-                            : "Tìm sách theo tên, tác giả hoặc danh mục."}</p>
+                            ? "Tra cứu, cập nhật và bổ sung tài liệu vào bộ sưu tập."
+                            : "Duyệt sách theo từ khóa, tác giả, danh mục và tình trạng."}</p>
                     </div>
                     ${state.isAdmin
                         ? `<div class="action-row">
@@ -570,45 +1169,56 @@
                         : ""}
                 </div>
 
-                <form id="book-filter-form" class="filter-panel">
-                    <label class="field">
-                        <span>Từ khóa</span>
-                        <span class="search-input-wrap">
-                            ${icon("i-search")}
-                            <input name="keyword"
-                                   placeholder="Tên, ISBN, tác giả...">
-                        </span>
-                    </label>
-                    <label class="field">
-                        <span>Danh mục</span>
-                        <select name="categoryId">
-                            <option value="">Tất cả danh mục</option>
-                            ${state.categories.map((category) => `
-                                <option value="${category.id}">
-                                    ${escapeHtml(category.name)}
-                                </option>
-                            `).join("")}
-                        </select>
-                    </label>
-                    <label class="field">
-                        <span>Nhà xuất bản</span>
-                        <input name="publisher"
-                               placeholder="Nhập nhà xuất bản">
-                    </label>
-                    <label class="field">
-                        <span>Trạng thái</span>
-                        <select name="availableOnly">
-                            <option value="">Tất cả</option>
-                            <option value="true">Còn sách</option>
-                            <option value="false">Hết sách</option>
-                        </select>
-                    </label>
-                    <button type="submit" class="button button--primary">
-                        Tìm kiếm
-                    </button>
-                </form>
-
-                <div id="books-result">${pageSkeleton(3)}</div>
+                <div class="catalog-layout">
+                    <aside class="catalog-filter-sidebar">
+                        <form id="book-filter-form" class="catalog-filter-form">
+                            <div class="catalog-filter-title">
+                                <h3>Lọc kết quả</h3>
+                                <button type="reset" class="text-button"
+                                        id="clear-book-filters">
+                                    Xóa lọc
+                                </button>
+                            </div>
+                            <label class="field">
+                                <span>Từ khóa</span>
+                                <input name="keyword"
+                                       value="${attribute(state.pendingBookSearch)}"
+                                       placeholder="Tên, ISBN, tác giả...">
+                            </label>
+                            <label class="field">
+                                <span>Danh mục</span>
+                                <select name="categoryId">
+                                    <option value="">Tất cả danh mục</option>
+                                    ${state.categories.map((category) => `
+                                        <option value="${category.id}">
+                                            ${escapeHtml(category.name)}
+                                        </option>
+                                    `).join("")}
+                                </select>
+                            </label>
+                            <label class="field">
+                                <span>Nhà xuất bản</span>
+                                <input name="publisher"
+                                       placeholder="Nhập nhà xuất bản">
+                            </label>
+                            <label class="field">
+                                <span>Tình trạng</span>
+                                <select name="availableOnly">
+                                    <option value="">Tất cả</option>
+                                    <option value="true">Có thể mượn</option>
+                                    <option value="false">Đang hết sách</option>
+                                </select>
+                            </label>
+                            <button type="submit"
+                                    class="button button--primary button--full">
+                                Áp dụng bộ lọc
+                            </button>
+                        </form>
+                    </aside>
+                    <div class="catalog-results">
+                        <div id="books-result">${pageSkeleton(3)}</div>
+                    </div>
+                </div>
             </section>
         `;
 
@@ -617,6 +1227,10 @@
                 event.preventDefault();
                 loadBooks(0);
             });
+        document.querySelector("#clear-book-filters")
+            .addEventListener("click", () => {
+                setTimeout(() => loadBooks(0));
+            });
 
         document.querySelector("#create-book-button")
             ?.addEventListener("click", () => openBookModal());
@@ -624,6 +1238,7 @@
             ?.addEventListener("click", openImportModal);
 
         await loadBooks(0);
+        state.pendingBookSearch = "";
     }
 
     async function loadBooks(page) {
@@ -636,7 +1251,7 @@
                 ? queryFromForm(form)
                 : new URLSearchParams();
             parameters.set("page", page);
-            parameters.set("size", 9);
+            parameters.set("size", 10);
             parameters.set("sortBy", "title");
             parameters.set("direction", "asc");
             if (!state.isAdmin) {
@@ -670,18 +1285,34 @@
         }
 
         return `
+            <div class="catalog-result-heading">
+                <p>
+                    <strong>${response.totalElements}</strong>
+                    đầu sách phù hợp
+                </p>
+            </div>
             <div class="book-grid">
                 ${response.content.map((book) => `
                     <article class="book-card">
                         <div class="book-card-top">
-                            <span class="book-cover">
-                                ${escapeHtml(bookInitials(book.title))}
-                            </span>
+                            <button type="button"
+                                    class="book-cover-link"
+                                    data-book-detail="${book.id}"
+                                    aria-label="Mở chi tiết ${attribute(book.title)}">
+                                ${bookCover(
+                                    book,
+                                    "book-cover-frame--catalog"
+                                )}
+                            </button>
                             ${availabilityBadge(book)}
                         </div>
-                        <h3 title="${escapeHtml(book.title)}">
-                            ${escapeHtml(book.title)}
-                        </h3>
+                        <button type="button"
+                                class="book-title-link"
+                                data-book-detail="${book.id}">
+                            <h3 title="${attribute(book.title)}">
+                                ${escapeHtml(book.title)}
+                            </h3>
+                        </button>
                         <p class="book-authors">
                             ${escapeHtml(authorNames(book))}
                         </p>
@@ -720,6 +1351,12 @@
         }
 
         return `
+            <div class="catalog-result-heading">
+                <p>
+                    <strong>${response.totalElements}</strong>
+                    đầu sách trong danh mục
+                </p>
+            </div>
             <div class="card">
                 <div class="table-wrap">
                     <table class="data-table">
@@ -737,11 +1374,17 @@
                             ${response.content.map((book) => `
                                 <tr>
                                     <td>
-                                        <span class="table-primary">
-                                            <strong>${escapeHtml(book.title)}</strong>
-                                            <small>${escapeHtml(book.isbn)}
-                                                · ${escapeHtml(authorNames(book))}
-                                            </small>
+                                        <span class="table-book">
+                                            ${bookCover(
+                                                book,
+                                                "book-cover-frame--table"
+                                            )}
+                                            <span class="table-primary">
+                                                <strong>${escapeHtml(book.title)}</strong>
+                                                <small>${escapeHtml(book.isbn)}
+                                                    · ${escapeHtml(authorNames(book))}
+                                                </small>
+                                            </span>
                                         </span>
                                     </td>
                                     <td>${escapeHtml(
@@ -757,6 +1400,11 @@
                                         : badge("Ngừng hoạt động", "neutral")}</td>
                                     <td>
                                         <span class="table-actions">
+                                            <button class="icon-button"
+                                                    data-book-detail="${book.id}"
+                                                    title="Mở chi tiết">
+                                                ${icon("i-book")}
+                                            </button>
                                             <button class="icon-button"
                                                     data-edit-book="${book.id}"
                                                     title="Chỉnh sửa">
@@ -811,6 +1459,7 @@
                     );
                 });
             });
+        bindBookDetailLinks(elements.pageContent);
     }
 
     async function borrowBook(bookId, button) {
@@ -824,11 +1473,234 @@
                 "Mượn sách thành công",
                 `Hạn trả: ${formatDate(result.dueAt)}`
             );
-            await loadBooks(0);
+            if (state.currentView === "books") {
+                await loadBooks(0);
+            }
+            return true;
         } catch (error) {
             toast("Không thể mượn sách", error.message, "error");
             setButtonLoading(button, false);
+            return false;
         }
+    }
+
+    function bindBookDetailLinks(root = document) {
+        root.querySelectorAll("[data-book-detail]")
+            .forEach((button) => {
+                if (button.dataset.detailBound === "true") {
+                    return;
+                }
+                button.dataset.detailBound = "true";
+                button.addEventListener("click", async () => {
+                    state.selectedBookId = Number(
+                        button.dataset.bookDetail
+                    );
+                    await navigate("bookDetail");
+                });
+            });
+    }
+
+    async function renderBookDetailPage() {
+        const bookId = Number(state.selectedBookId);
+        if (!Number.isInteger(bookId) || bookId < 1) {
+            state.selectedBookId = null;
+            await navigate("books");
+            return;
+        }
+
+        const [book, savedStatus] = await Promise.all([
+            api(`/api/books/${bookId}`),
+            safeApi(`/api/saved-books/${bookId}/status`)
+        ]);
+        state.books.set(String(book.id), book);
+
+        const isSaved = Boolean(savedStatus?.saved);
+        const canBorrow = !state.isAdmin
+            && book.active
+            && book.availableQuantity > 0;
+
+        elements.pageContent.innerHTML = `
+            <section class="page-section book-detail-page">
+                <button type="button"
+                        class="book-detail-back text-button"
+                        data-back-to-books>
+                    ${icon("i-chevron-left")} Trở lại kho sách
+                </button>
+
+                <div class="book-detail-hero">
+                    <aside class="book-detail-cover-panel">
+                        ${bookCover(
+                            book,
+                            "book-cover-frame--detail"
+                        )}
+                        <div class="book-detail-availability">
+                            ${availabilityBadge(book)}
+                            <span>
+                                ${book.availableQuantity}
+                                / ${book.totalQuantity} cuốn
+                            </span>
+                        </div>
+                    </aside>
+
+                    <div class="book-detail-summary">
+                        <span class="section-kicker">
+                            ${escapeHtml(
+                                book.category?.name || "Khác"
+                            )}
+                        </span>
+                        <h2>${escapeHtml(book.title)}</h2>
+                        <p class="book-detail-authors">
+                            ${escapeHtml(authorNames(book))}
+                        </p>
+
+                        <div class="book-detail-actions">
+                            <button type="button"
+                                    class="button button--secondary
+                                        ${isSaved ? "is-saved" : ""}"
+                                    data-toggle-saved-book
+                                    data-saved="${isSaved}">
+                                ${icon("i-bookmark")}
+                                ${isSaved ? "Đã lưu" : "Lưu"}
+                            </button>
+                            ${state.isAdmin
+                                ? `<button type="button"
+                                           class="button button--primary"
+                                           data-edit-detail-book>
+                                       ${icon("i-edit")} Chỉnh sửa sách
+                                   </button>`
+                                : `<button type="button"
+                                           class="button button--primary"
+                                           data-detail-borrow="${book.id}"
+                                           ${canBorrow ? "" : "disabled"}>
+                                       ${icon("i-borrow")} Mượn sách
+                                   </button>`}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="book-detail-content-grid">
+                    <article class="book-detail-description card">
+                        <div class="card-heading">
+                            <div>
+                                <span class="section-kicker">
+                                    Nội dung
+                                </span>
+                                <h3>Giới thiệu về cuốn sách</h3>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p>${escapeHtml(
+                                book.description
+                                    || "Mô tả đang được cập nhật."
+                            )}</p>
+                        </div>
+                    </article>
+
+                    <aside class="book-detail-facts card">
+                        <div class="card-heading">
+                            <div>
+                                <span class="section-kicker">
+                                    Thông tin
+                                </span>
+                                <h3>Thông tin xuất bản</h3>
+                            </div>
+                        </div>
+                        <dl class="book-facts-list">
+                            <div>
+                                <dt>ISBN</dt>
+                                <dd>${escapeHtml(book.isbn)}</dd>
+                            </div>
+                            <div>
+                                <dt>Tác giả</dt>
+                                <dd>${escapeHtml(authorNames(book))}</dd>
+                            </div>
+                            <div>
+                                <dt>Nhà xuất bản</dt>
+                                <dd>${escapeHtml(
+                                    book.publisher || "—"
+                                )}</dd>
+                            </div>
+                            <div>
+                                <dt>Ngày phát hành</dt>
+                                <dd>${formatDate(
+                                    book.publishedDate
+                                )}</dd>
+                            </div>
+                            <div>
+                                <dt>Danh mục</dt>
+                                <dd>${escapeHtml(
+                                    book.category?.name || "Khác"
+                                )}</dd>
+                            </div>
+                            <div>
+                                <dt>Số bản hiện có</dt>
+                                <dd>${book.availableQuantity}</dd>
+                            </div>
+                            <div>
+                                <dt>Tổng số bản</dt>
+                                <dd>${book.totalQuantity}</dd>
+                            </div>
+                        </dl>
+                    </aside>
+                </div>
+            </section>
+        `;
+
+        document.querySelector("[data-back-to-books]")
+            .addEventListener(
+                "click",
+                () => navigate("books")
+            );
+
+        document.querySelector("[data-toggle-saved-book]")
+            .addEventListener("click", async (event) => {
+                const button = event.currentTarget;
+                const wasSaved =
+                        button.dataset.saved === "true";
+                setButtonLoading(
+                    button,
+                    true,
+                    wasSaved
+                        ? "Đang bỏ lưu..."
+                        : "Đang lưu..."
+                );
+                try {
+                    await api(`/api/saved-books/${book.id}`, {
+                        method: wasSaved ? "DELETE" : "POST"
+                    });
+                    toast(
+                        wasSaved
+                            ? "Đã bỏ khỏi danh sách lưu"
+                            : "Đã lưu sách",
+                        book.title
+                    );
+                    await renderBookDetailPage();
+                } catch (error) {
+                    toast(
+                        "Không thể cập nhật",
+                        error.message,
+                        "error"
+                    );
+                    setButtonLoading(button, false);
+                }
+            });
+
+        document.querySelector("[data-detail-borrow]")
+            ?.addEventListener("click", async (event) => {
+                const borrowed = await borrowBook(
+                    book.id,
+                    event.currentTarget
+                );
+                if (borrowed) {
+                    await renderBookDetailPage();
+                }
+            });
+
+        document.querySelector("[data-edit-detail-book]")
+            ?.addEventListener(
+                "click",
+                () => openBookModal(book)
+            );
     }
 
     async function openBookModal(book = null) {
@@ -1173,6 +2045,7 @@
                                 <th>Mã thành viên</th>
                                 <th>Ngày sinh</th>
                                 <th>Liên hệ</th>
+                                <th>Thông tin mật khẩu</th>
                                 <th>Trạng thái</th>
                                 <th class="text-right">Thao tác</th>
                             </tr>
@@ -1181,11 +2054,19 @@
                             ${response.content.map((member) => `
                                 <tr>
                                     <td>
-                                        <span class="table-primary">
-                                            <strong>${escapeHtml(
-                                                member.fullName || member.username
-                                            )}</strong>
-                                            <small>${escapeHtml(member.email)}</small>
+                                        <span class="member-identity">
+                                            <span class="avatar avatar--person avatar--small">
+                                                ${icon("i-user")}
+                                            </span>
+                                            <span class="table-primary">
+                                                <strong>${escapeHtml(
+                                                    member.fullName
+                                                        || member.username
+                                                )}</strong>
+                                                <small>${escapeHtml(
+                                                    member.email
+                                                )}</small>
+                                            </span>
                                         </span>
                                     </td>
                                     <td>${escapeHtml(
@@ -1193,6 +2074,11 @@
                                     )}</td>
                                     <td>${formatDate(member.dateOfBirth)}</td>
                                     <td>${escapeHtml(member.phone || "—")}</td>
+                                    <td>
+                                        ${passwordStatusControl(
+                                            member.passwordConfigured !== false
+                                        )}
+                                    </td>
                                     <td>${memberStatus(member)}</td>
                                     <td>
                                         <span class="table-actions">
@@ -1219,6 +2105,7 @@
     }
 
     function bindMemberActions() {
+        bindPasswordStatusToggles(document);
         document.querySelectorAll("[data-members-page]")
             .forEach((button) => {
                 button.addEventListener("click", () => {
@@ -1283,6 +2170,15 @@
                                value="${attribute(member?.phone)}">
                     </label>
                     ${editing ? `
+                        <label class="field">
+                            <span>Thông tin mật khẩu</span>
+                            ${passwordStatusControl(
+                                member.passwordConfigured !== false
+                            )}
+                            <small>
+                                Mật khẩu đã được mã hóa và không thể xem.
+                            </small>
+                        </label>
                         <label class="field">
                             <span>Trạng thái tài khoản *</span>
                             <select name="enabled">
@@ -1369,6 +2265,58 @@
                 }
             }
         });
+        bindPasswordStatusToggles(elements.modalRoot);
+    }
+
+    function passwordStatusControl(configured) {
+        const status = configured ? "Đã thiết lập" : "Chưa thiết lập";
+        return `
+            <span class="password-status-control"
+                  data-password-status="${configured}">
+                <span class="password-status-value"
+                      data-password-masked>••••••••</span>
+                <span class="password-status-value hidden"
+                      data-password-revealed>${t(status)}</span>
+                <button type="button" class="password-toggle"
+                        data-toggle-password-status
+                        aria-label="${t("Hiển thị trạng thái mật khẩu")}"
+                        aria-pressed="false">
+                    ${icon("i-eye")}
+                </button>
+            </span>
+        `;
+    }
+
+    function bindPasswordStatusToggles(root) {
+        root.querySelectorAll("[data-toggle-password-status]")
+            .forEach((button) => {
+                if (button.dataset.bound === "true") {
+                    return;
+                }
+                button.dataset.bound = "true";
+                button.addEventListener("click", () => {
+                    const control = button.closest(
+                        "[data-password-status]"
+                    );
+                    const reveal = control.querySelector(
+                        "[data-password-revealed]"
+                    ).classList.contains("hidden");
+                    control.querySelector("[data-password-masked]")
+                        .classList.toggle("hidden", reveal);
+                    control.querySelector("[data-password-revealed]")
+                        .classList.toggle("hidden", !reveal);
+                    button.setAttribute("aria-pressed", String(reveal));
+                    button.setAttribute(
+                        "aria-label",
+                        t(reveal
+                            ? "Ẩn trạng thái mật khẩu"
+                            : "Hiển thị trạng thái mật khẩu")
+                    );
+                    button.innerHTML = icon(
+                        reveal ? "i-eye-off" : "i-eye"
+                    );
+                });
+            });
     }
 
     function confirmDeactivateMember(member) {
@@ -1413,12 +2361,93 @@
                         </button>
                     `}
                 </div>
+                ${state.isAdmin ? "" : `
+                    <section class="saved-books-section">
+                        <div class="shelf-heading">
+                            <div>
+                                <span class="section-kicker">
+                                    Bộ sưu tập cá nhân
+                                </span>
+                                <h3>Sách đã lưu</h3>
+                                <p>Bộ sưu tập bạn muốn đọc sau</p>
+                            </div>
+                        </div>
+                        <div id="saved-books-result">
+                            ${pageSkeleton(2)}
+                        </div>
+                    </section>
+                `}
                 <div id="borrowings-result">${pageSkeleton(3)}</div>
             </section>
         `;
         document.querySelector("[data-go-books]")
             ?.addEventListener("click", () => navigate("books"));
-        await loadBorrowings(0);
+        await Promise.all([
+            loadBorrowings(0),
+            state.isAdmin
+                ? Promise.resolve()
+                : loadSavedBooks()
+        ]);
+    }
+
+    async function loadSavedBooks() {
+        const host = document.querySelector(
+            "#saved-books-result"
+        );
+        if (!host) {
+            return;
+        }
+
+        try {
+            const response = await api(
+                "/api/saved-books?page=0&size=10"
+            );
+            if (!response.content.length) {
+                host.innerHTML = `
+                    <div class="saved-books-empty">
+                        ${icon("i-bookmark")}
+                        <span>Bạn chưa lưu cuốn sách nào.</span>
+                    </div>
+                `;
+                return;
+            }
+
+            host.innerHTML = `
+                <div class="saved-books-grid">
+                    ${response.content.map((savedBook) => {
+                        const book = savedBook.book;
+                        state.books.set(
+                            String(book.id),
+                            book
+                        );
+                        return `
+                            <button type="button"
+                                    class="saved-book-card"
+                                    data-book-detail="${book.id}">
+                                ${bookCover(
+                                    book,
+                                    "book-cover-frame--saved"
+                                )}
+                                <span>
+                                    <strong>
+                                        ${escapeHtml(book.title)}
+                                    </strong>
+                                    <small>
+                                        ${escapeHtml(
+                                            authorNames(book)
+                                        )}
+                                    </small>
+                                    <em>Mở chi tiết</em>
+                                </span>
+                            </button>
+                        `;
+                    }).join("")}
+                </div>
+            `;
+            bindBookDetailLinks(host);
+        } catch (error) {
+            host.innerHTML = inlineError(error);
+        }
     }
 
     async function loadBorrowings(page) {
@@ -1463,9 +2492,10 @@
                     <thead>
                         <tr>
                             <th>Sách</th>
-                            ${state.isAdmin ? "<th>Thành viên</th>" : ""}
+                            ${state.isAdmin ? "<th>Người mượn</th>" : ""}
                             <th>Ngày mượn</th>
                             <th>Hạn trả</th>
+                            <th>Ngày trả</th>
                             <th>Trạng thái</th>
                             ${options.canReturn
                                 ? '<th class="text-right">Thao tác</th>'
@@ -1485,18 +2515,45 @@
                                 </td>
                                 ${state.isAdmin ? `
                                     <td>
-                                        <span class="table-primary">
-                                            <strong>${escapeHtml(
-                                                item.memberName || "—"
-                                            )}</strong>
-                                            <small>${escapeHtml(
-                                                item.membershipCode || "—"
-                                            )}</small>
+                                        <span class="borrower-cell">
+                                            <span class="avatar avatar--person avatar--small">
+                                                ${icon("i-user")}
+                                            </span>
+                                            <span class="table-primary">
+                                                <strong>${escapeHtml(
+                                                    item.memberName
+                                                        || item.fullName
+                                                        || item.username
+                                                        || item.memberEmail
+                                                        || "—"
+                                                )}</strong>
+                                                <small>${escapeHtml(
+                                                    item.membershipCode
+                                                        || "—"
+                                                )}</small>
+                                                <small>${escapeHtml(
+                                                    item.memberEmail
+                                                        || item.email
+                                                        || "—"
+                                                )}</small>
+                                                <small>${escapeHtml(
+                                                    item.memberPhone
+                                                        || item.phone
+                                                        || "—"
+                                                )}</small>
+                                            </span>
                                         </span>
                                     </td>
                                 ` : ""}
-                                <td>${formatDate(item.borrowedAt)}</td>
-                                <td>${formatDate(item.dueAt)}</td>
+                                <td>${formatDateTime(item.borrowedAt)}</td>
+                                <td>${formatDateTime(item.dueAt)}</td>
+                                <td>
+                                    ${item.returnedAt
+                                        ? formatDateTime(item.returnedAt)
+                                        : `<span class="muted">${translate(
+                                            "Chưa trả"
+                                        )}</span>`}
+                                </td>
                                 <td>${borrowingStatus(item)}</td>
                                 ${options.canReturn ? `
                                     <td>
@@ -1593,6 +2650,46 @@
                     </label>
                 </div>
 
+                <div class="maintenance-guide" aria-label="Cách thức hoạt động">
+                    <div class="maintenance-guide__intro">
+                        <span class="section-kicker">Cách thức hoạt động</span>
+                        <h2>Chế độ bảo trì được sử dụng như thế nào?</h2>
+                        <p>
+                            Dùng chế độ này khi nâng cấp ứng dụng, sửa dữ liệu
+                            hoặc thực hiện công việc cần tạm dừng giao dịch.
+                        </p>
+                    </div>
+                    <div class="maintenance-guide__steps">
+                        <article>
+                            <strong>01</strong>
+                            <h3>Khi bật chế độ bảo trì</h3>
+                            <p>
+                                Các API sách, thành viên và mượn trả sẽ trả về
+                                HTTP 503 Service Unavailable cùng thông báo ở
+                                bên dưới.
+                            </p>
+                        </article>
+                        <article>
+                            <strong>02</strong>
+                            <h3>API vẫn được phép</h3>
+                            <p>
+                                Đăng nhập, kiểm tra trạng thái và API cấu hình
+                                vẫn hoạt động để quản trị viên có thể quay lại
+                                trang này và tắt bảo trì.
+                            </p>
+                        </article>
+                        <article>
+                            <strong>03</strong>
+                            <h3>Cách sử dụng an toàn</h3>
+                            <p>
+                                Nhập thông báo cho người dùng, bật công tắc rồi
+                                nhấn Lưu cấu hình. Khi hoàn tất bảo trì, tắt
+                                công tắc và lưu lại.
+                            </p>
+                        </article>
+                    </div>
+                </div>
+
                 <div class="card">
                     <div class="card-heading">
                         <div>
@@ -1677,56 +2774,138 @@
     }
 
     async function renderAccountPage() {
+        const profile = await api("/api/profile");
+        state.profile = profile;
+        const profileIncomplete = !state.isAdmin
+            && (
+                profile.profileComplete === false
+                || !profile.phone
+                || !profile.dateOfBirth
+            );
+
         elements.pageContent.innerHTML = `
             <section class="page-section">
                 <div class="section-heading">
                     <div>
                         <h2>Thông tin và bảo mật</h2>
-                        <p>Quản lý email và mật khẩu đăng nhập.</p>
+                        <p>Quản lý hồ sơ, email và mật khẩu đăng nhập.</p>
                     </div>
                 </div>
 
+                ${profileIncomplete ? `
+                    <div class="profile-completion-alert" role="alert">
+                        <span>${icon("i-alert")}</span>
+                        <div>
+                            <strong>Thông tin cá nhân chưa đầy đủ</strong>
+                            <p>
+                                Vui lòng cập nhật số điện thoại và ngày sinh
+                                để thư viện có thể liên hệ và hỗ trợ việc
+                                mượn trả sách.
+                            </p>
+                        </div>
+                        <button type="button" class="button button--secondary"
+                                data-focus-profile>
+                            Cập nhật ngay
+                        </button>
+                    </div>
+                ` : ""}
+
                 <div class="settings-grid">
-                    <div class="card">
+                    <div class="card account-profile-card">
                         <div class="card-heading">
                             <div>
                                 <h2>Thông tin tài khoản</h2>
-                                <p>Dữ liệu trong access token hiện tại.</p>
+                                <p>
+                                    Cập nhật thông tin hiển thị và thông tin
+                                    liên hệ của bạn.
+                                </p>
                             </div>
                         </div>
                         <div class="card-body">
                             <div class="profile-summary">
-                                <span class="avatar">
-                                    ${escapeHtml(
-                                        displayName().slice(0, 1)
-                                    )}
+                                <span class="avatar avatar--person avatar--large">
+                                    ${icon("i-user")}
                                 </span>
                                 <div>
-                                    <h3>${escapeHtml(displayName())}</h3>
+                                    <h3>${escapeHtml(
+                                        profile.fullName
+                                            || profile.username
+                                            || profile.email
+                                    )}</h3>
                                     <p>${state.isAdmin
                                         ? "Quản trị viên hệ thống"
                                         : "Thành viên thư viện"}</p>
                                 </div>
                             </div>
-                            <div class="detail-list">
-                                <div class="detail-row">
-                                    <span>Tên đăng nhập</span>
-                                    <strong>${escapeHtml(
-                                        state.user.username
-                                    )}</strong>
-                                </div>
-                                <div class="detail-row">
+                            <form id="profile-form" class="form-grid">
+                                <label class="field">
+                                    <span>Tên người dùng *</span>
+                                    <input name="username" required
+                                           minlength="3" maxlength="50"
+                                           autocomplete="username"
+                                           value="${attribute(
+                                               profile.username
+                                           )}">
+                                </label>
+                                <label class="field">
                                     <span>Email</span>
-                                    <strong>${escapeHtml(
-                                        state.user.email
-                                    )}</strong>
+                                    <input type="email" readonly
+                                           value="${attribute(profile.email)}">
+                                </label>
+                                ${state.isAdmin ? "" : `
+                                    <label class="field">
+                                        <span>Họ và tên</span>
+                                        <input name="fullName" maxlength="150"
+                                               autocomplete="name"
+                                               value="${attribute(
+                                                   profile.fullName
+                                               )}">
+                                    </label>
+                                    <label class="field">
+                                        <span>Số điện thoại *</span>
+                                        <input name="phone" maxlength="20"
+                                               autocomplete="tel"
+                                               required
+                                               value="${attribute(
+                                                   profile.phone
+                                               )}">
+                                    </label>
+                                    <label class="field">
+                                        <span>Ngày sinh *</span>
+                                        <input name="dateOfBirth" type="date"
+                                               max="${today()}" required
+                                               value="${attribute(
+                                                   profile.dateOfBirth
+                                               )}">
+                                    </label>
+                                    <label class="field">
+                                        <span>Mã thành viên</span>
+                                        <input readonly value="${attribute(
+                                            profile.membershipCode || "—"
+                                        )}">
+                                    </label>
+                                    <label class="field field--full">
+                                        <span>Địa chỉ</span>
+                                        <textarea name="address"
+                                                  maxlength="500">${escapeHtml(
+                                                      profile.address || ""
+                                                  )}</textarea>
+                                    </label>
+                                `}
+                                <div class="action-row field--full">
+                                    <button type="submit"
+                                            class="button button--primary">
+                                        Lưu hồ sơ
+                                    </button>
+                                    <span class="profile-role">
+                                        <span>Quyền</span>
+                                        <strong>${state.isAdmin
+                                            ? "ADMIN" : "USER"}</strong>
+                                    </span>
                                 </div>
-                                <div class="detail-row">
-                                    <span>Quyền</span>
-                                    <strong>${state.isAdmin
-                                        ? "ADMIN" : "USER"}</strong>
-                                </div>
-                            </div>
+                                <p id="profile-form-error"
+                                   class="form-error field--full hidden"></p>
+                            </form>
                         </div>
                     </div>
 
@@ -1785,7 +2964,8 @@
                         </div>
                     </div>
 
-                    <div class="card">
+                    <div id="email-verification-card"
+                         class="card hidden">
                         <div class="card-heading">
                             <div>
                                 <h2>Xác minh email mới</h2>
@@ -1818,6 +2998,52 @@
     }
 
     function bindAccountForms() {
+        document.querySelector("[data-focus-profile]")
+            ?.addEventListener("click", () => {
+                document.querySelector("#profile-form")
+                    ?.scrollIntoView({behavior: "smooth", block: "center"});
+                document.querySelector(
+                    "#profile-form [name='phone']"
+                )?.focus({preventScroll: true});
+            });
+
+        document.querySelector("#profile-form")
+            .addEventListener("submit", async (event) => {
+                event.preventDefault();
+                const form = event.currentTarget;
+                const button = form.querySelector("[type='submit']");
+                const raw = formDataToObject(form);
+                const payload = {
+                    username: raw.username.trim(),
+                    fullName: emptyToNull(raw.fullName),
+                    dateOfBirth: emptyToNull(raw.dateOfBirth),
+                    phone: emptyToNull(raw.phone),
+                    address: emptyToNull(raw.address)
+                };
+                setButtonLoading(button, true, t("Đang cập nhật..."));
+                try {
+                    const updated = await api("/api/profile", {
+                        method: "PUT",
+                        body: JSON.stringify(payload)
+                    });
+                    state.profile = updated;
+                    state.user = {
+                        ...state.user,
+                        username: updated.username,
+                        email: updated.email
+                    };
+                    hydrateUserIdentity();
+                    toast(
+                        t("Đã cập nhật hồ sơ"),
+                        t("Thông tin cá nhân đã được lưu.")
+                    );
+                    await renderAccountPage();
+                } catch (error) {
+                    showFormError("#profile-form-error", error);
+                    setButtonLoading(button, false);
+                }
+            });
+
         document.querySelector("#change-password-form")
             .addEventListener("submit", async (event) => {
                 event.preventDefault();
@@ -1845,7 +3071,8 @@
         document.querySelector("#email-request-form")
             .addEventListener("submit", async (event) => {
                 event.preventDefault();
-                const button = event.currentTarget
+                const form = event.currentTarget;
+                const button = form
                     .querySelector("[type='submit']");
                 setButtonLoading(button, true, "Đang gửi...");
                 try {
@@ -1854,12 +3081,24 @@
                         {
                             method: "POST",
                             body: JSON.stringify(
-                                formDataToObject(event.currentTarget)
+                                formDataToObject(form)
                             )
                         }
                     );
                     toast("Đã gửi mã xác minh", result.message);
-                    event.currentTarget.reset();
+                    form.reset();
+                    const verificationCard = document.querySelector(
+                        "#email-verification-card"
+                    );
+                    if (verificationCard) {
+                        verificationCard.classList.remove("hidden");
+                        verificationCard.scrollIntoView({
+                            behavior: "smooth",
+                            block: "center"
+                        });
+                        verificationCard.querySelector("[name='code']")
+                            ?.focus({preventScroll: true});
+                    }
                 } catch (error) {
                     showFormError("#email-request-error", error);
                 } finally {
@@ -1893,56 +3132,97 @@
     }
 
     function openPasswordRecoveryModal(resetToken = "") {
+        const token = typeof resetToken === "string"
+            ? resetToken.trim()
+            : "";
+        const isLocalEnvironment = [
+            "localhost",
+            "127.0.0.1"
+        ].includes(window.location.hostname);
+
         openModal({
-            title: "Khôi phục mật khẩu",
-            subtitle: "Yêu cầu email đặt lại hoặc nhập token đã nhận.",
-            body: `
-                <div class="form-stack">
-                    <form id="forgot-form" class="form-stack">
-                        <label class="field">
-                            <span>Email đăng ký</span>
-                            <input name="email" type="email" required
-                                   placeholder="email@example.com">
-                        </label>
-                        <button type="submit"
-                                class="button button--secondary">
-                            Gửi email khôi phục
-                        </button>
-                        <p id="forgot-form-error"
-                           class="form-error hidden"></p>
-                    </form>
-                    <hr style="border:0;border-top:1px solid var(--border);width:100%">
-                    <form id="reset-form" class="form-stack">
-                        <label class="field">
-                            <span>Token đặt lại mật khẩu</span>
-                            <input name="token" required
-                                   value="${attribute(resetToken)}">
-                        </label>
+            title: token
+                ? "Đặt mật khẩu mới"
+                : "Quên mật khẩu",
+            subtitle: token
+                ? "Liên kết đã được xác nhận. Hãy tạo mật khẩu mới."
+                : "Nhập email đăng ký để nhận liên kết đặt lại mật khẩu.",
+            body: token
+                ? `
+                    <form id="reset-form"
+                          class="form-stack recovery-form">
+                        <input name="token" type="hidden"
+                               value="${attribute(token)}">
                         <label class="field">
                             <span>Mật khẩu mới</span>
                             <input name="newPassword" type="password"
-                                   required>
+                                   autocomplete="new-password"
+                                   required placeholder="Nhập mật khẩu mới">
+                            <small>
+                                Gồm chữ hoa, chữ thường, số và ký tự đặc biệt.
+                            </small>
+                        </label>
+                        <label class="field">
+                            <span>Nhập lại mật khẩu mới</span>
+                            <input name="confirmPassword" type="password"
+                                   autocomplete="new-password"
+                                   required placeholder="Nhập lại mật khẩu">
                         </label>
                         <button type="submit"
-                                class="button button--primary">
-                            Đặt lại mật khẩu
+                                class="button button--primary button--full">
+                            Cập nhật mật khẩu
                         </button>
                         <p id="reset-form-error"
                            class="form-error hidden"></p>
                     </form>
-                </div>
-            `,
+                `
+                : `
+                    <div class="recovery-steps">
+                        <div><span>1</span> Nhập email đăng ký</div>
+                        <div><span>2</span> Mở liên kết trong email</div>
+                        <div><span>3</span> Tạo mật khẩu mới</div>
+                    </div>
+                    <form id="forgot-form" class="form-stack">
+                        <label class="field">
+                            <span>Email đăng ký</span>
+                            <input name="email" type="email"
+                                   autocomplete="email" required
+                                   placeholder="email@example.com">
+                        </label>
+                        <button type="submit"
+                                class="button button--primary button--full">
+                            Gửi liên kết đặt lại mật khẩu
+                        </button>
+                        <p id="forgot-form-error"
+                           class="form-error hidden"></p>
+                    </form>
+                    <div id="forgot-success"
+                         class="recovery-success hidden">
+                        <strong>Hãy kiểm tra hộp thư của bạn</strong>
+                        <p>
+                            Nếu email thuộc một tài khoản hợp lệ,
+                            hệ thống đã gửi liên kết có hiệu lực trong 30 phút.
+                            Kiểm tra cả thư mục spam hoặc thư rác.
+                        </p>
+                        ${isLocalEnvironment
+                            ? `<a href="http://localhost:8025"
+                                  target="_blank" rel="noopener">
+                                   Mở hộp thư thử nghiệm Mailpit
+                               </a>`
+                            : ""}
+                    </div>
+                `,
             showFooter: false
         });
 
         document.querySelector("#forgot-form")
-            .addEventListener("submit", async (event) => {
+            ?.addEventListener("submit", async (event) => {
                 event.preventDefault();
                 const button = event.currentTarget
                     .querySelector("[type='submit']");
                 setButtonLoading(button, true, "Đang gửi...");
                 try {
-                    const result = await api(
+                    await api(
                         "/api/auth/forgot-password",
                         {
                             method: "POST",
@@ -1952,7 +3232,13 @@
                         },
                         false
                     );
-                    toast("Đã tiếp nhận yêu cầu", result.message);
+                    event.currentTarget.classList.add("hidden");
+                    document.querySelector("#forgot-success")
+                        .classList.remove("hidden");
+                    toast(
+                        "Đã gửi hướng dẫn",
+                        "Hãy kiểm tra email để tiếp tục."
+                    );
                 } catch (error) {
                     showFormError("#forgot-form-error", error);
                 } finally {
@@ -1961,24 +3247,35 @@
             });
 
         document.querySelector("#reset-form")
-            .addEventListener("submit", async (event) => {
+            ?.addEventListener("submit", async (event) => {
                 event.preventDefault();
                 const button = event.currentTarget
                     .querySelector("[type='submit']");
+                const data = formDataToObject(event.currentTarget);
+                if (data.newPassword !== data.confirmPassword) {
+                    showFormError(
+                        "#reset-form-error",
+                        {message: "Mật khẩu nhập lại không khớp."}
+                    );
+                    return;
+                }
+                delete data.confirmPassword;
                 setButtonLoading(button, true, "Đang cập nhật...");
                 try {
-                    const result = await api(
+                    await api(
                         "/api/auth/reset-password",
                         {
                             method: "POST",
-                            body: JSON.stringify(
-                                formDataToObject(event.currentTarget)
-                            )
+                            body: JSON.stringify(data)
                         },
                         false
                     );
                     closeModal();
-                    setAuthMessage(result.message, "success");
+                    setAuthMessage(
+                        "Đặt lại mật khẩu thành công. "
+                            + "Bạn có thể đăng nhập bằng mật khẩu mới.",
+                        "success"
+                    );
                 } catch (error) {
                     showFormError("#reset-form-error", error);
                     setButtonLoading(button, false);
@@ -2103,6 +3400,7 @@
     function forceLogout() {
         clearTokens();
         state.user = null;
+        state.profile = null;
         state.isAdmin = false;
         state.books.clear();
         state.members.clear();
@@ -2309,7 +3607,11 @@
                             aria-label="Trang trước">
                         ${icon("i-chevron-left")}
                     </button>
-                    <span class="page-number">${response.page + 1}</span>
+                    ${paginationNumbers(
+                        response.page,
+                        response.totalPages,
+                        namespace
+                    )}
                     <button class="icon-button"
                             data-${namespace}-page="${response.page + 1}"
                             ${response.last ? "disabled" : ""}
@@ -2319,6 +3621,66 @@
                 </span>
             </div>
         `;
+    }
+
+    function paginationNumbers(
+            currentPage,
+            totalPages,
+            namespace
+    ) {
+        const visiblePages = new Set([
+            0,
+            totalPages - 1,
+            currentPage - 1,
+            currentPage,
+            currentPage + 1
+        ]);
+
+        if (totalPages <= 7) {
+            for (let page = 0; page < totalPages; page++) {
+                visiblePages.add(page);
+            }
+        } else if (currentPage <= 3) {
+            [0, 1, 2, 3, 4].forEach(
+                (page) => visiblePages.add(page)
+            );
+        } else if (currentPage >= totalPages - 4) {
+            for (
+                let page = totalPages - 5;
+                page < totalPages;
+                page++
+            ) {
+                visiblePages.add(page);
+            }
+        }
+
+        const pages = [...visiblePages]
+            .filter((page) =>
+                page >= 0 && page < totalPages
+            )
+            .sort((left, right) => left - right);
+
+        const items = [];
+        pages.forEach((page, index) => {
+            if (index > 0 && page - pages[index - 1] > 1) {
+                items.push(
+                    '<span class="page-ellipsis">…</span>'
+                );
+            }
+            items.push(`
+                <button type="button"
+                        class="page-number-button
+                            ${page === currentPage ? "active" : ""}"
+                        data-${namespace}-page="${page}"
+                        aria-label="Trang ${page + 1}"
+                        ${page === currentPage
+                            ? 'aria-current="page"'
+                            : ""}>
+                    ${page + 1}
+                </button>
+            `);
+        });
+        return items.join("");
     }
 
     function availabilityBadge(book) {
@@ -2437,29 +3799,51 @@
     }
 
     function displayName() {
-        return state.user?.username || state.user?.email || "Bạn";
+        return state.profile?.fullName
+            || state.profile?.username
+            || state.user?.username
+            || state.user?.email
+            || (state.locale === "en" ? "You" : "Bạn");
     }
 
     function icon(name) {
         return `<svg aria-hidden="true"><use href="#${name}"></use></svg>`;
     }
 
-    function bookInitials(title) {
-        const words = String(title || "Sách")
-            .trim()
-            .split(/\s+/)
-            .filter(Boolean);
-        if (!words.length) {
-            return "S";
-        }
-        return words.slice(0, 2)
-            .map((word) => word.charAt(0))
-            .join("")
-            .toUpperCase();
+    function bookCover(book, modifier = "") {
+        const fileKey = book.isbn
+            ? String(book.isbn)
+                .trim()
+                .replace(/[^a-zA-Z0-9]/g, "")
+            : String(book.id || "unknown")
+                .trim()
+                .replace(/[^a-zA-Z0-9_-]/g, "");
+        const encodedKey = encodeURIComponent(fileKey);
+        const extensions = ["jpg", "jpeg", "png", "webp"];
+        const candidates = extensions.flatMap((extension) => [
+            `/assets/images/books/${encodedKey}.${extension}`
+                + `?v=${COVER_ASSET_VERSION}`,
+            `/assets/images/${encodedKey}.${extension}`
+                + `?v=${COVER_ASSET_VERSION}`
+        ]);
+        return `
+            <span class="book-cover-frame ${modifier}"
+                  data-cover-frame
+                  aria-label="Vị trí ảnh bìa sách">
+                <img src="${candidates[0]}"
+                      alt="Bìa sách ${attribute(book.title)}"
+                      loading="lazy"
+                      data-cover-index="0"
+                      data-cover-candidates="${attribute(candidates.join("|"))}"
+                      data-book-cover>
+                <span class="book-cover-empty" aria-hidden="true"></span>
+            </span>
+        `;
     }
 
     function formatLongDate(value) {
-        const formatted = new Intl.DateTimeFormat("vi-VN", {
+        const formatted = new Intl.DateTimeFormat(
+            state.locale === "en" ? "en-US" : "vi-VN", {
             weekday: "long",
             day: "2-digit",
             month: "long",
@@ -2476,7 +3860,8 @@
         if (Number.isNaN(date.getTime())) {
             return value;
         }
-        return new Intl.DateTimeFormat("vi-VN", {
+        return new Intl.DateTimeFormat(
+            state.locale === "en" ? "en-US" : "vi-VN", {
             day: "2-digit",
             month: "2-digit",
             year: "numeric"
@@ -2488,12 +3873,18 @@
             return "—";
         }
         const date = new Date(value);
-        return new Intl.DateTimeFormat("vi-VN", {
+        if (Number.isNaN(date.getTime())) {
+            return value;
+        }
+        return new Intl.DateTimeFormat(
+            state.locale === "en" ? "en-US" : "vi-VN", {
             day: "2-digit",
             month: "2-digit",
             year: "numeric",
             hour: "2-digit",
-            minute: "2-digit"
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: false
         }).format(date);
     }
 

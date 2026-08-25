@@ -33,6 +33,10 @@ public class MemberMapper {
                 profile.getUser().isEnabled(),
                 profile.getUser().isEmailVerified(),
                 profile.getUser().isAccountNonLocked(),
+                profile.getUser().getPassword() != null
+                        && !profile.getUser()
+                            .getPassword()
+                            .isBlank(),
                 roles,
                 profile.getCreatedAt(),
                 profile.getUpdatedAt()

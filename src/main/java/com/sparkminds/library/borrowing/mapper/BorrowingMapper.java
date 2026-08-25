@@ -14,6 +14,8 @@ public class BorrowingMapper {
     public BorrowingResponse toResponse(
             Borrowing borrowing
     ) {
+        String memberName = resolveMemberName(borrowing);
+
         boolean overdue =
                 borrowing.getStatus()
                     == BorrowingStatus.BORROWED
@@ -25,7 +27,9 @@ public class BorrowingMapper {
                 borrowing.getId(),
                 borrowing.getMember().getId(),
                 borrowing.getMember().getMembershipCode(),
-                borrowing.getMember().getFullName(),
+                memberName,
+                borrowing.getMember().getUser().getEmail(),
+                borrowing.getMember().getPhone(),
                 borrowing.getBook().getId(),
                 borrowing.getBook().getIsbn(),
                 borrowing.getBook().getTitle(),
@@ -35,5 +39,27 @@ public class BorrowingMapper {
                 borrowing.getReturnedAt(),
                 overdue
         );
+    }
+
+    private String resolveMemberName(Borrowing borrowing) {
+        String fullName =
+                borrowing.getMember().getFullName();
+
+        if (fullName != null && !fullName.isBlank()) {
+            return fullName;
+        }
+
+        String username =
+                borrowing.getMember()
+                    .getUser()
+                    .getUsername();
+
+        if (username != null && !username.isBlank()) {
+            return username;
+        }
+
+        return borrowing.getMember()
+                .getUser()
+                .getEmail();
     }
 }

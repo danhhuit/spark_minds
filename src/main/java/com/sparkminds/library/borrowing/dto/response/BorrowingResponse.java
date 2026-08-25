@@ -9,6 +9,8 @@ public record BorrowingResponse(
         Long memberId,
         String membershipCode,
         String memberName,
+        String memberEmail,
+        String memberPhone,
         Long bookId,
         String isbn,
         String bookTitle,

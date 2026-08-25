@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.sparkminds.library.config.DocumentationIntegrationTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.752 s -- in com.sparkminds.library.config.DocumentationIntegrationTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.823 s -- in com.sparkminds.library.config.DocumentationIntegrationTest

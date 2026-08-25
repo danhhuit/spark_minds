@@ -17,6 +17,22 @@ public interface UserAccountRepository
 
     boolean existsByEmailIgnoreCase(String email);
 
+    boolean existsByUsernameIgnoreCaseAndIdNot(
+            String username,
+            Long id
+    );
+
+    boolean existsByEmailIgnoreCaseAndIdNot(
+            String email,
+            Long id
+    );
+
+    @EntityGraph(attributePaths = {
+            "roles",
+            "memberProfile"
+    })
+    Optional<UserAccount> findDetailedById(Long id);
+
     @EntityGraph(attributePaths = "roles")
     Optional<UserAccount> findByUsernameIgnoreCaseOrEmailIgnoreCase(
             String username,

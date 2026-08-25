@@ -53,16 +53,16 @@ public class MailService {
                 message.setFrom(mailFrom);
                 message.setTo(recipient);
                 message.setSubject(
-                                "Reset your library account password");
+                                "Đặt lại mật khẩu Spark Library");
                 message.setText(
-                                "A password reset was requested "
-                                                + "for your account.\n\n"
-                                                + "Open the link below to set "
-                                                + "a new password:\n"
+                                "Hệ thống vừa nhận được yêu cầu đặt lại "
+                                                + "mật khẩu cho tài khoản của bạn.\n\n"
+                                                + "Nhấn vào liên kết dưới đây để "
+                                                + "tạo mật khẩu mới:\n"
                                                 + resetUrl
-                                                + "\n\nThis token expires in 30 minutes.\n"
-                                                + "If you did not request this, "
-                                                + "ignore this email.");
+                                                + "\n\nLiên kết có hiệu lực trong 30 phút.\n"
+                                                + "Nếu bạn không gửi yêu cầu này, "
+                                                + "hãy bỏ qua email.");
 
                 mailSender.send(message);
         }
