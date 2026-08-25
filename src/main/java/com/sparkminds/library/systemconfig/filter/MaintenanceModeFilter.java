@@ -32,7 +32,10 @@ public class MaintenanceModeFilter
             return true;
         }
 
-        if (path.equals("/api/auth/login")) {
+        if (path.equals("/api/auth/login")
+                || path.equals(
+                        "/api/auth/social/exchange"
+                )) {
             return true;
         }
 

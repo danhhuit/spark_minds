@@ -311,6 +311,17 @@ h2,
     background: #88352d;
 }
 
+.auth-card .button--google {
+    color: var(--library-navy);
+    border-color: var(--library-line);
+    background: #fff;
+}
+
+.auth-card .button--google:hover {
+    border-color: #aeb8c0;
+    background: #f8f8f6;
+}
+
 .password-toggle {
     color: var(--library-muted);
 }

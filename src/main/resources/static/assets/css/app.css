@@ -366,6 +366,24 @@ svg {
     text-align: center;
 }
 
+.auth-divider {
+    display: flex;
+    margin: 22px 0 17px;
+    align-items: center;
+    gap: 12px;
+    color: var(--ink-500);
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    height: 1px;
+    flex: 1;
+    content: "";
+    background: var(--border);
+}
+
 .text-button {
     display: inline;
     padding: 0;
@@ -466,6 +484,28 @@ svg {
     width: 100%;
     min-height: 48px;
     margin-top: 4px;
+}
+
+.button--google {
+    margin-top: 0;
+    color: var(--ink-800);
+    border-color: var(--border);
+    background: var(--surface);
+    text-decoration: none;
+}
+
+.button--google:hover {
+    color: var(--ink-950);
+    border-color: #bdcac6;
+    background: var(--surface-soft);
+}
+
+.button--google .google-mark {
+    width: 19px;
+    height: 19px;
+    flex: 0 0 auto;
+    fill: initial;
+    stroke: none;
 }
 
 .icon-button {

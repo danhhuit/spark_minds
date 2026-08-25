@@ -138,6 +138,18 @@ public class GlobalExceptionHandler {
                                 errors);
         }
 
+        @ExceptionHandler(InvalidSocialLoginCodeException.class)
+        public ResponseEntity<ApiErrorResponse>
+        handleInvalidSocialLoginCode(
+                        InvalidSocialLoginCodeException exception,
+                        HttpServletRequest request) {
+                return build(
+                                HttpStatus.UNAUTHORIZED,
+                                exception.getMessage(),
+                                request,
+                                Map.of());
+        }
+
         @ExceptionHandler(ConstraintViolationException.class)
         public ResponseEntity<ApiErrorResponse> handleConstraintViolation(
                         ConstraintViolationException exception,

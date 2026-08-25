@@ -44,3 +44,9 @@ databaseChangeLog:
   - include:
       file: changes/014-seed-extended-book-catalog.yaml
       relativeToChangelogFile: true
+  - include:
+      file: changes/015-create-oauth-identities.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: changes/016-create-social-login-codes.yaml
+      relativeToChangelogFile: true

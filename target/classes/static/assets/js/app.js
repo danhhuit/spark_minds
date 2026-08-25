@@ -28,6 +28,10 @@
         "Quên mật khẩu?": "Forgot password?",
         "Chưa có tài khoản?": "New to the library?",
         "Đăng ký ngay": "Create an account",
+        "Hoặc": "Or",
+        "Tiếp tục với Google": "Continue with Google",
+        "Đăng nhập Google thành công": "Google sign-in successful",
+        "Không thể đăng nhập bằng Google. Vui lòng thử lại.": "Unable to sign in with Google. Please try again.",
         "Thành viên mới": "New member",
         "Tạo tài khoản": "Create account",
         "Chúng tôi sẽ gửi liên kết xác minh đến email của bạn.": "We will send a verification link to your email.",
@@ -285,10 +289,227 @@
         ,"Mở chi tiết": "View details"
         ,"Chỉnh sửa sách": "Edit book"
         ,"Mô tả đang được cập nhật.": "The description is being updated."
+        ,"Bạn": "You"
+        ,"Cấu hình hệ thống": "System configuration"
+        ,"Chào mừng bạn trở lại.": "Welcome back."
+        ,"Đang đăng nhập...": "Signing in..."
+        ,"Đăng nhập thành công": "Signed in successfully"
+        ,"Đang tạo...": "Creating..."
+        ,"Đăng ký thành công. Hãy kiểm tra email để xác minh.": "Registration successful. Check your email to verify your account."
+        ,"Sách trước": "Previous books"
+        ,"Sách tiếp theo": "Next books"
+        ,"đầu sách phù hợp": "matching books"
+        ,"đầu sách trong danh mục": "books in the catalog"
+        ,"Ngừng hoạt động": "Deactivate"
+        ,"Đang mượn...": "Borrowing..."
+        ,"Mượn sách thành công": "Book borrowed successfully"
+        ,"Không thể mượn sách": "Unable to borrow the book"
+        ,"Cập nhật sách": "Update book"
+        ,"Thêm sách mới": "Add a new book"
+        ,"Các trường có dấu * là bắt buộc.": "Fields marked with * are required."
+        ,"Mô tả ngắn về cuốn sách": "A short description of the book"
+        ,"Đang lưu...": "Saving..."
+        ,"Đang bỏ lưu...": "Removing..."
+        ,"Đã cập nhật sách": "Book updated"
+        ,"Đã thêm sách": "Book added"
+        ,"Không thể cập nhật": "Unable to update"
+        ,"Ngừng hoạt động sách?": "Deactivate this book?"
+        ,"Đang xử lý...": "Processing..."
+        ,"Đã cập nhật trạng thái sách": "Book status updated"
+        ,"Nhập sách từ CSV": "Import books from CSV"
+        ,"Dung lượng tối đa 5 MB, chỉ hỗ trợ file .csv.": "Maximum size is 5 MB. Only .csv files are supported."
+        ,"Nhập dữ liệu": "Import data"
+        ,"Đang nhập...": "Importing..."
+        ,"Nhập CSV thành công": "CSV imported successfully"
+        ,"Ví dụ: Member@123": "Example: Member@123"
+        ,"Đã cập nhật thành viên": "Member updated"
+        ,"Đã tạo thành viên": "Member created"
+        ,"Vô hiệu hóa thành viên?": "Disable this member?"
+        ,"Đã vô hiệu hóa thành viên": "Member disabled"
+        ,"Không thể vô hiệu hóa": "Unable to disable the member"
+        ,"Cảm ơn bạn!": "Thank you!"
+        ,"Trả sách thành công": "Book returned successfully"
+        ,"Không thể trả sách": "Unable to return the book"
+        ,"Đã lưu cấu hình": "Configuration saved"
+        ,"Hệ thống đang ở chế độ bảo trì.": "The system is in maintenance mode."
+        ,"Hệ thống hoạt động bình thường.": "The system is operating normally."
+        ,"Đã gửi mã xác minh": "Verification code sent"
+        ,"Đang gửi...": "Sending..."
+        ,"Đang xác minh...": "Verifying..."
+        ,"Đổi email thành công": "Email changed successfully"
+        ,"Vui lòng đăng nhập lại bằng email mới.": "Sign in again with your new email."
+        ,"Đổi mật khẩu thành công": "Password changed successfully"
+        ,"Vui lòng đăng nhập lại.": "Please sign in again."
+        ,"Bạn có thể đăng nhập bằng mật khẩu mới.": "You can sign in with your new password."
+        ,"Không thể kết nối tới hệ thống. Hãy kiểm tra server.": "Unable to connect to the system. Check the server."
+        ,"Chưa cập nhật tác giả": "Authors not yet provided"
+        ,"Vị trí ảnh bìa sách": "Book cover area"
+        ,"Về trang chủ": "Back to home"
+        ,"Dashboard": "Dashboard"
+        ,"Bảng điều khiển": "Dashboard"
+        ,"cuốn": "copies"
+        ,"Công nghệ": "Technology"
+        ,"Khoa học": "Science"
+        ,"Lịch sử": "History"
+        ,"Tâm lý học": "Psychology"
+        ,"Phát triển bản thân": "Self Development"
+        ,"Kinh doanh": "Business"
+        ,"Văn học": "Literature"
     };
     const VI_TEXT = Object.fromEntries(
         Object.entries(EN_TEXT).map(([vi, en]) => [en, vi])
     );
+
+    const API_TEXT_VI = {
+        "Validation failed": "Dữ liệu không hợp lệ",
+        "Invalid username, password, or account status": "Tên đăng nhập, mật khẩu hoặc trạng thái tài khoản không hợp lệ",
+        "Email is required": "Email là bắt buộc",
+        "Email format is invalid": "Định dạng email không hợp lệ",
+        "Email is too long": "Email quá dài",
+        "Password is required": "Mật khẩu là bắt buộc",
+        "Current password is required": "Mật khẩu hiện tại là bắt buộc",
+        "New password is required": "Mật khẩu mới là bắt buộc",
+        "Password must contain 8-72 characters, uppercase, lowercase, number and special character": "Mật khẩu phải dài 8–72 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt",
+        "Username or email is required": "Tên đăng nhập hoặc email là bắt buộc",
+        "Refresh token is required": "Refresh token là bắt buộc",
+        "Reset token is required": "Token đặt lại mật khẩu là bắt buộc",
+        "New email is required": "Email mới là bắt buộc",
+        "New email format is invalid": "Định dạng email mới không hợp lệ",
+        "Verification code is required": "Mã xác minh là bắt buộc",
+        "Verification code must contain 6 digits": "Mã xác minh phải gồm 6 chữ số",
+        "Full name is required": "Họ và tên là bắt buộc",
+        "Date of birth must be in the past": "Ngày sinh phải là một ngày trong quá khứ",
+        "Phone format is invalid": "Định dạng số điện thoại không hợp lệ",
+        "Enabled is required": "Trạng thái hoạt động là bắt buộc",
+        "Account lock status is required": "Trạng thái khóa tài khoản là bắt buộc",
+        "Username is required": "Tên người dùng là bắt buộc",
+        "Username must contain between 3 and 50 characters": "Tên người dùng phải dài từ 3 đến 50 ký tự",
+        "Username may contain only letters, numbers, dots, underscores and hyphens": "Tên người dùng chỉ được chứa chữ, số, dấu chấm, gạch dưới và gạch ngang",
+        "Maintenance status is required": "Trạng thái bảo trì là bắt buộc",
+        "Maintenance message must not exceed 500 characters": "Thông báo bảo trì không được vượt quá 500 ký tự",
+        "Each page contains at most 10 records": "Mỗi trang chỉ được chứa tối đa 10 bản ghi",
+        "Page cannot be negative": "Số trang không được là số âm",
+        "Size must be positive": "Kích thước trang phải lớn hơn 0",
+        "Active status is required": "Trạng thái hoạt động là bắt buộc",
+        "ISBN is required": "ISBN là bắt buộc",
+        "ISBN is too long": "ISBN quá dài",
+        "Title is required": "Tên sách là bắt buộc",
+        "Title is too long": "Tên sách quá dài",
+        "Description is too long": "Mô tả quá dài",
+        "Publisher is too long": "Tên nhà xuất bản quá dài",
+        "Published date cannot be in the future": "Ngày xuất bản không được ở tương lai",
+        "Total quantity cannot be negative": "Tổng số lượng không được là số âm",
+        "Category ID is required": "Danh mục là bắt buộc",
+        "Category ID must be positive": "Mã danh mục phải lớn hơn 0",
+        "Author name cannot be blank": "Tên tác giả không được để trống",
+        "Author name is too long": "Tên tác giả quá dài",
+        "Book ID is required": "Sách là bắt buộc",
+        "Book ID must be positive": "Mã sách phải lớn hơn 0",
+        "Social login code is required": "Mã đăng nhập Google là bắt buộc",
+        "Social login code is invalid": "Mã đăng nhập Google không hợp lệ",
+        "Email has already been registered": "Email đã được đăng ký",
+        "Email cannot be used": "Email này không thể sử dụng",
+        "Username is already in use": "Tên người dùng đã được sử dụng",
+        "Current password is incorrect": "Mật khẩu hiện tại không đúng",
+        "New password must be different from current password": "Mật khẩu mới phải khác mật khẩu hiện tại",
+        "Password reset token is invalid or expired": "Token đặt lại mật khẩu không hợp lệ hoặc đã hết hạn",
+        "Refresh token is invalid or expired": "Refresh token không hợp lệ hoặc đã hết hạn",
+        "Social login code is invalid or expired": "Mã đăng nhập Google không hợp lệ hoặc đã hết hạn",
+        "Verification token is invalid or expired": "Token xác minh không hợp lệ hoặc đã hết hạn",
+        "Email has not been verified": "Email chưa được xác minh",
+        "Member account is disabled": "Tài khoản thành viên đã bị vô hiệu hóa",
+        "Member account is locked": "Tài khoản thành viên đang bị khóa",
+        "Each member can borrow only one book at a time": "Mỗi thành viên chỉ được mượn một cuốn sách tại một thời điểm",
+        "Book is inactive": "Sách đã ngừng hoạt động",
+        "Book is out of stock": "Sách đã hết trong kho",
+        "Book has already been returned": "Sách đã được trả trước đó",
+        "Book inventory is inconsistent": "Số lượng tồn kho của sách không nhất quán",
+        "Inactive books cannot be saved": "Không thể lưu sách đã ngừng hoạt động",
+        "Admin account cannot be modified through member management": "Không thể chỉnh sửa tài khoản admin trong màn hình quản lý thành viên",
+        "Date of birth from must be before date of birth to": "Ngày sinh bắt đầu phải trước ngày sinh kết thúc",
+        "Google account email is not verified": "Email của tài khoản Google chưa được xác minh",
+        "This library account is already linked to another Google account": "Tài khoản thư viện này đã liên kết với một tài khoản Google khác",
+        "Unable to send email": "Không thể gửi email",
+        "File size must not exceed 5 MB": "Dung lượng file không được vượt quá 5 MB",
+        "File must be a CSV document": "File phải có định dạng CSV",
+        "CSV file is required": "Vui lòng chọn file CSV",
+        "CSV file size must not exceed 5 MB": "Dung lượng file CSV không được vượt quá 5 MB",
+        "Only .csv files are supported": "Chỉ hỗ trợ file có phần mở rộng .csv",
+        "CSV file does not contain any data rows": "File CSV không chứa dòng dữ liệu nào",
+        "Cannot read CSV file": "Không thể đọc file CSV",
+        "ISBN has already existed": "ISBN đã tồn tại",
+        "Cannot delete a book that is currently borrowed": "Không thể ngừng hoạt động sách đang được mượn",
+        "Category is inactive": "Danh mục đã ngừng hoạt động",
+        "Published from must be before published to": "Ngày xuất bản bắt đầu phải trước ngày xuất bản kết thúc",
+        "Invalid authenticated user": "Người dùng đã xác thực không hợp lệ",
+        "System is operating normally.": "Hệ thống hoạt động bình thường.",
+        "System is under maintenance.": "Hệ thống đang được bảo trì.",
+        "Registration successful. Please verify your email.": "Đăng ký thành công. Vui lòng xác minh email.",
+        "Email verified successfully. You can now login.": "Xác minh email thành công. Bạn có thể đăng nhập.",
+        "If the email exists, a password reset email was sent.": "Nếu email tồn tại, hệ thống đã gửi thư đặt lại mật khẩu.",
+        "Password reset successfully. Please login again.": "Đặt lại mật khẩu thành công. Vui lòng đăng nhập lại.",
+        "Password changed successfully. Please login again.": "Đổi mật khẩu thành công. Vui lòng đăng nhập lại.",
+        "Verification code was sent to the new email.": "Mã xác minh đã được gửi tới email mới.",
+        "Email changed successfully. Please login again.": "Đổi email thành công. Vui lòng đăng nhập lại.",
+        "Account does not exist": "Tài khoản không tồn tại",
+        "New email must be different from current email": "Email mới phải khác email hiện tại",
+        "No pending email change request": "Không có yêu cầu đổi email nào đang chờ xử lý",
+        "Verification code has expired": "Mã xác minh đã hết hạn",
+        "Maximum verification attempts exceeded": "Đã vượt quá số lần nhập mã xác minh",
+        "Verification code is incorrect": "Mã xác minh không chính xác",
+        "Authenticated user is invalid": "Người dùng đã xác thực không hợp lệ",
+        "New email has already been registered": "Email mới đã được đăng ký",
+        "New username has already been registered": "Tên người dùng mới đã được đăng ký",
+        "Member profile does not exist": "Hồ sơ thành viên không tồn tại",
+        "You cannot return this borrowing": "Bạn không có quyền trả lượt mượn này",
+        "Borrowed book does not exist": "Sách đã mượn không còn tồn tại",
+        "At least one author is required": "Phải có ít nhất một tác giả",
+        "Total quantity cannot be less than borrowed quantity": "Tổng số lượng không được nhỏ hơn số sách đang được mượn"
+    };
+
+    const VI_API_TEXT_EN = Object.fromEntries(
+        Object.entries(API_TEXT_VI)
+            .map(([en, vi]) => [vi, en])
+    );
+
+    const VI_TO_EN_PATTERNS = [
+        [/^Xin chào (.+)$/u, "Hello $1"],
+        [/^Hạn trả: (.+)$/u, "Due: $1"],
+        [/^(\d+) cuốn có sẵn$/u, "$1 copies available"],
+        [/^(\d+) sách đã được thêm\.$/u, "$1 books were added."],
+        [/^Trang (\d+)\/(\d+) · (\d+) kết quả$/u, "Page $1/$2 · $3 results"],
+        [/^(\d+) kết quả$/u, "$1 results"],
+        [/^Mở chi tiết (.+)$/u, "View details for $1"],
+        [/^Bìa sách (.+)$/u, "Cover of $1"],
+        [/^“(.+)” sẽ không còn hiển thị cho thành viên\.$/u, "“$1” will no longer be visible to members."],
+        [/^(.+) sẽ không thể đăng nhập\.$/u, "$1 will no longer be able to sign in."],
+        [/^Yêu cầu thất bại \((\d+)\)$/u, "Request failed ($1)"]
+    ];
+
+    const EN_TO_VI_PATTERNS = [
+        [/^Hello (.+)$/u, "Xin chào $1"],
+        [/^Due: (.+)$/u, "Hạn trả: $1"],
+        [/^(\d+) copies available$/u, "$1 cuốn có sẵn"],
+        [/^(\d+) books were added\.$/u, "$1 sách đã được thêm."],
+        [/^Page (\d+)\/(\d+) · (\d+) results$/u, "Trang $1/$2 · $3 kết quả"],
+        [/^(\d+) results$/u, "$1 kết quả"],
+        [/^View details for (.+)$/u, "Mở chi tiết $1"],
+        [/^Cover of (.+)$/u, "Bìa sách $1"],
+        [/^“(.+)” will no longer be visible to members\.$/u, "“$1” sẽ không còn hiển thị cho thành viên."],
+        [/^(.+) will no longer be able to sign in\.$/u, "$1 sẽ không thể đăng nhập."],
+        [/^Request failed \((\d+)\)$/u, "Yêu cầu thất bại ($1)"],
+        [/^Book does not exist: (.+)$/u, "Không tồn tại sách: $1"],
+        [/^Borrowing does not exist: (.+)$/u, "Không tồn tại lượt mượn: $1"],
+        [/^Member does not exist: (.+)$/u, "Không tồn tại thành viên: $1"],
+        [/^User account does not exist: (.+)$/u, "Không tồn tại tài khoản người dùng: $1"],
+        [/^Category does not exist: (.+)$/u, "Không tồn tại danh mục: $1"],
+        [/^ISBN has already been registered: (.+)$/u, "ISBN đã được đăng ký: $1"],
+        [/^Total quantity cannot be smaller than borrowed quantity: (\d+)$/u,
+            "Tổng số lượng không được nhỏ hơn số sách đang được mượn: $1"],
+        [/^CSV is missing required headers: (.+)$/u,
+            "File CSV thiếu các cột bắt buộc: $1"],
+        [/^CSV line (\d+): (.+)$/u, "Dòng CSV $1: $2"]
+    ];
 
     const state = {
         user: null,
@@ -338,6 +559,22 @@
         bindGlobalEvents();
 
         const parameters = new URLSearchParams(window.location.search);
+        if (parameters.has("socialCode")) {
+            showAuth();
+            await handleSocialLoginCode(
+                parameters.get("socialCode")
+            );
+            return;
+        }
+        if (parameters.has("oauthError")) {
+            showAuth();
+            setAuthMessage(
+                "Không thể đăng nhập bằng Google. Vui lòng thử lại.",
+                "error"
+            );
+            clearAuthQueryParameters();
+            return;
+        }
         if (parameters.has("token")) {
             showAuth();
             await handleVerificationToken();
@@ -383,9 +620,28 @@
     function t(value) {
         const text = String(value ?? "");
         if (state.locale === "en") {
-            return EN_TEXT[text] || text;
+            const exact = EN_TEXT[text]
+                || VI_API_TEXT_EN[text];
+            return exact || applyTranslationPatterns(
+                text,
+                VI_TO_EN_PATTERNS
+            );
         }
-        return VI_TEXT[text] || text;
+        const exact = VI_TEXT[text]
+            || API_TEXT_VI[text];
+        return exact || applyTranslationPatterns(
+            text,
+            EN_TO_VI_PATTERNS
+        );
+    }
+
+    function applyTranslationPatterns(text, patterns) {
+        for (const [pattern, replacement] of patterns) {
+            if (pattern.test(text)) {
+                return text.replace(pattern, replacement);
+            }
+        }
+        return text;
     }
 
     function translateTree(root) {
@@ -650,6 +906,44 @@
                 window.location.pathname
             );
         }
+    }
+
+    async function handleSocialLoginCode(code) {
+        try {
+            const tokens = await api(
+                "/api/auth/social/exchange",
+                {
+                    method: "POST",
+                    body: JSON.stringify({code})
+                },
+                false
+            );
+
+            storeTokens(tokens);
+            state.user = await api("/api/auth/me");
+            clearAuthQueryParameters();
+            await enterApplication();
+            toast(
+                "Đăng nhập Google thành công",
+                "Chào mừng bạn trở lại."
+            );
+        } catch (error) {
+            clearTokens();
+            clearAuthQueryParameters();
+            setAuthMessage(
+                error.message
+                    || "Không thể đăng nhập bằng Google. Vui lòng thử lại.",
+                "error"
+            );
+        }
+    }
+
+    function clearAuthQueryParameters() {
+        window.history.replaceState(
+            {},
+            document.title,
+            window.location.pathname
+        );
     }
 
     async function handleLogin(event) {
@@ -1191,7 +1485,7 @@
                                     <option value="">Tất cả danh mục</option>
                                     ${state.categories.map((category) => `
                                         <option value="${category.id}">
-                                            ${escapeHtml(category.name)}
+                                            ${escapeHtml(t(category.name))}
                                         </option>
                                     `).join("")}
                                 </select>
@@ -1320,7 +1614,7 @@
                             <div>
                                 <small>Danh mục</small>
                                 <strong>${escapeHtml(
-                                    book.category?.name || "Khác"
+                                    t(book.category?.name || "Khác")
                                 )}</strong>
                             </div>
                             <button class="button button--primary button--small"
@@ -1388,7 +1682,7 @@
                                         </span>
                                     </td>
                                     <td>${escapeHtml(
-                                        book.category?.name || "—"
+                                    t(book.category?.name || "—")
                                     )}</td>
                                     <td>${escapeHtml(book.publisher || "—")}</td>
                                     <td>
@@ -1545,7 +1839,7 @@
                     <div class="book-detail-summary">
                         <span class="section-kicker">
                             ${escapeHtml(
-                                book.category?.name || "Khác"
+                                t(book.category?.name || "Khác")
                             )}
                         </span>
                         <h2>${escapeHtml(book.title)}</h2>
@@ -1629,7 +1923,7 @@
                             <div>
                                 <dt>Danh mục</dt>
                                 <dd>${escapeHtml(
-                                    book.category?.name || "Khác"
+                                    t(book.category?.name || "Khác")
                                 )}</dd>
                             </div>
                             <div>
@@ -1730,7 +2024,7 @@
                                 <option value="${category.id}"
                                     ${book?.category?.id === category.id
                                         ? "selected" : ""}>
-                                    ${escapeHtml(category.name)}
+                                    ${escapeHtml(t(category.name))}
                                 </option>
                             `).join("")}
                         </select>
@@ -2550,7 +2844,7 @@
                                 <td>
                                     ${item.returnedAt
                                         ? formatDateTime(item.returnedAt)
-                                        : `<span class="muted">${translate(
+                                        : `<span class="muted">${t(
                                             "Chưa trả"
                                         )}</span>`}
                                 </td>
@@ -2703,7 +2997,7 @@
                                 <span>Nội dung thông báo</span>
                                 <textarea name="message" maxlength="500"
                                     placeholder="Hệ thống đang được bảo trì...">${escapeHtml(
-                                        config.maintenanceMessage || ""
+                                        t(config.maintenanceMessage || "")
                                     )}</textarea>
                             </label>
                             <div class="action-row">
@@ -3340,10 +3634,19 @@
 
         if (!response.ok) {
             const error = new Error(
-                payload?.message || `Yêu cầu thất bại (${response.status})`
+                t(
+                    payload?.message
+                        || `Yêu cầu thất bại (${response.status})`
+                )
             );
             error.status = response.status;
-            error.fieldErrors = payload?.fieldErrors || {};
+            error.fieldErrors = Object.fromEntries(
+                Object.entries(payload?.fieldErrors || {})
+                    .map(([field, message]) => [
+                        field,
+                        t(message)
+                    ])
+            );
             error.payload = payload;
             throw error;
         }
@@ -3435,9 +3738,9 @@
                          aria-labelledby="modal-title">
                     <header class="modal-header">
                         <div>
-                            <h2 id="modal-title">${escapeHtml(title)}</h2>
+                            <h2 id="modal-title">${escapeHtml(t(title))}</h2>
                             ${subtitle
-                                ? `<p>${escapeHtml(subtitle)}</p>`
+                                ? `<p>${escapeHtml(t(subtitle))}</p>`
                                 : ""}
                         </div>
                         <button class="icon-button" data-close-modal
@@ -3457,7 +3760,7 @@
                                     class="button ${danger
                                         ? "button--danger"
                                         : "button--primary"}">
-                                    ${escapeHtml(confirmText)}
+                                    ${escapeHtml(t(confirmText))}
                                 </button>
                             ` : ""}
                         </footer>
@@ -3522,8 +3825,8 @@
             ? "toast--error" : ""}`;
         element.innerHTML = `
             <span class="toast-content">
-                <strong>${escapeHtml(title)}</strong>
-                <span>${escapeHtml(message || "")}</span>
+                <strong>${escapeHtml(t(title))}</strong>
+                <span>${escapeHtml(t(message || ""))}</span>
             </span>
         `;
         elements.toastRoot.appendChild(element);
@@ -3569,8 +3872,8 @@
     function emptyState(iconName, title, message) {
         return `
             <div class="empty-state">
-                <strong>${escapeHtml(title)}</strong>
-                <p>${escapeHtml(message)}</p>
+                <strong>${escapeHtml(t(title))}</strong>
+                <p>${escapeHtml(t(message))}</p>
             </div>
         `;
     }
@@ -3717,18 +4020,20 @@
         return `
             <span class="badge badge--${variant}">
                 <span class="status-dot"></span>
-                ${escapeHtml(text)}
+                ${escapeHtml(t(text))}
             </span>
         `;
     }
 
     function authorNames(book) {
         const names = (book.authors || []).map((author) => author.name);
-        return names.length ? names.join(", ") : "Chưa cập nhật tác giả";
+        return names.length
+            ? names.join(", ")
+            : t("Chưa cập nhật tác giả");
     }
 
     function setAuthMessage(message, type) {
-        elements.authMessage.textContent = message;
+        elements.authMessage.textContent = t(message);
         elements.authMessage.classList.remove("hidden");
         elements.authMessage.style.color =
             type === "error" ? "var(--danger)" : "var(--success)";
@@ -3745,11 +4050,13 @@
     }
 
     function formatApiError(error) {
-        const fieldMessages = Object.values(error.fieldErrors || {});
+        const fieldMessages = Object.values(
+            error.fieldErrors || {}
+        ).map(t);
         if (fieldMessages.length) {
-            return `${error.message}: ${fieldMessages.join("; ")}`;
+            return `${t(error.message)}: ${fieldMessages.join("; ")}`;
         }
-        return error.message;
+        return t(error.message);
     }
 
     function formDataToObject(form) {
@@ -3773,7 +4080,7 @@
         if (loading) {
             button.dataset.originalLabel = button.innerHTML;
             button.disabled = true;
-            button.textContent = label;
+            button.textContent = t(label);
         } else {
             button.disabled = false;
             if (button.dataset.originalLabel) {

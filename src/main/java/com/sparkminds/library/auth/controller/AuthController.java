@@ -10,9 +10,11 @@ import com.sparkminds.library.auth.dto.request.ResetPasswordRequest;
 import com.sparkminds.library.auth.service.PasswordService;
 import com.sparkminds.library.auth.dto.request.LoginRequest;
 import com.sparkminds.library.auth.dto.request.RefreshTokenRequest;
+import com.sparkminds.library.auth.dto.request.SocialLoginExchangeRequest;
 import com.sparkminds.library.auth.dto.response.CurrentUserResponse;
 import com.sparkminds.library.auth.dto.response.TokenResponse;
 import com.sparkminds.library.auth.service.AuthService;
+import com.sparkminds.library.auth.service.SocialLoginCodeService;
 // import com.sparkminds.library.auth.service.PasswordService;
 import com.sparkminds.library.auth.service.EmailChangeService;
 import com.sparkminds.library.auth.dto.request.ChangeEmailRequest;
@@ -42,6 +44,7 @@ public class AuthController {
         private final RegistrationService registrationService;
         private final PasswordService passwordService;
         private final EmailChangeService emailChangeService;
+        private final SocialLoginCodeService socialLoginCodeService;
 
         @PostMapping("/login")
         @Operation(summary = "Login and issue tokens")
@@ -100,6 +103,16 @@ public class AuthController {
                         @Valid @RequestBody RefreshTokenRequest request) {
                 return ResponseEntity.ok(
                                 authService.refresh(request.refreshToken()));
+        }
+
+        @PostMapping("/social/exchange")
+        @Operation(summary = "Exchange one-time social login code")
+        public ResponseEntity<TokenResponse> exchangeSocialLoginCode(
+                        @Valid @RequestBody
+                        SocialLoginExchangeRequest request) {
+                return ResponseEntity.ok(
+                                socialLoginCodeService.exchange(
+                                                request.code()));
         }
 
         @PostMapping("/logout")

@@ -1,4 +1,4 @@
-# Created at 2026-08-25T15:00:37.011
+# Created at 2026-08-25T16:55:30.858
 Boot Manifest-JAR contains absolute paths in classpath 'D:\sparkminds\src\target\test-classes'
 Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
 'other' has different root

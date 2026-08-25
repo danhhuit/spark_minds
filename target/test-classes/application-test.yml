@@ -2,6 +2,18 @@ spring:
   main:
     banner-mode: off
 
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: google-test-client-id
+            client-secret: google-test-client-secret
+            scope:
+              - openid
+              - profile
+              - email
+
   jpa:
     open-in-view: false
     hibernate:

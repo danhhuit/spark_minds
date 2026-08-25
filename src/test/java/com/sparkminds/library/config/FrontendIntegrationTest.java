@@ -6,10 +6,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.nio.charset.StandardCharsets;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("test")
@@ -34,6 +38,26 @@ class FrontendIntegrationTest
                 ))
                 .andExpect(content().string(
                         containsString("id=\"app-view\"")
+                ))
+                .andExpect(content().string(
+                        containsString(
+                                "/oauth2/authorization/google"
+                        )
+                ));
+    }
+
+    @Test
+    void googleLoginEndpointRedirectsToGoogle()
+            throws Exception {
+        mockMvc.perform(get(
+                        "/oauth2/authorization/google"
+                ))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(header().string(
+                        "Location",
+                        containsString(
+                                "accounts.google.com"
+                        )
                 ));
     }
 
@@ -76,6 +100,56 @@ class FrontendIntegrationTest
                         containsString(
                                 "second: \"2-digit\""
                         )
+                ))
+                .andExpect(content().string(
+                        containsString(
+                                "const API_TEXT_VI"
+                        )
+                ))
+                .andExpect(content().string(
+                        containsString(
+                                "translateTree(document.body)"
+                        )
+                ))
+                .andExpect(content().string(
+                        containsString(
+                                "\"CSV file is required\""
+                        )
+                ))
+                .andExpect(content().string(
+                        containsString(
+                                "\"Technology\""
+                        )
                 ));
+    }
+
+    @Test
+    void translationCatalogContainsVietnameseAndEnglishCopies()
+            throws Exception {
+        byte[] javascript = mockMvc
+                .perform(get("/assets/js/app.js"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsByteArray();
+
+        String source = new String(
+                javascript,
+                StandardCharsets.UTF_8
+        );
+
+        assertThat(
+                source,
+                containsString(
+                        "\"CSV file is required\": "
+                                + "\"Vui lòng chọn file CSV\""
+                )
+        );
+        assertThat(
+                source,
+                containsString(
+                        "\"Công nghệ\": \"Technology\""
+                )
+        );
     }
 }

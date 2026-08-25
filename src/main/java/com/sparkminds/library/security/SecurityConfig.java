@@ -1,5 +1,8 @@
 package com.sparkminds.library.security;
 
+import com.sparkminds.library.auth.oauth.GoogleAuthenticationFailureHandler;
+import com.sparkminds.library.auth.oauth.GoogleAuthenticationSuccessHandler;
+import com.sparkminds.library.auth.oauth.GoogleOidcUserService;
 import com.sparkminds.library.security.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -60,7 +63,11 @@ public class SecurityConfig {
             HttpSecurity http,
             JwtAuthenticationConverter authenticationConverter,
             SystemConfigService systemConfigService,
-            ObjectMapper objectMapper) throws Exception {
+            ObjectMapper objectMapper,
+            GoogleOidcUserService googleOidcUserService,
+            GoogleAuthenticationSuccessHandler googleSuccessHandler,
+            GoogleAuthenticationFailureHandler googleFailureHandler)
+            throws Exception {
 
         MaintenanceModeFilter maintenanceModeFilter = new MaintenanceModeFilter(
                 systemConfigService,
@@ -74,13 +81,15 @@ public class SecurityConfig {
                 .requestCache(AbstractHttpConfigurer::disable)
 
                 .sessionManagement(session -> session.sessionCreationPolicy(
-                        SessionCreationPolicy.STATELESS))
+                        SessionCreationPolicy.IF_REQUIRED))
 
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
                                 "/",
                                 "/index.html",
                                 "/assets/**",
+                                "/oauth2/**",
+                                "/login/oauth2/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**",
@@ -94,7 +103,8 @@ public class SecurityConfig {
                                 "/api/auth/refresh",
                                 "/api/auth/register",
                                 "/api/auth/forgot-password",
-                                "/api/auth/reset-password")
+                                "/api/auth/reset-password",
+                                "/api/auth/social/exchange")
                         .permitAll()
 
                         .requestMatchers(
@@ -110,6 +120,16 @@ public class SecurityConfig {
 
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(
                         authenticationConverter)))
+
+                .oauth2Login(oauth2 -> oauth2
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .oidcUserService(
+                                        googleOidcUserService::loadUser
+                                )
+                        )
+                        .successHandler(googleSuccessHandler)
+                        .failureHandler(googleFailureHandler)
+                )
 
                 .addFilterAfter(
                         maintenanceModeFilter,

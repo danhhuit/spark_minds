@@ -5,6 +5,7 @@ import com.sparkminds.library.auth.dto.response.TokenResponse;
 import com.sparkminds.library.security.jwt.JwtTokenService;
 import com.sparkminds.library.security.jwt.JwtTokenService.GeneratedAccessToken;
 import com.sparkminds.library.security.service.CustomUserPrincipal;
+import com.sparkminds.library.member.entity.UserAccount;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -43,6 +44,23 @@ public class AuthService {
         RefreshTokenService.IssuedRefreshToken refresh =
                 refreshTokenService.issueForUser(
                         principal.getId()
+                );
+
+        return createResponse(
+                principal,
+                refresh.value(),
+                refresh.expiresAt()
+        );
+    }
+
+    @Transactional
+    public TokenResponse issueTokens(UserAccount user) {
+        CustomUserPrincipal principal =
+                CustomUserPrincipal.from(user);
+
+        RefreshTokenService.IssuedRefreshToken refresh =
+                refreshTokenService.issueForUser(
+                        user.getId()
                 );
 
         return createResponse(

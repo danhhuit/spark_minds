@@ -4,6 +4,7 @@ com\sparkminds\library\config\AdminDataInitializer.class
 com\sparkminds\library\common\validation\PasswordValidator.class
 com\sparkminds\library\borrowing\service\BorrowingService.class
 com\sparkminds\library\auth\entity\PasswordResetToken.class
+com\sparkminds\library\auth\dto\request\SocialLoginExchangeRequest.class
 com\sparkminds\library\auth\entity\EmailVerificationToken.class
 com\sparkminds\library\member\entity\MemberProfile.class
 com\sparkminds\library\auth\dto\request\ChangeEmailRequest.class
@@ -17,6 +18,7 @@ com\sparkminds\library\common\exception\CurrentPasswordMismatchException.class
 com\sparkminds\library\borrowing\entity\Borrowing.class
 com\sparkminds\library\book\repository\AuthorRepository.class
 com\sparkminds\library\common\validation\ValidPassword.class
+com\sparkminds\library\auth\oauth\GoogleAuthenticationFailureHandler.class
 com\sparkminds\library\security\jwt\JwtTokenService$GeneratedAccessToken.class
 com\sparkminds\library\config\JwtConfig.class
 com\sparkminds\library\common\exception\BusinessException.class
@@ -43,6 +45,8 @@ com\sparkminds\library\book\service\BookCsvImportService.class
 com\sparkminds\library\auth\entity\EmailChangeVerification.class
 com\sparkminds\library\book\specification\BookSpecification.class
 com\sparkminds\library\common\exception\InvalidPasswordResetTokenException.class
+com\sparkminds\library\auth\entity\OAuthIdentity.class
+com\sparkminds\library\auth\oauth\GoogleAuthenticationSuccessHandler.class
 com\sparkminds\library\auth\dto\request\ForgotPasswordRequest.class
 com\sparkminds\library\auth\repository\RefreshTokenRepository.class
 com\sparkminds\library\common\logging\ControllerLoggingAspect.class
@@ -50,8 +54,10 @@ com\sparkminds\library\member\repository\UserAccountRepository.class
 com\sparkminds\library\common\exception\ResourceNotFoundException.class
 com\sparkminds\library\auth\dto\request\RefreshTokenRequest.class
 com\sparkminds\library\security\jwt\JwtTokenService.class
+com\sparkminds\library\common\exception\InvalidSocialLoginCodeException.class
 com\sparkminds\library\borrowing\dto\request\BorrowBookRequest.class
 com\sparkminds\library\auth\dto\request\ResetPasswordRequest.class
+com\sparkminds\library\auth\entity\SocialLoginCode.class
 com\sparkminds\library\book\mapper\BookMapper.class
 com\sparkminds\library\profile\dto\response\ProfileResponse.class
 com\sparkminds\library\common\exception\CsvImportException.class
@@ -59,6 +65,7 @@ com\sparkminds\library\book\dto\response\BookResponse.class
 com\sparkminds\library\security\service\CustomUserPrincipal.class
 com\sparkminds\library\LibraryManagementApplication.class
 com\sparkminds\library\common\logging\HttpLoggingFilter.class
+com\sparkminds\library\auth\repository\SocialLoginCodeRepository.class
 com\sparkminds\library\borrowing\repository\BorrowingRepository.class
 com\sparkminds\library\common\exception\ResourceAlreadyExistsException.class
 com\sparkminds\library\book\controller\BookController.class
@@ -72,6 +79,7 @@ com\sparkminds\library\member\specification\MemberSpecification.class
 com\sparkminds\library\borrowing\entity\BorrowingStatus.class
 com\sparkminds\library\common\api\MessageResponse.class
 com\sparkminds\library\systemconfig\filter\MaintenanceModeFilter.class
+com\sparkminds\library\auth\oauth\GoogleOidcUserService.class
 com\sparkminds\library\member\controller\MemberController.class
 com\sparkminds\library\book\service\BookService.class
 com\sparkminds\library\auth\entity\RevokedToken.class
@@ -116,5 +124,7 @@ com\sparkminds\library\security\service\CustomUserDetailsService.class
 com\sparkminds\library\common\exception\InvalidRefreshTokenException.class
 com\sparkminds\library\auth\repository\PasswordResetTokenRepository.class
 com\sparkminds\library\member\dto\request\CreateMemberRequest.class
+com\sparkminds\library\auth\repository\OAuthIdentityRepository.class
 com\sparkminds\library\book\entity\Category.class
 com\sparkminds\library\systemconfig\service\SystemConfigService.class
+com\sparkminds\library\auth\service\SocialLoginCodeService.class
