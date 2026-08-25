@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+          content="Hệ thống quản lý thư viện Spark Minds">
+    <title>Spark Library</title>
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/assets/css/app.css">
+</head>
+<body>
+<svg class="svg-sprite" aria-hidden="true">
+    <symbol id="i-logo" viewBox="0 0 24 24">
+        <path d="M5 4.8A2.8 2.8 0 0 1 7.8 2H12v17H7.8A2.8 2.8 0 0 0 5 21.8V4.8Z"/>
+        <path d="M19 4.8A2.8 2.8 0 0 0 16.2 2H12v17h4.2a2.8 2.8 0 0 1 2.8 2.8V4.8Z"/>
+    </symbol>
+    <symbol id="i-dashboard" viewBox="0 0 24 24">
+        <rect x="3" y="3" width="7" height="7" rx="2"/>
+        <rect x="14" y="3" width="7" height="7" rx="2"/>
+        <rect x="3" y="14" width="7" height="7" rx="2"/>
+        <rect x="14" y="14" width="7" height="7" rx="2"/>
+    </symbol>
+    <symbol id="i-book" viewBox="0 0 24 24">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/>
+    </symbol>
+    <symbol id="i-users" viewBox="0 0 24 24">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+        <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+    </symbol>
+    <symbol id="i-borrow" viewBox="0 0 24 24">
+        <path d="M7 7h11l-2.5-2.5"/>
+        <path d="m18 7-2.5 2.5"/>
+        <path d="M17 17H6l2.5 2.5"/>
+        <path d="m6 17 2.5-2.5"/>
+    </symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21a2 2 0 1 1-4 0v-.09A1.7 1.7 0 0 0 8.5 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.6 8.5a1.7 1.7 0 0 0-.34-1.88l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V3a2 2 0 1 1 4 0v.09A1.7 1.7 0 0 0 15.5 4.6a1.7 1.7 0 0 0 1.88-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9c.14.37.35.7.6 1 .3.3.7.45 1.1.4H21a2 2 0 1 1 0 4h-.09A1.7 1.7 0 0 0 19.4 15Z"/>
+    </symbol>
+    <symbol id="i-user" viewBox="0 0 24 24">
+        <path d="M20 21a8 8 0 0 0-16 0"/>
+        <circle cx="12" cy="7" r="4"/>
+    </symbol>
+    <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="8"/>
+        <path d="m21 21-4.35-4.35"/>
+    </symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14"/>
+    </symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <path d="m17 8-5-5-5 5M12 3v12"/>
+    </symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24">
+        <path d="M12 20h9"/>
+        <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4Z"/>
+    </symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24">
+        <path d="M3 6h18M8 6V4h8v2M19 6l-1 15H6L5 6"/>
+        <path d="M10 11v6M14 11v6"/>
+    </symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24">
+        <path d="M10 17l5-5-5-5M15 12H3"/>
+        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+    </symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24">
+        <path d="M4 6h16M4 12h16M4 18h16"/>
+    </symbol>
+    <symbol id="i-close" viewBox="0 0 24 24">
+        <path d="m6 6 12 12M18 6 6 18"/>
+    </symbol>
+    <symbol id="i-chevron-left" viewBox="0 0 24 24">
+        <path d="m15 18-6-6 6-6"/>
+    </symbol>
+    <symbol id="i-chevron-right" viewBox="0 0 24 24">
+        <path d="m9 18 6-6-6-6"/>
+    </symbol>
+    <symbol id="i-check" viewBox="0 0 24 24">
+        <path d="m20 6-11 11-5-5"/>
+    </symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24">
+        <path d="M10.3 3.7 2.2 18a2 2 0 0 0 1.8 3h16a2 2 0 0 0 1.8-3L13.7 3.7a2 2 0 0 0-3.4 0Z"/>
+        <path d="M12 9v4M12 17h.01"/>
+    </symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24">
+        <rect x="3" y="5" width="18" height="16" rx="2"/>
+        <path d="M16 3v4M8 3v4M3 11h18"/>
+    </symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24">
+        <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/>
+        <circle cx="12" cy="12" r="2.6"/>
+    </symbol>
+    <symbol id="i-eye-off" viewBox="0 0 24 24">
+        <path d="m3 3 18 18"/>
+        <path d="M10.6 6.1A10.7 10.7 0 0 1 12 6c6 0 9.5 6 9.5 6a16 16 0 0 1-2.1 2.8"/>
+        <path d="M6.2 6.3C3.8 8.1 2.5 12 2.5 12s3.5 6 9.5 6c1.5 0 2.9-.4 4.1-1"/>
+        <path d="M10.2 10.2a2.6 2.6 0 0 0 3.6 3.6"/>
+    </symbol>
+</svg>
+
+<div id="loading-screen" class="loading-screen">
+    <div class="loader" aria-label="Đang tải"></div>
+    <span>Đang mở thư viện</span>
+</div>
+
+<section id="auth-view" class="auth-layout hidden">
+    <div class="auth-showcase">
+        <div class="auth-brand">
+            <span>Spark Library</span>
+            <small>Hệ thống nội bộ</small>
+        </div>
+        <div class="showcase-content">
+            <span class="eyebrow eyebrow--light">Quản lý lưu thông</span>
+            <h1>Sách, thành viên và lượt mượn trong một quy trình rõ ràng.</h1>
+            <p>
+                Không gian làm việc dành cho thủ thư và thành viên,
+                tập trung vào tra cứu nhanh và xử lý chính xác.
+            </p>
+            <div class="showcase-points">
+                <div><span>Danh mục</span> Tra cứu và cập nhật kho sách</div>
+                <div><span>Lưu thông</span> Theo dõi mượn, trả và quá hạn</div>
+                <div><span>Thành viên</span> Quản lý hồ sơ và tài khoản</div>
+            </div>
+        </div>
+        <p class="auth-copyright">Hệ thống quản lý thư viện · 2026</p>
+    </div>
+
+    <div class="auth-panel">
+        <div class="auth-card">
+            <div class="auth-mobile-brand">
+                <span>Spark Library</span>
+            </div>
+
+            <div id="auth-message" class="auth-message hidden"></div>
+
+            <div id="login-panel">
+                <span class="eyebrow">Chào mừng trở lại</span>
+                <h2>Đăng nhập</h2>
+                <p class="muted">
+                    Nhập tài khoản để tiếp tục vào thư viện.
+                </p>
+
+                <form id="login-form" class="form-stack">
+                    <label class="field">
+                        <span>Tên đăng nhập hoặc email</span>
+                        <input id="login-identity" name="usernameOrEmail"
+                               autocomplete="username" required
+                               placeholder="admin hoặc email@example.com">
+                    </label>
+                    <label class="field">
+                        <span>Mật khẩu</span>
+                        <input id="login-password" name="password"
+                               type="password" autocomplete="current-password"
+                               required placeholder="Nhập mật khẩu">
+                    </label>
+                    <button type="button" id="forgot-password-link"
+                            class="text-button auth-help">
+                        Quên mật khẩu?
+                    </button>
+                    <button type="submit" class="button button--primary button--full">
+                        Đăng nhập
+                    </button>
+                </form>
+
+                <p class="auth-switch">
+                    Chưa có tài khoản?
+                    <button type="button" class="text-button"
+                            data-auth-panel="register">
+                        Đăng ký ngay
+                    </button>
+                </p>
+            </div>
+
+            <div id="register-panel" class="hidden">
+                <span class="eyebrow">Thành viên mới</span>
+                <h2>Tạo tài khoản</h2>
+                <p class="muted">
+                    Chúng tôi sẽ gửi liên kết xác minh đến email của bạn.
+                </p>
+
+                <form id="register-form" class="form-stack">
+                    <label class="field">
+                        <span>Email</span>
+                        <input name="email" type="email"
+                               autocomplete="email" required
+                               placeholder="email@example.com">
+                    </label>
+                    <label class="field">
+                        <span>Mật khẩu</span>
+                        <input name="password" type="password"
+                               autocomplete="new-password" required
+                               placeholder="Tối thiểu 8 ký tự">
+                        <small>
+                            Gồm chữ hoa, chữ thường, số và ký tự đặc biệt.
+                        </small>
+                    </label>
+                    <button type="submit" class="button button--primary button--full">
+                        Tạo tài khoản
+                    </button>
+                </form>
+
+                <p class="auth-switch">
+                    Đã có tài khoản?
+                    <button type="button" class="text-button"
+                            data-auth-panel="login">
+                        Đăng nhập
+                    </button>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="app-view" class="app-shell hidden">
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+    <aside id="sidebar" class="sidebar">
+        <div class="sidebar-brand">
+            <div>
+                <strong>Spark Library</strong>
+                <small>Library operations</small>
+            </div>
+            <button id="sidebar-close" class="icon-button sidebar-close"
+                    aria-label="Đóng menu">
+                <svg><use href="#i-close"></use></svg>
+            </button>
+        </div>
+
+        <nav id="sidebar-nav" class="sidebar-nav"></nav>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-user">
+                <span id="sidebar-avatar" class="avatar">A</span>
+                <div>
+                    <strong id="sidebar-user-name">Admin</strong>
+                    <small id="sidebar-user-role">Quản trị viên</small>
+                </div>
+            </div>
+            <button id="logout-button" class="icon-button"
+                    aria-label="Đăng xuất" title="Đăng xuất">
+                <svg><use href="#i-logout"></use></svg>
+            </button>
+        </div>
+    </aside>
+
+    <main class="main-area">
+        <header class="topbar">
+            <div class="topbar-heading">
+                <button id="sidebar-open" class="icon-button mobile-menu"
+                        aria-label="Mở menu">
+                    <svg><use href="#i-menu"></use></svg>
+                </button>
+                <div>
+                    <p id="page-eyebrow" class="page-eyebrow">Tổng quan</p>
+                    <h1 id="page-title">Dashboard</h1>
+                </div>
+            </div>
+            <div class="topbar-actions">
+                <span id="maintenance-pill"
+                      class="status-pill status-pill--warning hidden">
+                    Đang bảo trì
+                </span>
+                <button id="topbar-profile" class="profile-button">
+                    <span id="topbar-avatar" class="avatar">A</span>
+                    <span id="topbar-user-name">Admin</span>
+                </button>
+            </div>
+        </header>
+
+        <div id="page-content" class="page-content"></div>
+    </main>
+</section>
+
+<div id="modal-root"></div>
+<div id="toast-root" class="toast-root"
+     aria-live="polite" aria-atomic="true"></div>
+
+<script src="/assets/js/app.js" defer></script>
+</body>
+</html>

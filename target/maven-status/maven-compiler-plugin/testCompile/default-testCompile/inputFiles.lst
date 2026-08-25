@@ -5,6 +5,7 @@ D:\sparkminds\src\src\test\java\com\sparkminds\library\book\controller\BookContr
 D:\sparkminds\src\src\test\java\com\sparkminds\library\book\controller\BookCsvImportIntegrationTest.java
 D:\sparkminds\src\src\test\java\com\sparkminds\library\borrowing\controller\BorrowingControllerIntegrationTest.java
 D:\sparkminds\src\src\test\java\com\sparkminds\library\config\DocumentationIntegrationTest.java
+D:\sparkminds\src\src\test\java\com\sparkminds\library\config\FrontendIntegrationTest.java
 D:\sparkminds\src\src\test\java\com\sparkminds\library\integration\AbstractIntegrationTest.java
 D:\sparkminds\src\src\test\java\com\sparkminds\library\member\controller\MemberControllerIntegrationTest.java
 D:\sparkminds\src\src\test\java\com\sparkminds\library\systemconfig\controller\SystemConfigControllerIntegrationTest.java

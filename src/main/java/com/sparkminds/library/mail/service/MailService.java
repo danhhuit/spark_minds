@@ -12,8 +12,8 @@ public class MailService {
 
         private final JavaMailSender mailSender;
 
-        @Value("${app.backend-url}")
-        private String backendUrl;
+        @Value("${app.frontend-url}")
+        private String frontendUrl;
 
         @Value("${app.mail-from}")
         private String mailFrom;
@@ -21,8 +21,8 @@ public class MailService {
         public void sendVerificationEmail(
                         String recipient,
                         String rawToken) {
-                String verificationUrl = backendUrl
-                                + "/api/auth/verify-email?token="
+                String verificationUrl = frontendUrl
+                                + "/?token="
                                 + rawToken;
 
                 SimpleMailMessage message = new SimpleMailMessage();
@@ -44,6 +44,10 @@ public class MailService {
         public void sendPasswordResetEmail(
                         String recipient,
                         String rawToken) {
+                String resetUrl = frontendUrl
+                                + "/?resetToken="
+                                + rawToken;
+
                 SimpleMailMessage message = new SimpleMailMessage();
 
                 message.setFrom(mailFrom);
@@ -53,12 +57,9 @@ public class MailService {
                 message.setText(
                                 "A password reset was requested "
                                                 + "for your account.\n\n"
-                                                + "Open Swagger:\n"
-                                                + backendUrl
-                                                + "/swagger-ui/index.html\n\n"
-                                                + "Use POST /api/auth/reset-password "
-                                                + "with this token:\n\n"
-                                                + rawToken
+                                                + "Open the link below to set "
+                                                + "a new password:\n"
+                                                + resetUrl
                                                 + "\n\nThis token expires in 30 minutes.\n"
                                                 + "If you did not request this, "
                                                 + "ignore this email.");
