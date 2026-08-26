@@ -11,27 +11,24 @@ import java.io.IOException;
 
 @Component
 public class GoogleAuthenticationFailureHandler
-        implements AuthenticationFailureHandler {
+                implements AuthenticationFailureHandler {
 
-    @Value("${app.frontend-url}")
-    private String frontendUrl;
+        @Value("${app.frontend-url}")
+        private String frontendUrl;
 
-    @Override
-    public void onAuthenticationFailure(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            AuthenticationException exception
-    ) throws IOException {
-        String baseUrl = frontendUrl.endsWith("/")
-                ? frontendUrl.substring(
-                        0,
-                        frontendUrl.length() - 1
-                )
-                : frontendUrl;
+        @Override
+        public void onAuthenticationFailure(
+                        HttpServletRequest request,
+                        HttpServletResponse response,
+                        AuthenticationException exception) throws IOException {
+                String baseUrl = frontendUrl.endsWith("/")
+                                ? frontendUrl.substring(
+                                                0,
+                                                frontendUrl.length() - 1)
+                                : frontendUrl;
 
-        response.sendRedirect(
-                baseUrl
-                        + "/?oauthError=google_login_failed"
-        );
-    }
+                response.sendRedirect(
+                                baseUrl
+                                                + "/?oauthError=google_login_failed");
+        }
 }

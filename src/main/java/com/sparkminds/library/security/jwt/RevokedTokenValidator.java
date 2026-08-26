@@ -33,13 +33,11 @@ public class RevokedTokenValidator
     }
 
     private OAuth2TokenValidatorResult failure(
-            String description
-    ) {
+            String description) {
         OAuth2Error error = new OAuth2Error(
                 "invalid_token",
                 description,
-                null
-        );
+                null);
 
         return OAuth2TokenValidatorResult.failure(error);
     }

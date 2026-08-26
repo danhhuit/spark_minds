@@ -19,64 +19,57 @@ import java.util.Locale;
 @Slf4j
 public class AdminDataInitializer implements ApplicationRunner {
 
-    private final UserAccountRepository userAccountRepository;
-    private final RoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final String adminUsername;
-    private final String adminPassword;
-    private final String adminEmail;
+        private final UserAccountRepository userAccountRepository;
+        private final RoleRepository roleRepository;
+        private final PasswordEncoder passwordEncoder;
+        private final String adminUsername;
+        private final String adminPassword;
+        private final String adminEmail;
 
-    public AdminDataInitializer(
-            UserAccountRepository userAccountRepository,
-            RoleRepository roleRepository,
-            PasswordEncoder passwordEncoder,
-            @Value("${app.admin.username}") String adminUsername,
-            @Value("${app.admin.password}") String adminPassword,
-            @Value("${app.admin.email}") String adminEmail
-    ) {
-        this.userAccountRepository = userAccountRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.adminUsername = adminUsername;
-        this.adminPassword = adminPassword;
-        this.adminEmail = adminEmail;
-    }
-
-    @Override
-    @Transactional
-    public void run(ApplicationArguments args) {
-        if (userAccountRepository
-                .existsByUsernameIgnoreCase(adminUsername)) {
-            log.info("Default admin account already exists");
-            return;
+        public AdminDataInitializer(
+                        UserAccountRepository userAccountRepository,
+                        RoleRepository roleRepository,
+                        PasswordEncoder passwordEncoder,
+                        @Value("${app.admin.username}") String adminUsername,
+                        @Value("${app.admin.password}") String adminPassword,
+                        @Value("${app.admin.email}") String adminEmail) {
+                this.userAccountRepository = userAccountRepository;
+                this.roleRepository = roleRepository;
+                this.passwordEncoder = passwordEncoder;
+                this.adminUsername = adminUsername;
+                this.adminPassword = adminPassword;
+                this.adminEmail = adminEmail;
         }
 
-        Role adminRole = roleRepository
-                .findByName(RoleName.ADMIN)
-                .orElseThrow(() ->
-                        new IllegalStateException(
-                                "ADMIN role does not exist"
-                        )
-                );
+        @Override
+        @Transactional
+        public void run(ApplicationArguments args) {
+                if (userAccountRepository
+                                .existsByUsernameIgnoreCase(adminUsername)) {
+                        log.info("Default admin account already exists");
+                        return;
+                }
 
-        UserAccount admin = new UserAccount();
-        admin.setUsername(
-                adminUsername.toLowerCase(Locale.ROOT)
-        );
-        admin.setEmail(
-                adminEmail.toLowerCase(Locale.ROOT)
-        );
-        admin.setPassword(
-                passwordEncoder.encode(adminPassword)
-        );
-        admin.setEnabled(true);
-        admin.setEmailVerified(true);
-        admin.setAccountNonLocked(true);
-        admin.addRole(adminRole);
+                Role adminRole = roleRepository
+                                .findByName(RoleName.ADMIN)
+                                .orElseThrow(() -> new IllegalStateException(
+                                                "ADMIN role does not exist"));
 
-        userAccountRepository.save(admin);
+                UserAccount admin = new UserAccount();
+                admin.setUsername(
+                                adminUsername.toLowerCase(Locale.ROOT));
+                admin.setEmail(
+                                adminEmail.toLowerCase(Locale.ROOT));
+                admin.setPassword(
+                                passwordEncoder.encode(adminPassword));
+                admin.setEnabled(true);
+                admin.setEmailVerified(true);
+                admin.setAccountNonLocked(true);
+                admin.addRole(adminRole);
 
-        log.info("Default admin account created: {}",
-                adminUsername);
-    }
+                userAccountRepository.save(admin);
+
+                log.info("Default admin account created: {}",
+                                adminUsername);
+        }
 }

@@ -8,17 +8,14 @@ import java.util.TimeZone;
 @SpringBootApplication
 public class LibraryManagementApplication {
 
-    private static final String APPLICATION_TIME_ZONE =
-            "Asia/Ho_Chi_Minh";
+        private static final String APPLICATION_TIME_ZONE = "Asia/Ho_Chi_Minh";
 
-    public static void main(String[] args) {
-        TimeZone.setDefault(
-                TimeZone.getTimeZone(APPLICATION_TIME_ZONE)
-        );
+        public static void main(String[] args) {
+                TimeZone.setDefault(
+                                TimeZone.getTimeZone(APPLICATION_TIME_ZONE));
 
-        SpringApplication.run(
-                LibraryManagementApplication.class,
-                args
-        );
-    }
+                SpringApplication.run(
+                                LibraryManagementApplication.class,
+                                args);
+        }
 }

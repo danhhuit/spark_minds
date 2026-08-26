@@ -1,4 +1,5 @@
 package com.sparkminds.library.systemconfig.filter;
+
 import tools.jackson.databind.ObjectMapper;
 import com.sparkminds.library.common.api.ApiErrorResponse;
 import com.sparkminds.library.systemconfig.service.SystemConfigService;
@@ -18,63 +19,62 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 public class MaintenanceModeFilter
-        extends OncePerRequestFilter {
+                extends OncePerRequestFilter {
 
-    private final SystemConfigService systemConfigService;
-    private final ObjectMapper objectMapper;
+        private final SystemConfigService systemConfigService;
+        private final ObjectMapper objectMapper;
 
-    @Override
-    protected boolean shouldNotFilter(
-            HttpServletRequest request) {
-        String path = request.getRequestURI();
+        @Override
+        protected boolean shouldNotFilter(
+                        HttpServletRequest request) {
+                String path = request.getRequestURI();
 
-        if (!path.startsWith("/api/")) {
-            return true;
+                if (!path.startsWith("/api/")) {
+                        return true;
+                }
+
+                if (path.equals("/api/auth/login")
+                                || path.equals(
+                                                "/api/auth/social/exchange")) {
+                        return true;
+                }
+
+                return path.startsWith(
+                                "/api/admin/system-config");
         }
 
-        if (path.equals("/api/auth/login")
-                || path.equals(
-                        "/api/auth/social/exchange"
-                )) {
-            return true;
+        @Override
+        protected void doFilterInternal(
+                        HttpServletRequest request,
+                        HttpServletResponse response,
+                        FilterChain filterChain) throws ServletException, IOException {
+
+                if (!systemConfigService.isMaintenanceMode()) {
+                        filterChain.doFilter(request, response);
+                        return;
+                }
+
+                ApiErrorResponse errorResponse = new ApiErrorResponse(
+                                Instant.now(),
+                                HttpStatus.SERVICE_UNAVAILABLE.value(),
+                                HttpStatus.SERVICE_UNAVAILABLE
+                                                .getReasonPhrase(),
+                                systemConfigService
+                                                .getMaintenanceMessage(),
+                                request.getRequestURI(),
+                                Map.of());
+
+                response.setStatus(
+                                HttpStatus.SERVICE_UNAVAILABLE.value());
+
+                response.setCharacterEncoding(
+                                StandardCharsets.UTF_8.name());
+
+                response.setContentType(
+                                MediaType.APPLICATION_JSON_VALUE);
+
+                objectMapper.writeValue(
+                                response.getWriter(),
+                                errorResponse);
         }
-
-        return path.startsWith(
-                "/api/admin/system-config");
-    }
-
-    @Override
-    protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain) throws ServletException, IOException {
-
-        if (!systemConfigService.isMaintenanceMode()) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        ApiErrorResponse errorResponse = new ApiErrorResponse(
-                Instant.now(),
-                HttpStatus.SERVICE_UNAVAILABLE.value(),
-                HttpStatus.SERVICE_UNAVAILABLE
-                        .getReasonPhrase(),
-                systemConfigService
-                        .getMaintenanceMessage(),
-                request.getRequestURI(),
-                Map.of());
-
-        response.setStatus(
-                HttpStatus.SERVICE_UNAVAILABLE.value());
-
-        response.setCharacterEncoding(
-                StandardCharsets.UTF_8.name());
-
-        response.setContentType(
-                MediaType.APPLICATION_JSON_VALUE);
-
-        objectMapper.writeValue(
-                response.getWriter(),
-                errorResponse);
-    }
 }

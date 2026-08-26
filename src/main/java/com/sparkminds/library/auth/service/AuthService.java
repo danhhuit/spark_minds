@@ -21,113 +21,89 @@ import java.time.Instant;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final AuthenticationManager authenticationManager;
-    private final JwtTokenService jwtTokenService;
-    private final RefreshTokenService refreshTokenService;
-    private final RevokedTokenService revokedTokenService;
+        private final AuthenticationManager authenticationManager;
+        private final JwtTokenService jwtTokenService;
+        private final RefreshTokenService refreshTokenService;
+        private final RevokedTokenService revokedTokenService;
 
-    @Transactional
-    public TokenResponse login(LoginRequest request) {
-        Authentication authentication =
-                authenticationManager.authenticate(
-                    UsernamePasswordAuthenticationToken
-                        .unauthenticated(
-                            request.usernameOrEmail(),
-                            request.password()
-                        )
-                );
+        @Transactional
+        public TokenResponse login(LoginRequest request) {
+                Authentication authentication = authenticationManager.authenticate(
+                                UsernamePasswordAuthenticationToken
+                                                .unauthenticated(
+                                                                request.usernameOrEmail(),
+                                                                request.password()));
 
-        CustomUserPrincipal principal =
-                (CustomUserPrincipal)
-                        authentication.getPrincipal();
+                CustomUserPrincipal principal = (CustomUserPrincipal) authentication.getPrincipal();
 
-        RefreshTokenService.IssuedRefreshToken refresh =
-                refreshTokenService.issueForUser(
-                        principal.getId()
-                );
+                RefreshTokenService.IssuedRefreshToken refresh = refreshTokenService.issueForUser(
+                                principal.getId());
 
-        return createResponse(
-                principal,
-                refresh.value(),
-                refresh.expiresAt()
-        );
-    }
+                return createResponse(
+                                principal,
+                                refresh.value(),
+                                refresh.expiresAt());
+        }
 
-    @Transactional
-    public TokenResponse issueTokens(UserAccount user) {
-        CustomUserPrincipal principal =
-                CustomUserPrincipal.from(user);
+        @Transactional
+        public TokenResponse issueTokens(UserAccount user) {
+                CustomUserPrincipal principal = CustomUserPrincipal.from(user);
 
-        RefreshTokenService.IssuedRefreshToken refresh =
-                refreshTokenService.issueForUser(
-                        user.getId()
-                );
+                RefreshTokenService.IssuedRefreshToken refresh = refreshTokenService.issueForUser(
+                                user.getId());
 
-        return createResponse(
-                principal,
-                refresh.value(),
-                refresh.expiresAt()
-        );
-    }
+                return createResponse(
+                                principal,
+                                refresh.value(),
+                                refresh.expiresAt());
+        }
 
-    @Transactional
-    public TokenResponse refresh(String rawRefreshToken) {
-        RefreshTokenService.RotatedRefreshToken rotated =
-                refreshTokenService.rotate(rawRefreshToken);
+        @Transactional
+        public TokenResponse refresh(String rawRefreshToken) {
+                RefreshTokenService.RotatedRefreshToken rotated = refreshTokenService.rotate(rawRefreshToken);
 
-        CustomUserPrincipal principal =
-                CustomUserPrincipal.from(
-                        rotated.user()
-                );
+                CustomUserPrincipal principal = CustomUserPrincipal.from(
+                                rotated.user());
 
-        return createResponse(
-                principal,
-                rotated.value(),
-                rotated.expiresAt()
-        );
-    }
+                return createResponse(
+                                principal,
+                                rotated.value(),
+                                rotated.expiresAt());
+        }
 
-    @Transactional
-    public void logout(
-            Jwt jwt,
-            String rawRefreshToken
-    ) {
-        Number userIdClaim = jwt.getClaim("uid");
-        Long userId = userIdClaim.longValue();
+        @Transactional
+        public void logout(
+                        Jwt jwt,
+                        String rawRefreshToken) {
+                Number userIdClaim = jwt.getClaim("uid");
+                Long userId = userIdClaim.longValue();
 
-        refreshTokenService.revokeIfPresent(
-                rawRefreshToken,
-                userId
-        );
+                refreshTokenService.revokeIfPresent(
+                                rawRefreshToken,
+                                userId);
 
-        revokedTokenService.revoke(jwt, userId);
-    }
+                revokedTokenService.revoke(jwt, userId);
+        }
 
-    private TokenResponse createResponse(
-            CustomUserPrincipal principal,
-            String refreshToken,
-            java.time.OffsetDateTime refreshExpiresAt
-    ) {
-        GeneratedAccessToken accessToken =
-                jwtTokenService.generateAccessToken(
-                        principal
-                );
+        private TokenResponse createResponse(
+                        CustomUserPrincipal principal,
+                        String refreshToken,
+                        java.time.OffsetDateTime refreshExpiresAt) {
+                GeneratedAccessToken accessToken = jwtTokenService.generateAccessToken(
+                                principal);
 
-        long expiresIn = Math.max(
-                0,
-                Duration.between(
-                        Instant.now(),
-                        accessToken.expiresAt()
-                ).toSeconds()
-        );
+                long expiresIn = Math.max(
+                                0,
+                                Duration.between(
+                                                Instant.now(),
+                                                accessToken.expiresAt()).toSeconds());
 
-        return new TokenResponse(
-                "Bearer",
-                accessToken.value(),
-                expiresIn,
-                accessToken.expiresAt(),
-                refreshToken,
-                refreshExpiresAt
-        );
-    }
+                return new TokenResponse(
+                                "Bearer",
+                                accessToken.value(),
+                                expiresIn,
+                                accessToken.expiresAt(),
+                                refreshToken,
+                                refreshExpiresAt);
+        }
 }

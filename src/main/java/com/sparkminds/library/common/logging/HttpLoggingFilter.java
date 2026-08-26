@@ -18,51 +18,46 @@ import java.util.UUID;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Log4j2
 public class HttpLoggingFilter
-        extends OncePerRequestFilter {
+                extends OncePerRequestFilter {
 
-    @Override
-    protected boolean shouldNotFilter(
-            HttpServletRequest request
-    ) {
-        return !request.getRequestURI()
-                .startsWith("/api/");
-    }
-
-    @Override
-    protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain
-    ) throws ServletException, IOException {
-
-        String requestId = UUID.randomUUID().toString();
-        long startTime = System.nanoTime();
-
-        ThreadContext.put("requestId", requestId);
-
-        log.info(
-                "HTTP_REQUEST method={} path={} remoteAddress={}",
-                request.getMethod(),
-                request.getRequestURI(),
-                request.getRemoteAddr()
-        );
-
-        try {
-            filterChain.doFilter(request, response);
-        } finally {
-            long durationMillis =
-                    (System.nanoTime() - startTime)
-                            / 1_000_000;
-
-            log.info(
-                    "HTTP_RESPONSE method={} path={} status={} durationMs={}",
-                    request.getMethod(),
-                    request.getRequestURI(),
-                    response.getStatus(),
-                    durationMillis
-            );
-
-            ThreadContext.remove("requestId");
+        @Override
+        protected boolean shouldNotFilter(
+                        HttpServletRequest request) {
+                return !request.getRequestURI()
+                                .startsWith("/api/");
         }
-    }
+
+        @Override
+        protected void doFilterInternal(
+                        HttpServletRequest request,
+                        HttpServletResponse response,
+                        FilterChain filterChain) throws ServletException, IOException {
+
+                String requestId = UUID.randomUUID().toString();
+                long startTime = System.nanoTime();
+
+                ThreadContext.put("requestId", requestId);
+
+                log.info(
+                                "HTTP_REQUEST method={} path={} remoteAddress={}",
+                                request.getMethod(),
+                                request.getRequestURI(),
+                                request.getRemoteAddr());
+
+                try {
+                        filterChain.doFilter(request, response);
+                } finally {
+                        long durationMillis = (System.nanoTime() - startTime)
+                                        / 1_000_000;
+
+                        log.info(
+                                        "HTTP_RESPONSE method={} path={} status={} durationMs={}",
+                                        request.getMethod(),
+                                        request.getRequestURI(),
+                                        response.getStatus(),
+                                        durationMillis);
+
+                        ThreadContext.remove("requestId");
+                }
+        }
 }

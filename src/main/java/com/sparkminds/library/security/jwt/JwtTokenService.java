@@ -39,7 +39,12 @@ public class JwtTokenService {
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .toList();
-
+        // iss: issuer của ứng dụng
+        // sub: subject của token, thường là username hoặc email
+        // iat: thời gian phát hành token
+        // nbf: thời gian bắt đầu có hiệu lực của token
+        // exp: thời gian hết hạn của token
+        // jti: JWT ID, một giá trị duy nhất để xác định token
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer(jwtProperties.issuer())
                 .subject(principal.getUsername())

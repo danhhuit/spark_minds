@@ -5,8 +5,5 @@ import jakarta.validation.constraints.Positive;
 
 public record BorrowBookRequest(
 
-        @NotNull(message = "Book ID is required")
-        @Positive(message = "Book ID must be positive")
-        Long bookId
-) {
+                @NotNull(message = "Book ID is required") @Positive(message = "Book ID must be positive") Long bookId) {
 }

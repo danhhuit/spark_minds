@@ -39,14 +39,11 @@ public class BorrowingController {
     @Operation(summary = "Borrow a book")
     public ResponseEntity<BorrowingResponse> borrow(
             @AuthenticationPrincipal Jwt jwt,
-            @Valid @RequestBody
-            BorrowBookRequest request
-    ) {
+            @Valid @RequestBody BorrowBookRequest request) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(
-                    borrowingService.borrow(jwt, request)
-                );
+                        borrowingService.borrow(jwt, request));
     }
 
     @PostMapping("/{id}/return")
@@ -54,36 +51,23 @@ public class BorrowingController {
     public ResponseEntity<BorrowingResponse> returnBook(
             @AuthenticationPrincipal Jwt jwt,
 
-            @PathVariable
-            @Positive
-            Long id
-    ) {
+            @PathVariable @Positive Long id) {
         return ResponseEntity.ok(
-                borrowingService.returnBook(jwt, id)
-        );
+                borrowingService.returnBook(jwt, id));
     }
 
     @GetMapping("/my")
     @Operation(summary = "Get my borrowing history")
-    public ResponseEntity<PageResponse<BorrowingResponse>>
-    getMyBorrowings(
+    public ResponseEntity<PageResponse<BorrowingResponse>> getMyBorrowings(
             @AuthenticationPrincipal Jwt jwt,
 
-            @RequestParam(defaultValue = "0")
-            @Min(0)
-            int page,
+            @RequestParam(defaultValue = "0") @Min(0) int page,
 
-            @RequestParam(defaultValue = "10")
-            @Min(1)
-            @Max(10)
-            int size
-    ) {
+            @RequestParam(defaultValue = "10") @Min(1) @Max(10) int size) {
         return ResponseEntity.ok(
                 borrowingService.getMyBorrowings(
-                    jwt,
-                    page,
-                    size
-                )
-        );
+                        jwt,
+                        page,
+                        size));
     }
 }

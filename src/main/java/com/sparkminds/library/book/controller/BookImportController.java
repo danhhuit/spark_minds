@@ -24,17 +24,12 @@ public class BookImportController {
 
     private final BookCsvImportService bookCsvImportService;
 
-    @PostMapping(
-        value = "/import",
-        consumes = MediaType.MULTIPART_FORM_DATA_VALUE
-    )
+    @PostMapping(value = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Import books from CSV")
     public ResponseEntity<BookImportResponse> importBooks(
-            @RequestPart("file") MultipartFile file
-    ) {
+            @RequestPart("file") MultipartFile file) {
         return ResponseEntity.ok(
-                bookCsvImportService.importBooks(file)
-        );
+                bookCsvImportService.importBooks(file));
     }
 }

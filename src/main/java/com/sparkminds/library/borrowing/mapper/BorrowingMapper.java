@@ -12,16 +12,12 @@ import java.time.ZoneOffset;
 public class BorrowingMapper {
 
     public BorrowingResponse toResponse(
-            Borrowing borrowing
-    ) {
+            Borrowing borrowing) {
         String memberName = resolveMemberName(borrowing);
 
-        boolean overdue =
-                borrowing.getStatus()
-                    == BorrowingStatus.BORROWED
+        boolean overdue = borrowing.getStatus() == BorrowingStatus.BORROWED
                 && borrowing.getDueAt().isBefore(
-                    OffsetDateTime.now(ZoneOffset.UTC)
-                );
+                        OffsetDateTime.now(ZoneOffset.UTC));
 
         return new BorrowingResponse(
                 borrowing.getId(),
@@ -37,22 +33,19 @@ public class BorrowingMapper {
                 borrowing.getBorrowedAt(),
                 borrowing.getDueAt(),
                 borrowing.getReturnedAt(),
-                overdue
-        );
+                overdue);
     }
 
     private String resolveMemberName(Borrowing borrowing) {
-        String fullName =
-                borrowing.getMember().getFullName();
+        String fullName = borrowing.getMember().getFullName();
 
         if (fullName != null && !fullName.isBlank()) {
             return fullName;
         }
 
-        String username =
-                borrowing.getMember()
-                    .getUser()
-                    .getUsername();
+        String username = borrowing.getMember()
+                .getUser()
+                .getUsername();
 
         if (username != null && !username.isBlank()) {
             return username;

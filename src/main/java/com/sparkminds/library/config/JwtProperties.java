@@ -9,16 +9,11 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public record JwtProperties(
 
-        @NotBlank
-        String issuer,
+                @NotBlank String issuer,
 
-        @NotBlank
-        String secret,
+                @NotBlank String secret,
 
-        @Min(1)
-        long accessTokenMinutes,
+                @Min(1) long accessTokenMinutes,
 
-        @Min(1)
-        long refreshTokenDays
-) {
+                @Min(1) long refreshTokenDays) {
 }

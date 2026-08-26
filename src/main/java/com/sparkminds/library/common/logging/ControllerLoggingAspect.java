@@ -24,15 +24,11 @@ import java.util.stream.Collectors;
 @Log4j2
 public class ControllerLoggingAspect {
 
-    @Around(
-        "within(com.sparkminds.library..controller..*)"
-    )
+    @Around("within(com.sparkminds.library..controller..*)")
     public Object logControllerMethod(
-            ProceedingJoinPoint joinPoint
-    ) throws Throwable {
+            ProceedingJoinPoint joinPoint) throws Throwable {
 
-        HttpServletRequest request =
-                getCurrentRequest();
+        HttpServletRequest request = getCurrentRequest();
 
         String httpMethod = request == null
                 ? "N/A"
@@ -42,15 +38,13 @@ public class ControllerLoggingAspect {
                 ? "N/A"
                 : request.getRequestURI();
 
-        String handler =
-                joinPoint.getSignature().toShortString();
+        String handler = joinPoint.getSignature().toShortString();
 
         String username = getCurrentUsername();
 
         String arguments = summarizeArguments(
                 joinPoint.getArgs(),
-                requestUri
-        );
+                requestUri);
 
         long startTime = System.nanoTime();
 
@@ -60,15 +54,13 @@ public class ControllerLoggingAspect {
                 requestUri,
                 username,
                 handler,
-                arguments
-        );
+                arguments);
 
         try {
             Object result = joinPoint.proceed();
 
-            long durationMillis =
-                    (System.nanoTime() - startTime)
-                            / 1_000_000;
+            long durationMillis = (System.nanoTime() - startTime)
+                    / 1_000_000;
 
             log.info(
                     "FUNCTION_RETURN method={} path={} user={} handler={} durationMs={} result={}",
@@ -77,14 +69,12 @@ public class ControllerLoggingAspect {
                     username,
                     handler,
                     durationMillis,
-                    summarizeResult(result)
-            );
+                    summarizeResult(result));
 
             return result;
         } catch (Throwable exception) {
-            long durationMillis =
-                    (System.nanoTime() - startTime)
-                            / 1_000_000;
+            long durationMillis = (System.nanoTime() - startTime)
+                    / 1_000_000;
 
             log.error(
                     "FUNCTION_ERROR method={} path={} user={} handler={} durationMs={} exception={} message={}",
@@ -95,16 +85,14 @@ public class ControllerLoggingAspect {
                     durationMillis,
                     exception.getClass().getSimpleName(),
                     exception.getMessage(),
-                    exception
-            );
+                    exception);
 
             throw exception;
         }
     }
 
     private HttpServletRequest getCurrentRequest() {
-        if (RequestContextHolder.getRequestAttributes()
-                instanceof ServletRequestAttributes attributes) {
+        if (RequestContextHolder.getRequestAttributes() instanceof ServletRequestAttributes attributes) {
             return attributes.getRequest();
         }
 
@@ -112,9 +100,8 @@ public class ControllerLoggingAspect {
     }
 
     private String getCurrentUsername() {
-        Authentication authentication =
-                SecurityContextHolder.getContext()
-                        .getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext()
+                .getAuthentication();
 
         if (authentication == null
                 || !authentication.isAuthenticated()) {
@@ -126,8 +113,7 @@ public class ControllerLoggingAspect {
 
     private String summarizeArguments(
             Object[] arguments,
-            String requestUri
-    ) {
+            String requestUri) {
         if (requestUri.startsWith("/api/auth")) {
             return "[authentication-arguments-masked]";
         }
@@ -137,8 +123,7 @@ public class ControllerLoggingAspect {
                 .collect(Collectors.joining(
                         ", ",
                         "[",
-                        "]"
-                ));
+                        "]"));
     }
 
     private String summarizeArgument(Object argument) {
@@ -191,8 +176,8 @@ public class ControllerLoggingAspect {
                     + response.getStatusCode().value()
                     + ", bodyType="
                     + (body == null
-                        ? "empty"
-                        : body.getClass().getSimpleName())
+                            ? "empty"
+                            : body.getClass().getSimpleName())
                     + "}";
         }
 

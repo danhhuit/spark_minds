@@ -184,177 +184,177 @@
         "Hoạt động": "Active",
         "Không thể tải dữ liệu": "Unable to load data",
         "Hệ thống đang bảo trì": "System is under maintenance"
-        ,"Đầu sách": "Titles"
-        ,"Trong danh mục": "In the catalog"
-        ,"Tài khoản đang quản lý": "Managed accounts"
-        ,"Lượt mượn": "Loans"
-        ,"Tổng lịch sử lưu thông": "All circulation records"
-        ,"Cần xử lý": "Needs attention"
-        ,"Không có cảnh báo": "No alerts"
-        ,"Có thể tra cứu": "Available to browse"
-        ,"Lịch sử": "History"
-        ,"Tổng lượt mượn": "Total loans"
-        ,"Chưa hoàn trả": "Not yet returned"
-        ,"Vui lòng hoàn trả": "Please return"
-        ,"Không có sách quá hạn": "No overdue books"
-        ,"Kho sách & lưu thông": "Catalog & circulation"
-        ,"Tìm nhanh trong toàn bộ thư viện": "Search the entire library"
-        ,"Bạn muốn đọc gì hôm nay?": "What would you like to read today?"
-        ,"Tra cứu đầu sách trước khi cập nhật kho, mượn hoặc trả.": "Find a title before updating inventory, borrowing, or returning it."
-        ,"Tìm theo tên sách, tác giả hoặc mã ISBN trong bộ sưu tập.": "Search the collection by title, author, or ISBN."
-        ,"Nhập tên sách, tác giả hoặc ISBN": "Enter a title, author, or ISBN"
-        ,"Tìm trong thư viện": "Search the library"
-        ,"Bộ sưu tập": "Collection"
-        ,"Sách trên kệ": "Books on the shelf"
-        ,"Xem toàn bộ kho sách": "View the full catalog"
-        ,"Hoạt động gần đây": "Recent activity"
-        ,"Xem lịch sử mượn trả": "View loan history"
-        ,"Danh mục thư viện": "Library catalog"
-        ,"Khám phá kho sách": "Explore the catalog"
-        ,"Tra cứu, cập nhật và bổ sung tài liệu vào bộ sưu tập.": "Search, update, and add materials to the collection."
-        ,"Duyệt sách theo từ khóa, tác giả, danh mục và tình trạng.": "Browse by keyword, author, category, and availability."
-        ,"Nhập CSV": "Import CSV"
-        ,"Thêm sách": "Add book"
-        ,"Lọc kết quả": "Filter results"
-        ,"Xóa lọc": "Clear filters"
-        ,"Tên, ISBN, tác giả...": "Title, ISBN, author..."
-        ,"Danh mục": "Category"
-        ,"Tất cả danh mục": "All categories"
-        ,"Nhà xuất bản": "Publisher"
-        ,"Nhập nhà xuất bản": "Enter publisher"
-        ,"Tình trạng": "Availability"
-        ,"Có thể mượn": "Available"
-        ,"Đang hết sách": "Out of stock"
-        ,"Áp dụng bộ lọc": "Apply filters"
-        ,"Không tìm thấy sách": "No books found"
-        ,"Thử thay đổi từ khóa hoặc bộ lọc tìm kiếm.": "Try changing the keyword or filters."
-        ,"Khác": "Other"
-        ,"Mượn sách": "Borrow book"
-        ,"Chưa có dữ liệu sách": "No book data yet"
-        ,"Thêm sách mới hoặc nhập danh sách từ CSV.": "Add a new book or import a CSV list."
-        ,"Số lượng": "Quantity"
-        ,"Tên sách *": "Book title *"
-        ,"Tác giả *": "Authors *"
-        ,"Danh mục *": "Category *"
-        ,"ISBN *": "ISBN *"
-        ,"Ngày xuất bản": "Published date"
-        ,"Tổng số lượng *": "Total quantity *"
-        ,"Mô tả": "Description"
-        ,"Chọn file CSV *": "Choose CSV file *"
-        ,"Chế độ bảo trì được sử dụng như thế nào?": "How is maintenance mode used?"
-        ,"Dùng chế độ này khi nâng cấp ứng dụng, sửa dữ liệu hoặc thực hiện công việc cần tạm dừng giao dịch.": "Use this mode during upgrades, data repairs, or work that requires transactions to pause."
-        ,"Tên người dùng *": "Username *"
-        ,"Số điện thoại *": "Phone number *"
-        ,"Ngày sinh *": "Date of birth *"
-        ,"Cập nhật ngay": "Update now"
-        ,"Đã cập nhật hồ sơ": "Profile updated"
-        ,"Thông tin cá nhân đã được lưu.": "Your personal information has been saved."
-        ,"Đang cập nhật...": "Updating..."
-        ,"Đặt mật khẩu mới": "Set a new password"
-        ,"Liên kết đã được xác nhận. Hãy tạo mật khẩu mới.": "The link has been verified. Create a new password."
-        ,"Quên mật khẩu": "Forgot password"
-        ,"Nhập email đăng ký để nhận liên kết đặt lại mật khẩu.": "Enter your registered email to receive a password reset link."
-        ,"Nhập lại mật khẩu mới": "Confirm new password"
-        ,"Nhập mật khẩu mới": "Enter a new password"
-        ,"Nhập lại mật khẩu": "Enter the password again"
-        ,"Cập nhật mật khẩu": "Update password"
-        ,"Nhập email đăng ký": "Enter your registered email"
-        ,"Mở liên kết trong email": "Open the link in the email"
-        ,"Tạo mật khẩu mới": "Create a new password"
-        ,"Email đăng ký": "Registered email"
-        ,"Gửi liên kết đặt lại mật khẩu": "Send password reset link"
-        ,"Hãy kiểm tra hộp thư của bạn": "Check your inbox"
-        ,"Nếu email thuộc một tài khoản hợp lệ, hệ thống đã gửi liên kết có hiệu lực trong 30 phút. Kiểm tra cả thư mục spam hoặc thư rác.": "If the email belongs to a valid account, a link valid for 30 minutes has been sent. Check your spam or junk folder too."
-        ,"Mở hộp thư thử nghiệm Mailpit": "Open the Mailpit test inbox"
-        ,"Đã gửi hướng dẫn": "Instructions sent"
-        ,"Hãy kiểm tra email để tiếp tục.": "Check your email to continue."
-        ,"Mật khẩu nhập lại không khớp.": "The password confirmation does not match."
-        ,"Đặt lại mật khẩu thành công. Bạn có thể đăng nhập bằng mật khẩu mới.": "Your password has been reset. You can now sign in with the new password."
-        ,"Chi tiết sách": "Book details"
-        ,"Trở lại kho sách": "Back to catalog"
-        ,"Lưu": "Save"
-        ,"Đã lưu": "Saved"
-        ,"Lưu sách": "Save book"
-        ,"Bỏ lưu": "Remove from saved"
-        ,"Đã lưu sách": "Book saved"
-        ,"Đã bỏ khỏi danh sách lưu": "Removed from saved books"
-        ,"Giới thiệu về cuốn sách": "About this book"
-        ,"Thông tin xuất bản": "Publication details"
-        ,"Ngày phát hành": "Published date"
-        ,"Số bản hiện có": "Available copies"
-        ,"Tổng số bản": "Total copies"
-        ,"Sách đã lưu": "Saved books"
-        ,"Bộ sưu tập bạn muốn đọc sau": "Your reading list for later"
-        ,"Bạn chưa lưu cuốn sách nào.": "You have not saved any books yet."
-        ,"Mở chi tiết": "View details"
-        ,"Chỉnh sửa sách": "Edit book"
-        ,"Mô tả đang được cập nhật.": "The description is being updated."
-        ,"Bạn": "You"
-        ,"Cấu hình hệ thống": "System configuration"
-        ,"Chào mừng bạn trở lại.": "Welcome back."
-        ,"Đang đăng nhập...": "Signing in..."
-        ,"Đăng nhập thành công": "Signed in successfully"
-        ,"Đang tạo...": "Creating..."
-        ,"Đăng ký thành công. Hãy kiểm tra email để xác minh.": "Registration successful. Check your email to verify your account."
-        ,"Sách trước": "Previous books"
-        ,"Sách tiếp theo": "Next books"
-        ,"đầu sách phù hợp": "matching books"
-        ,"đầu sách trong danh mục": "books in the catalog"
-        ,"Ngừng hoạt động": "Deactivate"
-        ,"Đang mượn...": "Borrowing..."
-        ,"Mượn sách thành công": "Book borrowed successfully"
-        ,"Không thể mượn sách": "Unable to borrow the book"
-        ,"Cập nhật sách": "Update book"
-        ,"Thêm sách mới": "Add a new book"
-        ,"Các trường có dấu * là bắt buộc.": "Fields marked with * are required."
-        ,"Mô tả ngắn về cuốn sách": "A short description of the book"
-        ,"Đang lưu...": "Saving..."
-        ,"Đang bỏ lưu...": "Removing..."
-        ,"Đã cập nhật sách": "Book updated"
-        ,"Đã thêm sách": "Book added"
-        ,"Không thể cập nhật": "Unable to update"
-        ,"Ngừng hoạt động sách?": "Deactivate this book?"
-        ,"Đang xử lý...": "Processing..."
-        ,"Đã cập nhật trạng thái sách": "Book status updated"
-        ,"Nhập sách từ CSV": "Import books from CSV"
-        ,"Dung lượng tối đa 5 MB, chỉ hỗ trợ file .csv.": "Maximum size is 5 MB. Only .csv files are supported."
-        ,"Nhập dữ liệu": "Import data"
-        ,"Đang nhập...": "Importing..."
-        ,"Nhập CSV thành công": "CSV imported successfully"
-        ,"Ví dụ: Member@123": "Example: Member@123"
-        ,"Đã cập nhật thành viên": "Member updated"
-        ,"Đã tạo thành viên": "Member created"
-        ,"Vô hiệu hóa thành viên?": "Disable this member?"
-        ,"Đã vô hiệu hóa thành viên": "Member disabled"
-        ,"Không thể vô hiệu hóa": "Unable to disable the member"
-        ,"Cảm ơn bạn!": "Thank you!"
-        ,"Trả sách thành công": "Book returned successfully"
-        ,"Không thể trả sách": "Unable to return the book"
-        ,"Đã lưu cấu hình": "Configuration saved"
-        ,"Hệ thống đang ở chế độ bảo trì.": "The system is in maintenance mode."
-        ,"Hệ thống hoạt động bình thường.": "The system is operating normally."
-        ,"Đã gửi mã xác minh": "Verification code sent"
-        ,"Đang gửi...": "Sending..."
-        ,"Đang xác minh...": "Verifying..."
-        ,"Đổi email thành công": "Email changed successfully"
-        ,"Vui lòng đăng nhập lại bằng email mới.": "Sign in again with your new email."
-        ,"Đổi mật khẩu thành công": "Password changed successfully"
-        ,"Vui lòng đăng nhập lại.": "Please sign in again."
-        ,"Bạn có thể đăng nhập bằng mật khẩu mới.": "You can sign in with your new password."
-        ,"Không thể kết nối tới hệ thống. Hãy kiểm tra server.": "Unable to connect to the system. Check the server."
-        ,"Chưa cập nhật tác giả": "Authors not yet provided"
-        ,"Vị trí ảnh bìa sách": "Book cover area"
-        ,"Về trang chủ": "Back to home"
-        ,"Dashboard": "Dashboard"
-        ,"Bảng điều khiển": "Dashboard"
-        ,"cuốn": "copies"
-        ,"Công nghệ": "Technology"
-        ,"Khoa học": "Science"
-        ,"Lịch sử": "History"
-        ,"Tâm lý học": "Psychology"
-        ,"Phát triển bản thân": "Self Development"
-        ,"Kinh doanh": "Business"
-        ,"Văn học": "Literature"
+        , "Đầu sách": "Titles"
+        , "Trong danh mục": "In the catalog"
+        , "Tài khoản đang quản lý": "Managed accounts"
+        , "Lượt mượn": "Loans"
+        , "Tổng lịch sử lưu thông": "All circulation records"
+        , "Cần xử lý": "Needs attention"
+        , "Không có cảnh báo": "No alerts"
+        , "Có thể tra cứu": "Available to browse"
+        , "Lịch sử": "History"
+        , "Tổng lượt mượn": "Total loans"
+        , "Chưa hoàn trả": "Not yet returned"
+        , "Vui lòng hoàn trả": "Please return"
+        , "Không có sách quá hạn": "No overdue books"
+        , "Kho sách & lưu thông": "Catalog & circulation"
+        , "Tìm nhanh trong toàn bộ thư viện": "Search the entire library"
+        , "Bạn muốn đọc gì hôm nay?": "What would you like to read today?"
+        , "Tra cứu đầu sách trước khi cập nhật kho, mượn hoặc trả.": "Find a title before updating inventory, borrowing, or returning it."
+        , "Tìm theo tên sách, tác giả hoặc mã ISBN trong bộ sưu tập.": "Search the collection by title, author, or ISBN."
+        , "Nhập tên sách, tác giả hoặc ISBN": "Enter a title, author, or ISBN"
+        , "Tìm trong thư viện": "Search the library"
+        , "Bộ sưu tập": "Collection"
+        , "Sách trên kệ": "Books on the shelf"
+        , "Xem toàn bộ kho sách": "View the full catalog"
+        , "Hoạt động gần đây": "Recent activity"
+        , "Xem lịch sử mượn trả": "View loan history"
+        , "Danh mục thư viện": "Library catalog"
+        , "Khám phá kho sách": "Explore the catalog"
+        , "Tra cứu, cập nhật và bổ sung tài liệu vào bộ sưu tập.": "Search, update, and add materials to the collection."
+        , "Duyệt sách theo từ khóa, tác giả, danh mục và tình trạng.": "Browse by keyword, author, category, and availability."
+        , "Nhập CSV": "Import CSV"
+        , "Thêm sách": "Add book"
+        , "Lọc kết quả": "Filter results"
+        , "Xóa lọc": "Clear filters"
+        , "Tên, ISBN, tác giả...": "Title, ISBN, author..."
+        , "Danh mục": "Category"
+        , "Tất cả danh mục": "All categories"
+        , "Nhà xuất bản": "Publisher"
+        , "Nhập nhà xuất bản": "Enter publisher"
+        , "Tình trạng": "Availability"
+        , "Có thể mượn": "Available"
+        , "Đang hết sách": "Out of stock"
+        , "Áp dụng bộ lọc": "Apply filters"
+        , "Không tìm thấy sách": "No books found"
+        , "Thử thay đổi từ khóa hoặc bộ lọc tìm kiếm.": "Try changing the keyword or filters."
+        , "Khác": "Other"
+        , "Mượn sách": "Borrow book"
+        , "Chưa có dữ liệu sách": "No book data yet"
+        , "Thêm sách mới hoặc nhập danh sách từ CSV.": "Add a new book or import a CSV list."
+        , "Số lượng": "Quantity"
+        , "Tên sách *": "Book title *"
+        , "Tác giả *": "Authors *"
+        , "Danh mục *": "Category *"
+        , "ISBN *": "ISBN *"
+        , "Ngày xuất bản": "Published date"
+        , "Tổng số lượng *": "Total quantity *"
+        , "Mô tả": "Description"
+        , "Chọn file CSV *": "Choose CSV file *"
+        , "Chế độ bảo trì được sử dụng như thế nào?": "How is maintenance mode used?"
+        , "Dùng chế độ này khi nâng cấp ứng dụng, sửa dữ liệu hoặc thực hiện công việc cần tạm dừng giao dịch.": "Use this mode during upgrades, data repairs, or work that requires transactions to pause."
+        , "Tên người dùng *": "Username *"
+        , "Số điện thoại *": "Phone number *"
+        , "Ngày sinh *": "Date of birth *"
+        , "Cập nhật ngay": "Update now"
+        , "Đã cập nhật hồ sơ": "Profile updated"
+        , "Thông tin cá nhân đã được lưu.": "Your personal information has been saved."
+        , "Đang cập nhật...": "Updating..."
+        , "Đặt mật khẩu mới": "Set a new password"
+        , "Liên kết đã được xác nhận. Hãy tạo mật khẩu mới.": "The link has been verified. Create a new password."
+        , "Quên mật khẩu": "Forgot password"
+        , "Nhập email đăng ký để nhận liên kết đặt lại mật khẩu.": "Enter your registered email to receive a password reset link."
+        , "Nhập lại mật khẩu mới": "Confirm new password"
+        , "Nhập mật khẩu mới": "Enter a new password"
+        , "Nhập lại mật khẩu": "Enter the password again"
+        , "Cập nhật mật khẩu": "Update password"
+        , "Nhập email đăng ký": "Enter your registered email"
+        , "Mở liên kết trong email": "Open the link in the email"
+        , "Tạo mật khẩu mới": "Create a new password"
+        , "Email đăng ký": "Registered email"
+        , "Gửi liên kết đặt lại mật khẩu": "Send password reset link"
+        , "Hãy kiểm tra hộp thư của bạn": "Check your inbox"
+        , "Nếu email thuộc một tài khoản hợp lệ, hệ thống đã gửi liên kết có hiệu lực trong 30 phút. Kiểm tra cả thư mục spam hoặc thư rác.": "If the email belongs to a valid account, a link valid for 30 minutes has been sent. Check your spam or junk folder too."
+        , "Mở hộp thư thử nghiệm Mailpit": "Open the Mailpit test inbox"
+        , "Đã gửi hướng dẫn": "Instructions sent"
+        , "Hãy kiểm tra email để tiếp tục.": "Check your email to continue."
+        , "Mật khẩu nhập lại không khớp.": "The password confirmation does not match."
+        , "Đặt lại mật khẩu thành công. Bạn có thể đăng nhập bằng mật khẩu mới.": "Your password has been reset. You can now sign in with the new password."
+        , "Chi tiết sách": "Book details"
+        , "Trở lại kho sách": "Back to catalog"
+        , "Lưu": "Save"
+        , "Đã lưu": "Saved"
+        , "Lưu sách": "Save book"
+        , "Bỏ lưu": "Remove from saved"
+        , "Đã lưu sách": "Book saved"
+        , "Đã bỏ khỏi danh sách lưu": "Removed from saved books"
+        , "Giới thiệu về cuốn sách": "About this book"
+        , "Thông tin xuất bản": "Publication details"
+        , "Ngày phát hành": "Published date"
+        , "Số bản hiện có": "Available copies"
+        , "Tổng số bản": "Total copies"
+        , "Sách đã lưu": "Saved books"
+        , "Bộ sưu tập bạn muốn đọc sau": "Your reading list for later"
+        , "Bạn chưa lưu cuốn sách nào.": "You have not saved any books yet."
+        , "Mở chi tiết": "View details"
+        , "Chỉnh sửa sách": "Edit book"
+        , "Mô tả đang được cập nhật.": "The description is being updated."
+        , "Bạn": "You"
+        , "Cấu hình hệ thống": "System configuration"
+        , "Chào mừng bạn trở lại.": "Welcome back."
+        , "Đang đăng nhập...": "Signing in..."
+        , "Đăng nhập thành công": "Signed in successfully"
+        , "Đang tạo...": "Creating..."
+        , "Đăng ký thành công. Hãy kiểm tra email để xác minh.": "Registration successful. Check your email to verify your account."
+        , "Sách trước": "Previous books"
+        , "Sách tiếp theo": "Next books"
+        , "đầu sách phù hợp": "matching books"
+        , "đầu sách trong danh mục": "books in the catalog"
+        , "Ngừng hoạt động": "Deactivate"
+        , "Đang mượn...": "Borrowing..."
+        , "Mượn sách thành công": "Book borrowed successfully"
+        , "Không thể mượn sách": "Unable to borrow the book"
+        , "Cập nhật sách": "Update book"
+        , "Thêm sách mới": "Add a new book"
+        , "Các trường có dấu * là bắt buộc.": "Fields marked with * are required."
+        , "Mô tả ngắn về cuốn sách": "A short description of the book"
+        , "Đang lưu...": "Saving..."
+        , "Đang bỏ lưu...": "Removing..."
+        , "Đã cập nhật sách": "Book updated"
+        , "Đã thêm sách": "Book added"
+        , "Không thể cập nhật": "Unable to update"
+        , "Ngừng hoạt động sách?": "Deactivate this book?"
+        , "Đang xử lý...": "Processing..."
+        , "Đã cập nhật trạng thái sách": "Book status updated"
+        , "Nhập sách từ CSV": "Import books from CSV"
+        , "Dung lượng tối đa 5 MB, chỉ hỗ trợ file .csv.": "Maximum size is 5 MB. Only .csv files are supported."
+        , "Nhập dữ liệu": "Import data"
+        , "Đang nhập...": "Importing..."
+        , "Nhập CSV thành công": "CSV imported successfully"
+        , "Ví dụ: Member@123": "Example: Member@123"
+        , "Đã cập nhật thành viên": "Member updated"
+        , "Đã tạo thành viên": "Member created"
+        , "Vô hiệu hóa thành viên?": "Disable this member?"
+        , "Đã vô hiệu hóa thành viên": "Member disabled"
+        , "Không thể vô hiệu hóa": "Unable to disable the member"
+        , "Cảm ơn bạn!": "Thank you!"
+        , "Trả sách thành công": "Book returned successfully"
+        , "Không thể trả sách": "Unable to return the book"
+        , "Đã lưu cấu hình": "Configuration saved"
+        , "Hệ thống đang ở chế độ bảo trì.": "The system is in maintenance mode."
+        , "Hệ thống hoạt động bình thường.": "The system is operating normally."
+        , "Đã gửi mã xác minh": "Verification code sent"
+        , "Đang gửi...": "Sending..."
+        , "Đang xác minh...": "Verifying..."
+        , "Đổi email thành công": "Email changed successfully"
+        , "Vui lòng đăng nhập lại bằng email mới.": "Sign in again with your new email."
+        , "Đổi mật khẩu thành công": "Password changed successfully"
+        , "Vui lòng đăng nhập lại.": "Please sign in again."
+        , "Bạn có thể đăng nhập bằng mật khẩu mới.": "You can sign in with your new password."
+        , "Không thể kết nối tới hệ thống. Hãy kiểm tra server.": "Unable to connect to the system. Check the server."
+        , "Chưa cập nhật tác giả": "Authors not yet provided"
+        , "Vị trí ảnh bìa sách": "Book cover area"
+        , "Về trang chủ": "Back to home"
+        , "Dashboard": "Dashboard"
+        , "Bảng điều khiển": "Dashboard"
+        , "cuốn": "copies"
+        , "Công nghệ": "Technology"
+        , "Khoa học": "Science"
+        , "Lịch sử": "History"
+        , "Tâm lý học": "Psychology"
+        , "Phát triển bản thân": "Self Development"
+        , "Kinh doanh": "Business"
+        , "Văn học": "Literature"
     };
     const VI_TEXT = Object.fromEntries(
         Object.entries(EN_TEXT).map(([vi, en]) => [en, vi])
@@ -717,7 +717,7 @@
         translateTree(document.body);
 
         if (rerender && state.user
-                && !elements.appView.classList.contains("hidden")) {
+            && !elements.appView.classList.contains("hidden")) {
             hydrateUserIdentity();
             renderNavigation();
             await navigate(state.currentView);
@@ -805,7 +805,7 @@
             mutations.forEach((mutation) => {
                 mutation.addedNodes.forEach((node) => {
                     if (node.nodeType === Node.ELEMENT_NODE
-                            || node.nodeType === Node.TEXT_NODE) {
+                        || node.nodeType === Node.TEXT_NODE) {
                         translateTree(node);
                     }
                 });
@@ -822,7 +822,7 @@
         const enhance = (root) => {
             const inputs = [];
             if (root instanceof Element
-                    && root.matches("input[type='password']")) {
+                && root.matches("input[type='password']")) {
                 inputs.push(root);
             }
             if (root.querySelectorAll) {
@@ -863,7 +863,7 @@
                     button.innerHTML = icon(
                         reveal ? "i-eye-off" : "i-eye"
                     );
-                    input.focus({preventScroll: true});
+                    input.focus({ preventScroll: true });
                 });
             });
         };
@@ -907,14 +907,14 @@
             );
         }
     }
-
+    // Xử lý mã đăng nhập xã hội
     async function handleSocialLoginCode(code) {
         try {
             const tokens = await api(
                 "/api/auth/social/exchange",
                 {
                     method: "POST",
-                    body: JSON.stringify({code})
+                    body: JSON.stringify({ code })
                 },
                 false
             );
@@ -932,7 +932,7 @@
             clearAuthQueryParameters();
             setAuthMessage(
                 error.message
-                    || "Không thể đăng nhập bằng Google. Vui lòng thử lại.",
+                || "Không thể đăng nhập bằng Google. Vui lòng thử lại.",
                 "error"
             );
         }
@@ -994,7 +994,7 @@
             showAuthPanel("login");
             setAuthMessage(
                 result.message
-                    || "Đăng ký thành công. Hãy kiểm tra email để xác minh.",
+                || "Đăng ký thành công. Hãy kiểm tra email để xác minh.",
                 "success"
             );
         } catch (error) {
@@ -1029,7 +1029,7 @@
         renderNavigation();
         await navigate("dashboard");
         if (state.profile
-                && (!state.profile.phone || !state.profile.dateOfBirth)) {
+            && (!state.profile.phone || !state.profile.dateOfBirth)) {
             toast(
                 t("Thông tin cá nhân chưa đầy đủ"),
                 t("Vui lòng cập nhật số điện thoại và ngày sinh để thư viện có thể liên hệ và hỗ trợ việc mượn trả sách.")
@@ -1148,7 +1148,7 @@
         const [books, borrowings, members, systemConfig] =
             await Promise.all(requests);
         state.dashboardShelfBooks =
-                await loadDashboardShelfBooks(books);
+            await loadDashboardShelfBooks(books);
         state.dashboardShelfIndex = 0;
 
         if (systemConfig) {
@@ -1189,15 +1189,15 @@
                     <div class="library-hero-copy">
                         <span class="eyebrow">
                             ${state.isAdmin
-                                ? "Kho sách & lưu thông"
-                                : `Xin chào ${escapeHtml(displayName())}`}
+                ? "Kho sách & lưu thông"
+                : `Xin chào ${escapeHtml(displayName())}`}
                         </span>
                         <h2>${state.isAdmin
-                            ? "Tìm nhanh trong toàn bộ thư viện"
-                            : "Bạn muốn đọc gì hôm nay?"}</h2>
+                ? "Tìm nhanh trong toàn bộ thư viện"
+                : "Bạn muốn đọc gì hôm nay?"}</h2>
                         <p>${state.isAdmin
-                            ? "Tra cứu đầu sách trước khi cập nhật kho, mượn hoặc trả."
-                            : "Tìm theo tên sách, tác giả hoặc mã ISBN trong bộ sưu tập."}</p>
+                ? "Tra cứu đầu sách trước khi cập nhật kho, mượn hoặc trả."
+                : "Tìm theo tên sách, tác giả hoặc mã ISBN trong bộ sưu tập."}</p>
                         <form id="dashboard-search-form"
                               class="library-hero-search" role="search">
                             <input name="keyword" autocomplete="off"
@@ -1237,8 +1237,8 @@
                     </div>
                     <div id="dashboard-shelf-host">
                         ${dashboardBookShelf(
-                            dashboardShelfWindow()
-                        )}
+                    dashboardShelfWindow()
+                )}
                     </div>
                 </section>
 
@@ -1259,9 +1259,9 @@
                     </div>
                     <div class="card">
                         ${borrowingTable(
-                            borrowings?.content || [],
-                            { compact: true, canReturn: false }
-                        )}
+                    borrowings?.content || [],
+                    { compact: true, canReturn: false }
+                )}
                     </div>
                 </section>
             </section>
@@ -1309,11 +1309,11 @@
 
         const remainingPages = await Promise.all(
             Array.from(
-                {length: firstPage.totalPages - 1},
+                { length: firstPage.totalPages - 1 },
                 (_, index) => safeApi(
                     `/api/books?page=${index + 1}`
-                        + "&size=10&active=true"
-                        + "&sortBy=title&direction=asc"
+                    + "&size=10&active=true"
+                    + "&sortBy=title&direction=asc"
                 )
             )
         );
@@ -1333,10 +1333,10 @@
         }
         const visibleCount = Math.min(8, books.length);
         return Array.from(
-            {length: visibleCount},
+            { length: visibleCount },
             (_, offset) => books[
                 (state.dashboardShelfIndex + offset)
-                    % books.length
+                % books.length
             ]
         );
     }
@@ -1348,7 +1348,7 @@
         }
         state.dashboardShelfIndex =
             (state.dashboardShelfIndex + step + books.length)
-                % books.length;
+            % books.length;
 
         const host = document.querySelector(
             "#dashboard-shelf-host"
@@ -1370,11 +1370,11 @@
         return `
             <div class="library-hero-shelf" aria-hidden="true">
                 ${items.map((book) =>
-                    bookCover(
-                        book,
-                        "book-cover-frame--hero"
-                    )
-                ).join("")}
+            bookCover(
+                book,
+                "book-cover-frame--hero"
+            )
+        ).join("")}
             </div>
         `;
     }
@@ -1383,7 +1383,7 @@
         if (!books.length) {
             return `
                 <div class="book-shelf book-shelf--empty" aria-hidden="true">
-                    ${Array.from({length: 7}, (_, index) => `
+                    ${Array.from({ length: 7 }, (_, index) => `
                         <span class="book-cover-frame is-empty
                             ${index % 3 === 0 ? "book-cover-frame--short" : ""}">
                             <span class="book-cover-empty"></span>
@@ -1443,14 +1443,14 @@
                 <div class="section-heading">
                     <div>
                         <h2>${state.isAdmin
-                            ? "Danh mục thư viện"
-                            : "Khám phá kho sách"}</h2>
+                ? "Danh mục thư viện"
+                : "Khám phá kho sách"}</h2>
                         <p>${state.isAdmin
-                            ? "Tra cứu, cập nhật và bổ sung tài liệu vào bộ sưu tập."
-                            : "Duyệt sách theo từ khóa, tác giả, danh mục và tình trạng."}</p>
+                ? "Tra cứu, cập nhật và bổ sung tài liệu vào bộ sưu tập."
+                : "Duyệt sách theo từ khóa, tác giả, danh mục và tình trạng."}</p>
                     </div>
                     ${state.isAdmin
-                        ? `<div class="action-row">
+                ? `<div class="action-row">
                             <button id="import-books-button"
                                     class="button button--secondary">
                                 Nhập CSV
@@ -1460,7 +1460,7 @@
                                 Thêm sách
                             </button>
                            </div>`
-                        : ""}
+                : ""}
                 </div>
 
                 <div class="catalog-layout">
@@ -1594,9 +1594,9 @@
                                     data-book-detail="${book.id}"
                                     aria-label="Mở chi tiết ${attribute(book.title)}">
                                 ${bookCover(
-                                    book,
-                                    "book-cover-frame--catalog"
-                                )}
+            book,
+            "book-cover-frame--catalog"
+        )}
                             </button>
                             ${availabilityBadge(book)}
                         </div>
@@ -1614,13 +1614,13 @@
                             <div>
                                 <small>Danh mục</small>
                                 <strong>${escapeHtml(
-                                    t(book.category?.name || "Khác")
-                                )}</strong>
+            t(book.category?.name || "Khác")
+        )}</strong>
                             </div>
                             <button class="button button--primary button--small"
                                     data-borrow-book="${book.id}"
                                     ${book.availableQuantity < 1
-                                        || !book.active ? "disabled" : ""}>
+                || !book.active ? "disabled" : ""}>
                                 Mượn sách
                             </button>
                         </div>
@@ -1636,10 +1636,10 @@
             return `
                 <div class="card">
                     ${emptyState(
-                        "i-book",
-                        "Chưa có dữ liệu sách",
-                        "Thêm sách mới hoặc nhập danh sách từ CSV."
-                    )}
+                "i-book",
+                "Chưa có dữ liệu sách",
+                "Thêm sách mới hoặc nhập danh sách từ CSV."
+            )}
                 </div>
             `;
         }
@@ -1670,9 +1670,9 @@
                                     <td>
                                         <span class="table-book">
                                             ${bookCover(
-                                                book,
-                                                "book-cover-frame--table"
-                                            )}
+            book,
+            "book-cover-frame--table"
+        )}
                                             <span class="table-primary">
                                                 <strong>${escapeHtml(book.title)}</strong>
                                                 <small>${escapeHtml(book.isbn)}
@@ -1682,16 +1682,16 @@
                                         </span>
                                     </td>
                                     <td>${escapeHtml(
-                                    t(book.category?.name || "—")
-                                    )}</td>
+            t(book.category?.name || "—")
+        )}</td>
                                     <td>${escapeHtml(book.publisher || "—")}</td>
                                     <td>
                                         ${book.availableQuantity}
                                         / ${book.totalQuantity}
                                     </td>
                                     <td>${book.active
-                                        ? availabilityBadge(book)
-                                        : badge("Ngừng hoạt động", "neutral")}</td>
+                ? availabilityBadge(book)
+                : badge("Ngừng hoạt động", "neutral")}</td>
                                     <td>
                                         <span class="table-actions">
                                             <button class="icon-button"
@@ -1761,7 +1761,7 @@
         try {
             const result = await api("/api/borrowings", {
                 method: "POST",
-                body: JSON.stringify({bookId: Number(bookId)})
+                body: JSON.stringify({ bookId: Number(bookId) })
             });
             toast(
                 "Mượn sách thành công",
@@ -1824,9 +1824,9 @@
                 <div class="book-detail-hero">
                     <aside class="book-detail-cover-panel">
                         ${bookCover(
-                            book,
-                            "book-cover-frame--detail"
-                        )}
+            book,
+            "book-cover-frame--detail"
+        )}
                         <div class="book-detail-availability">
                             ${availabilityBadge(book)}
                             <span>
@@ -1839,8 +1839,8 @@
                     <div class="book-detail-summary">
                         <span class="section-kicker">
                             ${escapeHtml(
-                                t(book.category?.name || "Khác")
-                            )}
+            t(book.category?.name || "Khác")
+        )}
                         </span>
                         <h2>${escapeHtml(book.title)}</h2>
                         <p class="book-detail-authors">
@@ -1857,12 +1857,12 @@
                                 ${isSaved ? "Đã lưu" : "Lưu"}
                             </button>
                             ${state.isAdmin
-                                ? `<button type="button"
+                ? `<button type="button"
                                            class="button button--primary"
                                            data-edit-detail-book>
                                        ${icon("i-edit")} Chỉnh sửa sách
                                    </button>`
-                                : `<button type="button"
+                : `<button type="button"
                                            class="button button--primary"
                                            data-detail-borrow="${book.id}"
                                            ${canBorrow ? "" : "disabled"}>
@@ -1884,9 +1884,9 @@
                         </div>
                         <div class="card-body">
                             <p>${escapeHtml(
-                                book.description
-                                    || "Mô tả đang được cập nhật."
-                            )}</p>
+                    book.description
+                    || "Mô tả đang được cập nhật."
+                )}</p>
                         </div>
                     </article>
 
@@ -1911,20 +1911,20 @@
                             <div>
                                 <dt>Nhà xuất bản</dt>
                                 <dd>${escapeHtml(
-                                    book.publisher || "—"
-                                )}</dd>
+                    book.publisher || "—"
+                )}</dd>
                             </div>
                             <div>
                                 <dt>Ngày phát hành</dt>
                                 <dd>${formatDate(
-                                    book.publishedDate
-                                )}</dd>
+                    book.publishedDate
+                )}</dd>
                             </div>
                             <div>
                                 <dt>Danh mục</dt>
                                 <dd>${escapeHtml(
-                                    t(book.category?.name || "Khác")
-                                )}</dd>
+                    t(book.category?.name || "Khác")
+                )}</dd>
                             </div>
                             <div>
                                 <dt>Số bản hiện có</dt>
@@ -1950,7 +1950,7 @@
             .addEventListener("click", async (event) => {
                 const button = event.currentTarget;
                 const wasSaved =
-                        button.dataset.saved === "true";
+                    button.dataset.saved === "true";
                 setButtonLoading(
                     button,
                     true,
@@ -2023,7 +2023,7 @@
                             ${state.categories.map((category) => `
                                 <option value="${category.id}"
                                     ${book?.category?.id === category.id
-                                        ? "selected" : ""}>
+                    ? "selected" : ""}>
                                     ${escapeHtml(t(category.name))}
                                 </option>
                             `).join("")}
@@ -2034,10 +2034,10 @@
                         <input name="authorNames" required
                                placeholder="Nguyễn Nhật Ánh, Tô Hoài"
                                value="${attribute(
-                                   (book?.authors || [])
-                                       .map((author) => author.name)
-                                       .join(", ")
-                               )}">
+                        (book?.authors || [])
+                            .map((author) => author.name)
+                            .join(", ")
+                    )}">
                         <small>Phân cách nhiều tác giả bằng dấu phẩy.</small>
                     </label>
                     <label class="field">
@@ -2058,7 +2058,7 @@
                                value="${book?.totalQuantity ?? 1}">
                     </label>
                     ${editing
-                        ? `<label class="field">
+                    ? `<label class="field">
                             <span>Trạng thái *</span>
                             <select name="active" required>
                                 <option value="true"
@@ -2071,13 +2071,13 @@
                                 </option>
                             </select>
                            </label>`
-                        : ""}
+                    : ""}
                     <label class="field field--full">
                         <span>Mô tả</span>
                         <textarea name="description" maxlength="2000"
                                   placeholder="Mô tả ngắn về cuốn sách">${escapeHtml(
-                                      book?.description || ""
-                                  )}</textarea>
+                        book?.description || ""
+                    )}</textarea>
                     </label>
                     <p id="book-form-error"
                        class="form-error field--full hidden"></p>
@@ -2321,10 +2321,10 @@
             return `
                 <div class="card">
                     ${emptyState(
-                        "i-users",
-                        "Không tìm thấy thành viên",
-                        "Thử thay đổi các điều kiện tìm kiếm."
-                    )}
+                "i-users",
+                "Không tìm thấy thành viên",
+                "Thử thay đổi các điều kiện tìm kiếm."
+            )}
                 </div>
             `;
         }
@@ -2354,24 +2354,24 @@
                                             </span>
                                             <span class="table-primary">
                                                 <strong>${escapeHtml(
-                                                    member.fullName
-                                                        || member.username
-                                                )}</strong>
+            member.fullName
+            || member.username
+        )}</strong>
                                                 <small>${escapeHtml(
-                                                    member.email
-                                                )}</small>
+            member.email
+        )}</small>
                                             </span>
                                         </span>
                                     </td>
                                     <td>${escapeHtml(
-                                        member.membershipCode || "—"
-                                    )}</td>
+            member.membershipCode || "—"
+        )}</td>
                                     <td>${formatDate(member.dateOfBirth)}</td>
                                     <td>${escapeHtml(member.phone || "—")}</td>
                                     <td>
                                         ${passwordStatusControl(
-                                            member.passwordConfigured !== false
-                                        )}
+            member.passwordConfigured !== false
+        )}
                                     </td>
                                     <td>${memberStatus(member)}</td>
                                     <td>
@@ -2467,8 +2467,8 @@
                         <label class="field">
                             <span>Thông tin mật khẩu</span>
                             ${passwordStatusControl(
-                                member.passwordConfigured !== false
-                            )}
+                member.passwordConfigured !== false
+            )}
                             <small>
                                 Mật khẩu đã được mã hóa và không thể xem.
                             </small>
@@ -2491,12 +2491,12 @@
                             <select name="accountNonLocked">
                                 <option value="true"
                                     ${member.accountNonLocked
-                                        ? "selected" : ""}>
+                        ? "selected" : ""}>
                                     Không khóa
                                 </option>
                                 <option value="false"
                                     ${!member.accountNonLocked
-                                        ? "selected" : ""}>
+                        ? "selected" : ""}>
                                     Đang khóa
                                 </option>
                             </select>
@@ -2642,11 +2642,11 @@
                 <div class="section-heading">
                     <div>
                         <h2>${state.isAdmin
-                            ? "Hoạt động mượn trả"
-                            : "Sách của tôi"}</h2>
+                ? "Hoạt động mượn trả"
+                : "Sách của tôi"}</h2>
                         <p>${state.isAdmin
-                            ? "Theo dõi toàn bộ giao dịch trong thư viện."
-                            : "Theo dõi thời hạn và lịch sử mượn sách."}</p>
+                ? "Theo dõi toàn bộ giao dịch trong thư viện."
+                : "Theo dõi thời hạn và lịch sử mượn sách."}</p>
                     </div>
                     ${state.isAdmin ? "" : `
                         <button class="button button--primary"
@@ -2709,33 +2709,33 @@
             host.innerHTML = `
                 <div class="saved-books-grid">
                     ${response.content.map((savedBook) => {
-                        const book = savedBook.book;
-                        state.books.set(
-                            String(book.id),
-                            book
-                        );
-                        return `
+                const book = savedBook.book;
+                state.books.set(
+                    String(book.id),
+                    book
+                );
+                return `
                             <button type="button"
                                     class="saved-book-card"
                                     data-book-detail="${book.id}">
                                 ${bookCover(
-                                    book,
-                                    "book-cover-frame--saved"
-                                )}
+                    book,
+                    "book-cover-frame--saved"
+                )}
                                 <span>
                                     <strong>
                                         ${escapeHtml(book.title)}
                                     </strong>
                                     <small>
                                         ${escapeHtml(
-                                            authorNames(book)
-                                        )}
+                    authorNames(book)
+                )}
                                     </small>
                                     <em>Mở chi tiết</em>
                                 </span>
                             </button>
                         `;
-                    }).join("")}
+            }).join("")}
                 </div>
             `;
             bindBookDetailLinks(host);
@@ -2757,9 +2757,9 @@
             host.innerHTML = `
                 <div class="card">
                     ${borrowingTable(response.content, {
-                        canReturn: !state.isAdmin,
-                        compact: false
-                    })}
+                canReturn: !state.isAdmin,
+                compact: false
+            })}
                     ${pagination(response, "borrowings")}
                 </div>
             `;
@@ -2792,8 +2792,8 @@
                             <th>Ngày trả</th>
                             <th>Trạng thái</th>
                             ${options.canReturn
-                                ? '<th class="text-right">Thao tác</th>'
-                                : ""}
+                ? '<th class="text-right">Thao tác</th>'
+                : ""}
                         </tr>
                     </thead>
                     <tbody>
@@ -2802,8 +2802,8 @@
                                 <td>
                                     <span class="table-primary">
                                         <strong>${escapeHtml(
-                                            item.bookTitle
-                                        )}</strong>
+                    item.bookTitle
+                )}</strong>
                                         <small>${escapeHtml(item.isbn)}</small>
                                     </span>
                                 </td>
@@ -2815,26 +2815,26 @@
                                             </span>
                                             <span class="table-primary">
                                                 <strong>${escapeHtml(
-                                                    item.memberName
-                                                        || item.fullName
-                                                        || item.username
-                                                        || item.memberEmail
-                                                        || "—"
-                                                )}</strong>
+                    item.memberName
+                    || item.fullName
+                    || item.username
+                    || item.memberEmail
+                    || "—"
+                )}</strong>
                                                 <small>${escapeHtml(
-                                                    item.membershipCode
-                                                        || "—"
-                                                )}</small>
+                    item.membershipCode
+                    || "—"
+                )}</small>
                                                 <small>${escapeHtml(
-                                                    item.memberEmail
-                                                        || item.email
-                                                        || "—"
-                                                )}</small>
+                    item.memberEmail
+                    || item.email
+                    || "—"
+                )}</small>
                                                 <small>${escapeHtml(
-                                                    item.memberPhone
-                                                        || item.phone
-                                                        || "—"
-                                                )}</small>
+                    item.memberPhone
+                    || item.phone
+                    || "—"
+                )}</small>
                                             </span>
                                         </span>
                                     </td>
@@ -2843,22 +2843,22 @@
                                 <td>${formatDateTime(item.dueAt)}</td>
                                 <td>
                                     ${item.returnedAt
-                                        ? formatDateTime(item.returnedAt)
-                                        : `<span class="muted">${t(
-                                            "Chưa trả"
-                                        )}</span>`}
+                        ? formatDateTime(item.returnedAt)
+                        : `<span class="muted">${t(
+                            "Chưa trả"
+                        )}</span>`}
                                 </td>
                                 <td>${borrowingStatus(item)}</td>
                                 ${options.canReturn ? `
                                     <td>
                                         <span class="table-actions">
                                             ${item.status === "BORROWED"
-                                                ? `<button
+                            ? `<button
                                                     class="button button--secondary button--small"
                                                     data-return-borrowing="${item.id}">
                                                     Trả sách
                                                    </button>`
-                                                : "—"}
+                            : "—"}
                                         </span>
                                     </td>
                                 ` : ""}
@@ -2899,7 +2899,7 @@
                 try {
                     await api(
                         `/api/borrowings/${borrowingId}/return`,
-                        {method: "POST"}
+                        { method: "POST" }
                     );
                     closeModal();
                     toast("Trả sách thành công", "Cảm ơn bạn!");
@@ -2997,8 +2997,8 @@
                                 <span>Nội dung thông báo</span>
                                 <textarea name="message" maxlength="500"
                                     placeholder="Hệ thống đang được bảo trì...">${escapeHtml(
-                                        t(config.maintenanceMessage || "")
-                                    )}</textarea>
+            t(config.maintenanceMessage || "")
+        )}</textarea>
                             </label>
                             <div class="action-row">
                                 <button type="submit"
@@ -3018,14 +3018,14 @@
                             <div class="detail-row">
                                 <span>Cập nhật bởi</span>
                                 <strong>${escapeHtml(
-                                    config.updatedBy || "Hệ thống"
-                                )}</strong>
+            config.updatedBy || "Hệ thống"
+        )}</strong>
                             </div>
                             <div class="detail-row">
                                 <span>Cập nhật lúc</span>
                                 <strong>${formatDateTime(
-                                    config.updatedAt
-                                )}</strong>
+            config.updatedAt
+        )}</strong>
                             </div>
                         </div>
                     </div>
@@ -3048,7 +3048,7 @@
                         "/api/admin/system-config/maintenance",
                         {
                             method: "PUT",
-                            body: JSON.stringify({enabled, message})
+                            body: JSON.stringify({ enabled, message })
                         }
                     );
                     state.maintenance = updated;
@@ -3122,13 +3122,13 @@
                                 </span>
                                 <div>
                                     <h3>${escapeHtml(
-                                        profile.fullName
-                                            || profile.username
-                                            || profile.email
-                                    )}</h3>
+            profile.fullName
+            || profile.username
+            || profile.email
+        )}</h3>
                                     <p>${state.isAdmin
-                                        ? "Quản trị viên hệ thống"
-                                        : "Thành viên thư viện"}</p>
+                ? "Quản trị viên hệ thống"
+                : "Thành viên thư viện"}</p>
                                 </div>
                             </div>
                             <form id="profile-form" class="form-grid">
@@ -3138,8 +3138,8 @@
                                            minlength="3" maxlength="50"
                                            autocomplete="username"
                                            value="${attribute(
-                                               profile.username
-                                           )}">
+                    profile.username
+                )}">
                                 </label>
                                 <label class="field">
                                     <span>Email</span>
@@ -3152,8 +3152,8 @@
                                         <input name="fullName" maxlength="150"
                                                autocomplete="name"
                                                value="${attribute(
-                                                   profile.fullName
-                                               )}">
+                    profile.fullName
+                )}">
                                     </label>
                                     <label class="field">
                                         <span>Số điện thoại *</span>
@@ -3161,29 +3161,29 @@
                                                autocomplete="tel"
                                                required
                                                value="${attribute(
-                                                   profile.phone
-                                               )}">
+                    profile.phone
+                )}">
                                     </label>
                                     <label class="field">
                                         <span>Ngày sinh *</span>
                                         <input name="dateOfBirth" type="date"
                                                max="${today()}" required
                                                value="${attribute(
-                                                   profile.dateOfBirth
-                                               )}">
+                    profile.dateOfBirth
+                )}">
                                     </label>
                                     <label class="field">
                                         <span>Mã thành viên</span>
                                         <input readonly value="${attribute(
-                                            profile.membershipCode || "—"
-                                        )}">
+                    profile.membershipCode || "—"
+                )}">
                                     </label>
                                     <label class="field field--full">
                                         <span>Địa chỉ</span>
                                         <textarea name="address"
                                                   maxlength="500">${escapeHtml(
-                                                      profile.address || ""
-                                                  )}</textarea>
+                    profile.address || ""
+                )}</textarea>
                                     </label>
                                 `}
                                 <div class="action-row field--full">
@@ -3194,7 +3194,7 @@
                                     <span class="profile-role">
                                         <span>Quyền</span>
                                         <strong>${state.isAdmin
-                                            ? "ADMIN" : "USER"}</strong>
+                ? "ADMIN" : "USER"}</strong>
                                     </span>
                                 </div>
                                 <p id="profile-form-error"
@@ -3295,10 +3295,10 @@
         document.querySelector("[data-focus-profile]")
             ?.addEventListener("click", () => {
                 document.querySelector("#profile-form")
-                    ?.scrollIntoView({behavior: "smooth", block: "center"});
+                    ?.scrollIntoView({ behavior: "smooth", block: "center" });
                 document.querySelector(
                     "#profile-form [name='phone']"
-                )?.focus({preventScroll: true});
+                )?.focus({ preventScroll: true });
             });
 
         document.querySelector("#profile-form")
@@ -3391,7 +3391,7 @@
                             block: "center"
                         });
                         verificationCard.querySelector("[name='code']")
-                            ?.focus({preventScroll: true});
+                            ?.focus({ preventScroll: true });
                     }
                 } catch (error) {
                     showFormError("#email-request-error", error);
@@ -3499,11 +3499,11 @@
                             Kiểm tra cả thư mục spam hoặc thư rác.
                         </p>
                         ${isLocalEnvironment
-                            ? `<a href="http://localhost:8025"
+                    ? `<a href="http://localhost:8025"
                                   target="_blank" rel="noopener">
                                    Mở hộp thư thử nghiệm Mailpit
                                </a>`
-                            : ""}
+                    : ""}
                     </div>
                 `,
             showFooter: false
@@ -3549,7 +3549,7 @@
                 if (data.newPassword !== data.confirmPassword) {
                     showFormError(
                         "#reset-form-error",
-                        {message: "Mật khẩu nhập lại không khớp."}
+                        { message: "Mật khẩu nhập lại không khớp." }
                     );
                     return;
                 }
@@ -3567,7 +3567,7 @@
                     closeModal();
                     setAuthMessage(
                         "Đặt lại mật khẩu thành công. "
-                            + "Bạn có thể đăng nhập bằng mật khẩu mới.",
+                        + "Bạn có thể đăng nhập bằng mật khẩu mới.",
                         "success"
                     );
                 } catch (error) {
@@ -3585,13 +3585,13 @@
     }
 
     async function api(path, options = {}, allowRefresh = true) {
-        const requestOptions = {...options};
+        const requestOptions = { ...options };
         const bodyIsFormData = requestOptions.body instanceof FormData;
         const headers = new Headers(requestOptions.headers || {});
         const accessToken = sessionStorage.getItem(TOKEN_KEY);
 
         if (!bodyIsFormData && requestOptions.body
-                && !headers.has("Content-Type")) {
+            && !headers.has("Content-Type")) {
             headers.set("Content-Type", "application/json");
         }
         if (accessToken) {
@@ -3611,8 +3611,8 @@
         }
 
         if (response.status === 401 && allowRefresh
-                && sessionStorage.getItem(REFRESH_KEY)
-                && !path.includes("/api/auth/refresh")) {
+            && sessionStorage.getItem(REFRESH_KEY)
+            && !path.includes("/api/auth/refresh")) {
             const refreshed = await refreshAccessToken();
             if (refreshed) {
                 return api(path, options, false);
@@ -3629,14 +3629,14 @@
             payload = await response.json();
         } else {
             const text = await response.text();
-            payload = text ? {message: text} : null;
+            payload = text ? { message: text } : null;
         }
 
         if (!response.ok) {
             const error = new Error(
                 t(
                     payload?.message
-                        || `Yêu cầu thất bại (${response.status})`
+                    || `Yêu cầu thất bại (${response.status})`
                 )
             );
             error.status = response.status;
@@ -3670,8 +3670,8 @@
         try {
             const response = await fetch("/api/auth/refresh", {
                 method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({refreshToken})
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ refreshToken })
             });
             if (!response.ok) {
                 throw new Error("Refresh token is invalid");
@@ -3690,7 +3690,7 @@
             if (refreshToken) {
                 await api("/api/auth/logout", {
                     method: "POST",
-                    body: JSON.stringify({refreshToken})
+                    body: JSON.stringify({ refreshToken })
                 }, false);
             }
         } catch (error) {
@@ -3740,8 +3740,8 @@
                         <div>
                             <h2 id="modal-title">${escapeHtml(t(title))}</h2>
                             ${subtitle
-                                ? `<p>${escapeHtml(t(subtitle))}</p>`
-                                : ""}
+                ? `<p>${escapeHtml(t(subtitle))}</p>`
+                : ""}
                         </div>
                         <button class="icon-button" data-close-modal
                                 aria-label="Đóng">
@@ -3758,8 +3758,8 @@
                             ${onConfirm ? `
                                 <button id="modal-confirm-button"
                                     class="button ${danger
-                                        ? "button--danger"
-                                        : "button--primary"}">
+                        ? "button--danger"
+                        : "button--primary"}">
                                     ${escapeHtml(t(confirmText))}
                                 </button>
                             ` : ""}
@@ -3838,19 +3838,19 @@
             <section class="page-section">
                 <div class="card">
                     ${emptyState(
-                        "i-alert",
-                        error.status === 503
-                            ? "Hệ thống đang bảo trì"
-                            : "Không thể tải dữ liệu",
-                        error.message
-                    )}
+            "i-alert",
+            error.status === 503
+                ? "Hệ thống đang bảo trì"
+                : "Không thể tải dữ liệu",
+            error.message
+        )}
                 </div>
                 ${state.isAdmin && error.status === 503
-                    ? `<button class="button button--primary"
+                ? `<button class="button button--primary"
                               data-open-system>
                            Mở cấu hình hệ thống
                        </button>`
-                    : ""}
+                : ""}
             </section>
         `;
         document.querySelector("[data-open-system]")
@@ -3861,10 +3861,10 @@
         return `
             <div class="card">
                 ${emptyState(
-                    "i-alert",
-                    "Không thể tải dữ liệu",
-                    error.message
-                )}
+            "i-alert",
+            "Không thể tải dữ liệu",
+            error.message
+        )}
             </div>
         `;
     }
@@ -3881,8 +3881,8 @@
     function pageSkeleton(count = 2) {
         return `
             <div style="display:grid;gap:14px">
-                ${Array.from({length: count}, () =>
-                    '<div class="skeleton"></div>').join("")}
+                ${Array.from({ length: count }, () =>
+            '<div class="skeleton"></div>').join("")}
             </div>
         `;
     }
@@ -3911,10 +3911,10 @@
                         ${icon("i-chevron-left")}
                     </button>
                     ${paginationNumbers(
-                        response.page,
-                        response.totalPages,
-                        namespace
-                    )}
+            response.page,
+            response.totalPages,
+            namespace
+        )}
                     <button class="icon-button"
                             data-${namespace}-page="${response.page + 1}"
                             ${response.last ? "disabled" : ""}
@@ -3927,9 +3927,9 @@
     }
 
     function paginationNumbers(
-            currentPage,
-            totalPages,
-            namespace
+        currentPage,
+        totalPages,
+        namespace
     ) {
         const visiblePages = new Set([
             0,
@@ -3977,8 +3977,8 @@
                         data-${namespace}-page="${page}"
                         aria-label="Trang ${page + 1}"
                         ${page === currentPage
-                            ? 'aria-current="page"'
-                            : ""}>
+                    ? 'aria-current="page"'
+                    : ""}>
                     ${page + 1}
                 </button>
             `);
@@ -4116,7 +4116,7 @@
     function icon(name) {
         return `<svg aria-hidden="true"><use href="#${name}"></use></svg>`;
     }
-
+    // hàm xử lý hiển thị ảnh bìa sách, nếu không có ảnh bìa thì hiển thị ảnh mặc định
     function bookCover(book, modifier = "") {
         const fileKey = book.isbn
             ? String(book.isbn)
@@ -4125,13 +4125,15 @@
             : String(book.id || "unknown")
                 .trim()
                 .replace(/[^a-zA-Z0-9_-]/g, "");
+        // mã hóa fileKey để sử dụng trong URL
         const encodedKey = encodeURIComponent(fileKey);
+        // danh sách các định dạng ảnh bìa sách được hỗ trợ
         const extensions = ["jpg", "jpeg", "png", "webp"];
         const candidates = extensions.flatMap((extension) => [
             `/assets/images/books/${encodedKey}.${extension}`
-                + `?v=${COVER_ASSET_VERSION}`,
+            + `?v=${COVER_ASSET_VERSION}`,
             `/assets/images/${encodedKey}.${extension}`
-                + `?v=${COVER_ASSET_VERSION}`
+            + `?v=${COVER_ASSET_VERSION}`
         ]);
         return `
             <span class="book-cover-frame ${modifier}"

@@ -18,40 +18,32 @@ public interface BorrowingRepository
 
     boolean existsByMember_IdAndStatus(
             Long memberId,
-            BorrowingStatus status
-    );
+            BorrowingStatus status);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("""
-        select borrowing
-          from Borrowing borrowing
-         where borrowing.id = :id
-        """)
+            select borrowing
+              from Borrowing borrowing
+             where borrowing.id = :id
+            """)
     Optional<Borrowing> findByIdForUpdate(
-            @Param("id") Long id
-    );
+            @Param("id") Long id);
 
-    @EntityGraph(
-        attributePaths = {
+    @EntityGraph(attributePaths = {
             "member",
             "member.user",
             "book"
-        }
-    )
+    })
     Page<Borrowing> findByMember_User_Id(
             Long userId,
-            Pageable pageable
-    );
+            Pageable pageable);
 
-    @EntityGraph(
-        attributePaths = {
+    @EntityGraph(attributePaths = {
             "member",
             "member.user",
             "book"
-        }
-    )
+    })
     @Query("select borrowing from Borrowing borrowing")
     Page<Borrowing> findAllDetailed(
-            Pageable pageable
-    );
+            Pageable pageable);
 }

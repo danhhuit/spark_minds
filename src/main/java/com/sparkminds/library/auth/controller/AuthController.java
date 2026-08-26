@@ -108,8 +108,7 @@ public class AuthController {
         @PostMapping("/social/exchange")
         @Operation(summary = "Exchange one-time social login code")
         public ResponseEntity<TokenResponse> exchangeSocialLoginCode(
-                        @Valid @RequestBody
-                        SocialLoginExchangeRequest request) {
+                        @Valid @RequestBody SocialLoginExchangeRequest request) {
                 return ResponseEntity.ok(
                                 socialLoginCodeService.exchange(
                                                 request.code()));

@@ -32,18 +32,10 @@ public class EmailChangeVerification {
     @JoinColumn(name = "user_id", nullable = false)
     private UserAccount user;
 
-    @Column(
-        name = "new_email",
-        nullable = false,
-        length = 255
-    )
+    @Column(name = "new_email", nullable = false, length = 255)
     private String newEmail;
 
-    @Column(
-        name = "code_hash",
-        nullable = false,
-        length = 255
-    )
+    @Column(name = "code_hash", nullable = false, length = 255)
     private String codeHash;
 
     @Column(name = "expires_at", nullable = false)
@@ -56,11 +48,7 @@ public class EmailChangeVerification {
     private boolean used = false;
 
     @CreationTimestamp
-    @Column(
-        name = "created_at",
-        nullable = false,
-        updatable = false
-    )
+    @Column(name = "created_at", nullable = false, updatable = false)
     private OffsetDateTime createdAt;
 
     @Column(name = "used_at")

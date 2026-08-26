@@ -13,43 +13,19 @@ import java.util.Set;
 
 public record CreateBookRequest(
 
-        @NotBlank(message = "ISBN is required")
-        @Size(max = 20, message = "ISBN is too long")
-        String isbn,
+        @NotBlank(message = "ISBN is required") @Size(max = 20, message = "ISBN is too long") String isbn,
 
-        @NotBlank(message = "Title is required")
-        @Size(max = 255, message = "Title is too long")
-        String title,
+        @NotBlank(message = "Title is required") @Size(max = 255, message = "Title is too long") String title,
 
-        @Size(max = 2000, message = "Description is too long")
-        String description,
+        @Size(max = 2000, message = "Description is too long") String description,
 
-        @Size(max = 255, message = "Publisher is too long")
-        String publisher,
+        @Size(max = 255, message = "Publisher is too long") String publisher,
 
-        @PastOrPresent(
-            message = "Published date cannot be in the future"
-        )
-        LocalDate publishedDate,
+        @PastOrPresent(message = "Published date cannot be in the future") LocalDate publishedDate,
 
-        @Min(
-            value = 0,
-            message = "Total quantity cannot be negative"
-        )
-        int totalQuantity,
+        @Min(value = 0, message = "Total quantity cannot be negative") int totalQuantity,
 
-        @NotNull(message = "Category ID is required")
-        @Positive(message = "Category ID must be positive")
-        Long categoryId,
+        @NotNull(message = "Category ID is required") @Positive(message = "Category ID must be positive") Long categoryId,
 
-        @NotEmpty(message = "At least one author is required")
-        Set<
-            @NotBlank(message = "Author name cannot be blank")
-            @Size(
-                max = 150,
-                message = "Author name is too long"
-            )
-            String
-        > authorNames
-) {
+        @NotEmpty(message = "At least one author is required") Set<@NotBlank(message = "Author name cannot be blank") @Size(max = 150, message = "Author name is too long") String> authorNames) {
 }

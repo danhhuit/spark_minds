@@ -2,15 +2,12 @@ databaseChangeLog:
   - include:
       file: changes/001-create-roles.yaml
       relativeToChangelogFile: true
-
   - include:
       file: changes/002-create-user-accounts.yaml
       relativeToChangelogFile: true
-
   - include:
       file: changes/003-create-member-profiles.yaml
       relativeToChangelogFile: true
-
   - include:
       file: changes/004-add-username.yaml
       relativeToChangelogFile: true
