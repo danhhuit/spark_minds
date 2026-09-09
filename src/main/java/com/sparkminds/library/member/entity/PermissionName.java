@@ -1,0 +1,31 @@
+package com.sparkminds.library.member.entity;
+
+/** Fine-grained actions that can be assigned through roles or directly to users. */
+public enum PermissionName {
+  BOOK_READ,
+  BOOK_CREATE,
+  BOOK_UPDATE,
+  BOOK_DELETE,
+  BOOK_IMPORT,
+
+  MEMBER_READ,
+  MEMBER_CREATE,
+  MEMBER_UPDATE,
+  MEMBER_DELETE,
+
+  BORROWING_BORROW,
+  BORROWING_RETURN_OWN,
+  BORROWING_RETURN_ANY,
+  BORROWING_READ_OWN,
+  BORROWING_READ_ALL,
+
+  PROFILE_READ,
+  PROFILE_UPDATE,
+  SAVED_BOOK_READ,
+  SAVED_BOOK_WRITE,
+
+  SYSTEM_CONFIG_READ,
+  SYSTEM_CONFIG_UPDATE,
+
+  ACCESS_CONTROL_MANAGE
+}

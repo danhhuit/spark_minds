@@ -34,93 +34,55 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/admin/members")
 @RequiredArgsConstructor
 @Validated
-@PreAuthorize("hasRole('ADMIN')")
 @Tag(name = "Member Management")
 @SecurityRequirement(name = "bearerAuth")
 public class MemberController {
 
-    private final MemberService memberService;
+  private final MemberService memberService;
 
-    @GetMapping
-    @Operation(summary = "Search members")
-    public ResponseEntity<PageResponse<MemberResponse>> search(
-            @Valid @ModelAttribute
-            MemberSearchRequest request,
+  @GetMapping
+  @PreAuthorize("hasAuthority('MEMBER_READ')")
+  @Operation(summary = "Search members")
+  public ResponseEntity<PageResponse<MemberResponse>> search(
+      @Valid @ModelAttribute MemberSearchRequest request,
+      @RequestParam(defaultValue = "0") @Min(0) int page,
+      @RequestParam(defaultValue = "10")
+          @Min(1)
+          @Max(value = 10, message = "Each page contains at most 10 records")
+          int size,
+      @RequestParam(defaultValue = "id") String sortBy,
+      @RequestParam(defaultValue = "desc") String direction) {
+    return ResponseEntity.ok(memberService.search(request, page, size, sortBy, direction));
+  }
 
-            @RequestParam(defaultValue = "0")
-            @Min(0)
-            int page,
+  @GetMapping("/{id}")
+  @PreAuthorize("hasAuthority('MEMBER_READ')")
+  @Operation(summary = "Get member details")
+  public ResponseEntity<MemberResponse> getById(@PathVariable @Positive Long id) {
+    return ResponseEntity.ok(memberService.getById(id));
+  }
 
-            @RequestParam(defaultValue = "10")
-            @Min(1)
-            @Max(
-                value = 10,
-                message = "Each page contains at most 10 records"
-            )
-            int size,
+  @PostMapping
+  @PreAuthorize("hasAuthority('MEMBER_CREATE')")
+  @Operation(summary = "Create member")
+  public ResponseEntity<MemberResponse> create(@Valid @RequestBody CreateMemberRequest request) {
+    return ResponseEntity.status(HttpStatus.CREATED).body(memberService.create(request));
+  }
 
-            @RequestParam(defaultValue = "id")
-            String sortBy,
+  @PutMapping("/{id}")
+  @PreAuthorize("hasAuthority('MEMBER_UPDATE')")
+  @Operation(summary = "Update member")
+  public ResponseEntity<MemberResponse> update(
+      @PathVariable @Positive Long id, @Valid @RequestBody UpdateMemberRequest request) {
 
-            @RequestParam(defaultValue = "desc")
-            String direction
-    ) {
-        return ResponseEntity.ok(
-                memberService.search(
-                    request,
-                    page,
-                    size,
-                    sortBy,
-                    direction
-                )
-        );
-    }
+    return ResponseEntity.ok(memberService.update(id, request));
+  }
 
-    @GetMapping("/{id}")
-    @Operation(summary = "Get member details")
-    public ResponseEntity<MemberResponse> getById(
-            @PathVariable
-            @Positive
-            Long id
-    ) {
-        return ResponseEntity.ok(
-                memberService.getById(id)
-        );
-    }
-
-    @PostMapping
-    @Operation(summary = "Create member")
-    public ResponseEntity<MemberResponse> create(
-            @Valid @RequestBody CreateMemberRequest request
-    ) {
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(memberService.create(request));
-    }
-
-    @PutMapping("/{id}")
-    @Operation(summary = "Update member")
-    public ResponseEntity<MemberResponse> update(
-            @PathVariable
-            @Positive
-            Long id,
-
-            @Valid @RequestBody
-            UpdateMemberRequest request
-    ) {
-        return ResponseEntity.ok(
-                memberService.update(id, request)
-        );
-    }
-
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Deactivate member")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deactivate(
-            @PathVariable
-            @Positive
-            Long id
-    ) {
-        memberService.deactivate(id);
-    }
+  @DeleteMapping("/{id}")
+  @PreAuthorize("hasAuthority('MEMBER_DELETE')")
+  @Operation(summary = "Deactivate member")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void deactivate(@PathVariable @Positive Long id) {
+    memberService.deactivate(id);
+  }
 }

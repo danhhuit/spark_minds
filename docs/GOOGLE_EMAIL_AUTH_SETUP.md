@@ -433,8 +433,17 @@ cấu hình mặc định cho provider Google.
 Set biến môi trường:
 
 ```powershell
+$env:SPRING_PROFILES_ACTIVE = "google"
 $env:GOOGLE_CLIENT_ID = "CLIENT_ID.apps.googleusercontent.com"
 $env:GOOGLE_CLIENT_SECRET = "GOOGLE_CLIENT_SECRET"
+```
+
+Nếu lưu trong file `.env`, không đặt dấu ngoặc kép quanh giá trị:
+
+```properties
+SPRING_PROFILES_ACTIVE=google
+GOOGLE_CLIENT_ID=CLIENT_ID.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=GOOGLE_CLIENT_SECRET
 ```
 
 ### Bước C7 — Thiết kế database liên kết Google
@@ -710,6 +719,7 @@ Nếu exchange thất bại, xóa code khỏi URL và hiển thị thông báo �
 Set toàn bộ biến trong cùng cửa sổ PowerShell:
 
 ```powershell
+$env:SPRING_PROFILES_ACTIVE = "google"
 $env:GOOGLE_CLIENT_ID = "..."
 $env:GOOGLE_CLIENT_SECRET = "..."
 

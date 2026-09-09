@@ -14,6 +14,7 @@ Repository: [github.com/danhhuit/spark_minds](https://github.com/danhhuit/spark_
 
 - [Tính năng chính](#tính-năng-chính)
 - [Phân quyền](#phân-quyền)
+- [Thời gian sống và phiên đăng nhập](#thời-gian-sống-và-phiên-đăng-nhập)
 - [Công nghệ sử dụng](#công-nghệ-sử-dụng)
 - [Kiến trúc ứng dụng](#kiến-trúc-ứng-dụng)
 - [Cấu trúc dự án](#cấu-trúc-dự-án)
@@ -125,25 +126,31 @@ Repository: [github.com/danhhuit/spark_minds](https://github.com/danhhuit/spark_
 
 ## Phân quyền
 
-| Chức năng | ADMIN | USER |
-|---|:---:|:---:|
-| Đăng nhập, logout, refresh token | Có | Có |
-| Xem/search/chi tiết sách | Có | Có |
-| Thêm, sửa, ngừng hoạt động sách | Có | Không |
-| Import CSV | Có | Không |
-| Quản lý thành viên | Có | Không |
-| Xem toàn bộ lịch sử mượn/trả | Có | Không |
-| Mượn sách | Không hiện trên giao diện | Có |
-| Trả sách của chính mình | Có thể hỗ trợ | Có |
-| Lưu sách | Không hiện trên giao diện | Có |
-| Cập nhật hồ sơ | Có | Có |
-| Đổi mật khẩu/email | Có | Có |
-| Bật/tắt maintenance mode | Có | Không |
+Ứng dụng có ba role mặc định:
 
-> Lưu ý: các endpoint `/api/admin/**` được khóa bằng `ROLE_ADMIN`. Một số API
-> mượn/lưu/profile hiện yêu cầu authenticated nhưng chưa gắn riêng
-> `ROLE_USER`; xem phần giới hạn trong
-> [báo cáo kiểm toán](docs/REQUIREMENTS_AUDIT.md).
+- `SUPER_ADMIN`: toàn quyền và quản lý role/permission.
+- `ADMIN`: vận hành sách, thành viên, mượn/trả và cấu hình.
+- `USER`: tra cứu, lưu, mượn/trả sách của mình và cập nhật hồ sơ.
+
+Authorization được kiểm tra bằng permission/action như `BOOK_CREATE`,
+`MEMBER_READ`, `BORROWING_RETURN_ANY` và `SYSTEM_CONFIG_UPDATE`, không còn phụ
+thuộc vào kiểm tra `ROLE_ADMIN` cứng tại controller. Quyền hiệu lực của user là
+permissions từ role cộng với permissions được cấp trực tiếp.
+
+Chi tiết bảng quyền, API Super Admin và cách đề xuất thêm role xem tại
+[Cấu hình phiên và RBAC](docs/AUTH_SESSION_RBAC_CONFIGURATION.md).
+
+## Thời gian sống và phiên đăng nhập
+
+Mọi thời gian sống được cấu hình tập trung bằng **giây** trong
+`app.time-to-live` của `application.yml`. Access token mặc định sống 900 giây;
+refresh token sống 604800 giây và được rotate sau mỗi lần sử dụng. Frontend lưu
+hai token trong một object `localStorage`, đồng bộ login/logout/thay đổi dữ liệu
+giữa các tab bằng `storage` event và `BroadcastChannel`. Web Locks ngăn nhiều
+tab refresh cùng một refresh token tại cùng thời điểm.
+
+Flow đầy đủ xem tại
+[Cấu hình phiên và RBAC](docs/AUTH_SESSION_RBAC_CONFIGURATION.md).
 
 ## Công nghệ sử dụng
 
@@ -154,7 +161,7 @@ Repository: [github.com/danhhuit/spark_minds](https://github.com/danhhuit/spark_
 | REST/Web | Spring Web MVC |
 | ORM | Spring Data JPA, Hibernate |
 | Database | PostgreSQL 17 |
-| Migration | Liquibase, 16 changeset |
+| Migration | Liquibase, 19 changeset |
 | Security | Spring Security, OAuth2 Resource Server |
 | Token | JWT access token, rotating refresh token |
 | Social login | Spring OAuth2 Client, Google OpenID Connect |
@@ -205,7 +212,8 @@ Quan hệ Hibernate tiêu biểu:
 
 - One-to-One: `UserAccount` ↔ `MemberProfile`.
 - One-to-Many: member ↔ borrowings, book ↔ borrowings, category ↔ books.
-- Many-to-Many: user ↔ roles, book ↔ authors.
+- Many-to-Many: user ↔ roles, book ↔ authors, role ↔ permissions và user ↔
+  permissions cấp trực tiếp.
 - Many-to-One: borrowing → member/book và các bảng token → user.
 
 ## Cấu trúc dự án
@@ -401,11 +409,11 @@ Nếu dùng Google thật, thay hai giá trị giả bằng Client ID và Client
 | Biến | Bắt buộc | Mặc định | Ý nghĩa |
 |---|:---:|---|---|
 | `JWT_SECRET` | **Có** | Không có | Base64 secret, giải mã tối thiểu 32 byte |
-| `GOOGLE_CLIENT_ID` | **Có để app khởi động** | Chuỗi rỗng | Google OAuth Client ID |
-| `GOOGLE_CLIENT_SECRET` | **Có để app khởi động** | Chuỗi rỗng | Google OAuth Client Secret |
-| `DB_URL` | Không | `jdbc:postgresql://127.0.0.1:5433/library_db` | JDBC URL |
-| `DB_USERNAME` | Không | `library_user` | Database username |
-| `DB_PASSWORD` | Không | `library_password` | Database password |
+| `GOOGLE_CLIENT_ID` | Khi bật profile `google` | Chuỗi rỗng | Google OAuth Client ID |
+| `GOOGLE_CLIENT_SECRET` | Khi bật profile `google` | Chuỗi rỗng | Google OAuth Client Secret |
+| `DB_URL` | **Có** | Khai báo trong `.env` | JDBC URL |
+| `DB_USERNAME` | **Có** | Khai báo trong `.env` | Database username |
+| `DB_PASSWORD` | **Có** | Khai báo trong `.env` | Database password |
 | `MAIL_HOST` | Không | `localhost` | SMTP host |
 | `MAIL_PORT` | Không | `1025` | SMTP port |
 | `MAIL_USERNAME` | Tùy SMTP | Trống | SMTP username |
@@ -416,16 +424,29 @@ Nếu dùng Google thật, thay hai giá trị giả bằng Client ID và Client
 | `MAIL_STARTTLS_REQUIRED` | Không | `false` | Bắt buộc STARTTLS |
 | `FRONTEND_URL` | Không | `http://localhost:8080` | URL dùng trong link frontend |
 | `BACKEND_URL` | Không | `http://localhost:8080` | URL callback/link backend |
-| `DEFAULT_LOAN_DAYS` | Không | `14` | Số ngày mượn mặc định |
-| `ADMIN_USERNAME` | Không | `admin` | Username admin lần khởi tạo đầu |
-| `ADMIN_PASSWORD` | Không | `admin` | Password admin lần khởi tạo đầu |
-| `ADMIN_EMAIL` | Không | `admin@library.local` | Email admin lần khởi tạo đầu |
+| `ADMIN_USERNAME` | **Có** | Khai báo trong `.env` | Username Super Admin bootstrap |
+| `ADMIN_PASSWORD` | **Có** | Khai báo trong `.env` | Password Super Admin bootstrap |
+| `ADMIN_EMAIL` | **Có** | Khai báo trong `.env` | Email Super Admin bootstrap |
+| `ACCESS_TOKEN_SECONDS` | Không | `900` | TTL access token, đơn vị giây |
+| `REFRESH_TOKEN_SECONDS` | Không | `604800` | TTL refresh token, đơn vị giây |
+| `EMAIL_VERIFICATION_SECONDS` | Không | `86400` | TTL link xác minh email |
+| `PASSWORD_RESET_SECONDS` | Không | `1800` | TTL link reset mật khẩu |
+| `EMAIL_CHANGE_VERIFICATION_SECONDS` | Không | `600` | TTL mã đổi email |
+| `SOCIAL_LOGIN_CODE_SECONDS` | Không | `120` | TTL mã Google dùng một lần |
+| `BORROWING_SECONDS` | Không | `1209600` | Thời hạn mượn sách |
+| `TOMCAT_PROTOCOL` | Không | `Http11Nio2Protocol` | Connector tránh lỗi Windows NIO loopback |
 
 ### Lưu ý về `.env`
 
-File `.env` đã được đưa vào `.gitignore`, nhưng Spring Boot không tự động đọc
-file `.env` nếu không có công cụ bổ sung. Cách chắc chắn nhất là set `$env:...`
-trong đúng terminal dùng để chạy Maven/JAR.
+File `.env` đã được đưa vào `.gitignore`. Project chủ động import file này qua
+`spring.config.import`, vì vậy có thể tạo cấu hình local bằng:
+
+```powershell
+Copy-Item .env.example .env
+notepad .env
+```
+
+Biến được set trực tiếp bằng `$env:...` vẫn có độ ưu tiên cao hơn `.env`.
 
 Không dùng dấu gạch chéo để escape email trong PowerShell:
 
@@ -518,9 +539,17 @@ sách Test users.
 Set biến:
 
 ```powershell
+$env:SPRING_PROFILES_ACTIVE = "google"
 $env:GOOGLE_CLIENT_ID = "YOUR_CLIENT_ID.apps.googleusercontent.com"
 $env:GOOGLE_CLIENT_SECRET = "YOUR_GOOGLE_CLIENT_SECRET"
 ```
+
+Hoặc đặt ba giá trị trên trong `.env`. Nếu không bật profile `google`, endpoint
+OAuth không được Spring Security đăng ký; ứng dụng sẽ quay về trang đăng nhập
+và hiển thị thông báo cấu hình thay vì trang Whitelabel 404.
+
+Khi dùng `.env`, không bao quanh Client ID/Client Secret bằng dấu ngoặc kép vì
+file được Spring đọc theo định dạng `.properties`.
 
 Luồng bảo mật:
 
@@ -543,6 +572,12 @@ Hướng dẫn từng bước:
 | OpenAPI JSON | [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs) |
 | Health check | [http://localhost:8080/actuator/health](http://localhost:8080/actuator/health) |
 | Mailpit | [http://localhost:8025](http://localhost:8025) |
+
+Hướng dẫn xem dữ liệu PostgreSQL bằng DBeaver:
+[docs/DATABASE_VIEW_DBEAVER.md](docs/DATABASE_VIEW_DBEAVER.md).
+
+Tài liệu chi tiết luồng mượn/trả và các file liên quan:
+[docs/BORROWING_RETURN_FLOW.md](docs/BORROWING_RETURN_FLOW.md).
 
 ## Tài khoản mặc định
 
@@ -657,7 +692,7 @@ Liquibase tự chạy khi ứng dụng khởi động. Master changelog:
 src/main/resources/db/changelog/db.changelog-master.yaml
 ```
 
-Hiện có 16 changeset cho:
+Hiện có 19 changeset cho:
 
 - roles và user accounts;
 - member profiles;
@@ -668,6 +703,9 @@ Hiện có 16 changeset cho:
 - saved books;
 - seed 50 sách;
 - Google OAuth identities/social codes.
+- `SUPER_ADMIN`, permissions, role-permissions và user-permissions.
+- permission bị từ chối riêng cho từng user.
+- authorization version để permission mới có hiệu lực ngay với token cũ.
 
 Không chỉnh sửa changeset đã chạy trên database dùng chung. Khi thay đổi schema,
 hãy tạo changeset mới và include vào master.
@@ -959,7 +997,13 @@ Cách xử lý:
 ```powershell
 docker info
 docker compose up -d
+docker compose ps
 ```
+
+Nếu gặp `failed to connect to the docker API at
+npipe:////./pipe/dockerDesktopLinuxEngine`, Docker Desktop chưa chạy xong.
+Không tiếp tục chạy Spring Boot cho đến khi `docker info` trả về thông tin
+Server và `docker compose ps` cho thấy container `postgres` đang `Up`.
 
 ### 4. Không kết nối PostgreSQL
 
@@ -984,6 +1028,13 @@ Khởi động lại:
 docker compose up -d postgres
 ```
 
+Project dùng cổng host `5433`, vì vậy `.env` phải có:
+
+```properties
+DB_URL=jdbc:postgresql://127.0.0.1:5433/library_db
+POSTGRES_PORT=5433
+```
+
 Nếu đã thay username/password sau khi volume được tạo, PostgreSQL vẫn giữ
 credential cũ. Với dữ liệu local không cần giữ:
 
@@ -992,7 +1043,32 @@ docker compose down -v
 docker compose up -d
 ```
 
-### 5. `JWT_SECRET` bị thiếu, không hợp lệ hoặc quá ngắn
+### 5. Tomcat báo `Unable to establish loopback connection`
+
+Lỗi này xuất hiện ở Java NIO selector trên một số môi trường Windows:
+
+```text
+Unable to establish loopback connection
+UnixDomainSockets.connect0
+Invalid argument: connect
+```
+
+Project đã mặc định dùng connector Tomcat NIO2:
+
+```properties
+TOMCAT_PROTOCOL=org.apache.coyote.http11.Http11Nio2Protocol
+```
+
+Đảm bảo `.env` có dòng trên và dùng Java 21:
+
+```powershell
+$env:JAVA_HOME = "C:\duong-dan-toi-jdk-21"
+$env:Path = "$env:JAVA_HOME\bin;$env:Path"
+.\mvnw.cmd -version
+.\mvnw.cmd spring-boot:run
+```
+
+### 6. `JWT_SECRET` bị thiếu, không hợp lệ hoặc quá ngắn
 
 Lỗi có thể là:
 

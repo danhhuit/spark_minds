@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Positive;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +33,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/books")
 @RequiredArgsConstructor
@@ -42,78 +41,67 @@ import java.util.List;
 @SecurityRequirement(name = "bearerAuth")
 public class BookController {
 
-        private final BookService bookService;
+  private final BookService bookService;
 
-        @GetMapping
-        @Operation(summary = "Search books with pagination")
-        public ResponseEntity<PageResponse<BookResponse>> search(
-                        @Valid @ModelAttribute BookSearchRequest request,
+  @GetMapping
+  @PreAuthorize("hasAuthority('BOOK_READ')")
+  @Operation(summary = "Search books with pagination")
+  public ResponseEntity<PageResponse<BookResponse>> search(
+      @Valid @ModelAttribute BookSearchRequest request,
+      @RequestParam(defaultValue = "0") @Min(value = 0, message = "Page cannot be negative")
+          int page,
+      @RequestParam(defaultValue = "10")
+          @Min(value = 1, message = "Size must be positive")
+          @Max(value = 10, message = "Each page contains at most 10 records")
+          int size,
+      @RequestParam(defaultValue = "id") String sortBy,
+      @RequestParam(defaultValue = "desc") String direction) {
+    return ResponseEntity.ok(bookService.search(request, page, size, sortBy, direction));
+  }
 
-                        @RequestParam(defaultValue = "0") @Min(value = 0, message = "Page cannot be negative") int page,
+  @GetMapping("/{id}")
+  @PreAuthorize("hasAuthority('BOOK_READ')")
+  @Operation(summary = "Get book details")
+  public ResponseEntity<BookResponse> getById(
+      @PathVariable @Positive(message = "Book ID must be positive") Long id) {
+    return ResponseEntity.ok(bookService.getById(id));
+  }
 
-                        @RequestParam(defaultValue = "10") @Min(value = 1, message = "Size must be positive") @Max(value = 10, message = "Each page contains at most 10 records") int size,
+  @PostMapping
+  @PreAuthorize("hasAuthority('BOOK_CREATE')")
+  @Operation(summary = "Create a book")
+  public ResponseEntity<BookResponse> create(@Valid @RequestBody CreateBookRequest request) {
+    return ResponseEntity.status(HttpStatus.CREATED).body(bookService.create(request));
+  }
 
-                        @RequestParam(defaultValue = "id") String sortBy,
+  @PutMapping("/{id}")
+  @PreAuthorize("hasAuthority('BOOK_UPDATE')")
+  @Operation(summary = "Update a book")
+  public ResponseEntity<BookResponse> update(
+      @PathVariable @Positive(message = "Book ID must be positive") Long id,
+      @Valid @RequestBody UpdateBookRequest request) {
+    return ResponseEntity.ok(bookService.update(id, request));
+  }
 
-                        @RequestParam(defaultValue = "desc") String direction) {
-                return ResponseEntity.ok(
-                                bookService.search(
-                                                request,
-                                                page,
-                                                size,
-                                                sortBy,
-                                                direction));
-        }
+  @DeleteMapping("/{id}")
+  @PreAuthorize("hasAuthority('BOOK_DELETE')")
+  @Operation(summary = "Delete a book")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void delete(@PathVariable @Positive(message = "Book ID must be positive") Long id) {
+    bookService.delete(id);
+  }
 
-        @GetMapping("/{id}")
-        @Operation(summary = "Get book details")
-        public ResponseEntity<BookResponse> getById(
-                        @PathVariable @Positive(message = "Book ID must be positive") Long id) {
-                return ResponseEntity.ok(
-                                bookService.getById(id));
-        }
+  @GetMapping("/lookups/categories")
+  @PreAuthorize("hasAuthority('BOOK_READ')")
+  @Operation(summary = "Get categories for combobox")
+  public ResponseEntity<List<CategoryResponse>> getCategories() {
+    return ResponseEntity.ok(bookService.getCategories());
+  }
 
-        @PostMapping
-        @PreAuthorize("hasRole('ADMIN')")
-        @Operation(summary = "Create a book")
-        public ResponseEntity<BookResponse> create(
-                        @Valid @RequestBody CreateBookRequest request) {
-                return ResponseEntity
-                                .status(HttpStatus.CREATED)
-                                .body(bookService.create(request));
-        }
-
-        @PutMapping("/{id}")
-        @PreAuthorize("hasRole('ADMIN')")
-        @Operation(summary = "Update a book")
-        public ResponseEntity<BookResponse> update(
-                        @PathVariable @Positive(message = "Book ID must be positive") Long id,
-
-                        @Valid @RequestBody UpdateBookRequest request) {
-                return ResponseEntity.ok(
-                                bookService.update(id, request));
-        }
-
-        @DeleteMapping("/{id}")
-        @PreAuthorize("hasRole('ADMIN')")
-        @Operation(summary = "Delete a book")
-        @ResponseStatus(HttpStatus.NO_CONTENT)
-        public void delete(
-                        @PathVariable @Positive(message = "Book ID must be positive") Long id) {
-                bookService.delete(id);
-        }
-
-        @GetMapping("/lookups/categories")
-        @Operation(summary = "Get categories for combobox")
-        public ResponseEntity<List<CategoryResponse>> getCategories() {
-                return ResponseEntity.ok(
-                                bookService.getCategories());
-        }
-
-        @GetMapping("/lookups/authors")
-        @Operation(summary = "Get authors for combobox")
-        public ResponseEntity<List<AuthorResponse>> getAuthors() {
-                return ResponseEntity.ok(
-                                bookService.getAuthors());
-        }
+  @GetMapping("/lookups/authors")
+  @PreAuthorize("hasAuthority('BOOK_READ')")
+  @Operation(summary = "Get authors for combobox")
+  public ResponseEntity<List<AuthorResponse>> getAuthors() {
+    return ResponseEntity.ok(bookService.getAuthors());
+  }
 }

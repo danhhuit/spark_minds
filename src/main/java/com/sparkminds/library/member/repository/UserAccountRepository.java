@@ -1,41 +1,60 @@
 package com.sparkminds.library.member.repository;
 
+import com.sparkminds.library.member.entity.Role;
+import com.sparkminds.library.member.entity.RoleName;
 import com.sparkminds.library.member.entity.UserAccount;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
-import java.util.Optional;
+public interface UserAccountRepository extends JpaRepository<UserAccount, Long> {
 
-public interface UserAccountRepository
-        extends JpaRepository<UserAccount, Long> {
+  Optional<UserAccount> findByUsernameIgnoreCase(String username);
 
-    Optional<UserAccount> findByUsernameIgnoreCase(String username);
+  Optional<UserAccount> findByEmailIgnoreCase(String email);
 
-    Optional<UserAccount> findByEmailIgnoreCase(String email);
+  boolean existsByUsernameIgnoreCase(String username);
 
-    boolean existsByUsernameIgnoreCase(String username);
+  boolean existsByEmailIgnoreCase(String email);
 
-    boolean existsByEmailIgnoreCase(String email);
+  long countDistinctByRoles_Name(RoleName roleName);
 
-    boolean existsByUsernameIgnoreCaseAndIdNot(
-            String username,
-            Long id
-    );
+  @Query(
+      """
+            select user.authorizationVersion
+            from UserAccount user
+            where user.id = :userId
+            """)
+  Optional<Long> findAuthorizationVersionById(@Param("userId") Long userId);
 
-    boolean existsByEmailIgnoreCaseAndIdNot(
-            String email,
-            Long id
-    );
+  @Modifying
+  @Query(
+      """
+            update UserAccount user
+            set user.authorizationVersion =
+                user.authorizationVersion + 1
+            where :role member of user.roles
+            """)
+  int incrementAuthorizationVersionForRole(@Param("role") Role role);
 
-    @EntityGraph(attributePaths = {
-            "roles",
-            "memberProfile"
-    })
-    Optional<UserAccount> findDetailedById(Long id);
+  boolean existsByUsernameIgnoreCaseAndIdNot(String username, Long id);
 
-    @EntityGraph(attributePaths = "roles")
-    Optional<UserAccount> findByUsernameIgnoreCaseOrEmailIgnoreCase(
-            String username,
-            String email
-    );
+  boolean existsByEmailIgnoreCaseAndIdNot(String email, Long id);
+
+  @EntityGraph(
+      attributePaths = {
+        "roles",
+        "roles.permissions",
+        "directPermissions",
+        "deniedPermissions",
+        "memberProfile"
+      })
+  Optional<UserAccount> findDetailedById(Long id);
+
+  @EntityGraph(
+      attributePaths = {"roles", "roles.permissions", "directPermissions", "deniedPermissions"})
+  Optional<UserAccount> findByUsernameIgnoreCaseOrEmailIgnoreCase(String username, String email);
 }

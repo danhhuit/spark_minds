@@ -11,11 +11,13 @@ import com.sparkminds.library.borrowing.repository.BorrowingRepository;
 import com.sparkminds.library.common.api.PageResponse;
 import com.sparkminds.library.common.exception.BusinessException;
 import com.sparkminds.library.common.exception.ResourceNotFoundException;
+import com.sparkminds.library.config.TimeToLiveProperties;
 import com.sparkminds.library.member.entity.MemberProfile;
 import com.sparkminds.library.member.entity.UserAccount;
 import com.sparkminds.library.member.repository.MemberProfileRepository;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -24,206 +26,151 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class BorrowingService {
 
-        private final BorrowingRepository borrowingRepository;
-        private final MemberProfileRepository memberProfileRepository;
-        private final BookRepository bookRepository;
-        private final BorrowingMapper borrowingMapper;
+  private final BorrowingRepository borrowingRepository;
+  private final MemberProfileRepository memberProfileRepository;
+  private final BookRepository bookRepository;
+  private final BorrowingMapper borrowingMapper;
+  private final TimeToLiveProperties timeToLiveProperties;
 
-        // giới hạn 14 ngày mượn sách
-        @Value("${app.borrowing.default-loan-days:14}")
-        private int defaultLoanDays;
+  @Transactional
+  public BorrowingResponse borrow(Jwt jwt, BorrowBookRequest request) {
+    Long userId = getUserId(jwt);
 
-        @Transactional
-        public BorrowingResponse borrow(
-                        Jwt jwt,
-                        BorrowBookRequest request) {
-                Long userId = getUserId(jwt);
+    MemberProfile member =
+        memberProfileRepository
+            .findByUserIdForUpdate(userId)
+            .orElseThrow(() -> new ResourceNotFoundException("Member profile does not exist"));
 
-                MemberProfile member = memberProfileRepository
-                                .findByUserIdForUpdate(userId)
-                                .orElseThrow(() -> new ResourceNotFoundException(
-                                                "Member profile does not exist"));
+    UserAccount account = member.getUser();
 
-                UserAccount account = member.getUser();
+    if (!account.isEnabled()) {
+      throw new BusinessException("Member account is disabled");
+    }
 
-                if (!account.isEnabled()) {
-                        throw new BusinessException(
-                                        "Member account is disabled");
-                }
+    if (!account.isEmailVerified()) {
+      throw new BusinessException("Email has not been verified");
+    }
 
-                if (!account.isEmailVerified()) {
-                        throw new BusinessException(
-                                        "Email has not been verified");
-                }
+    if (!account.isAccountNonLocked()) {
+      throw new BusinessException("Member account is locked");
+    }
 
-                if (!account.isAccountNonLocked()) {
-                        throw new BusinessException(
-                                        "Member account is locked");
-                }
+    boolean hasActiveBorrowing =
+        borrowingRepository.existsByMember_IdAndStatus(member.getId(), BorrowingStatus.BORROWED);
 
-                boolean hasActiveBorrowing = borrowingRepository
-                                .existsByMember_IdAndStatus(
-                                                member.getId(),
-                                                BorrowingStatus.BORROWED);
+    if (hasActiveBorrowing) {
+      throw new BusinessException("Each member can borrow only " + "one book at a time");
+    }
 
-                if (hasActiveBorrowing) {
-                        throw new BusinessException(
-                                        "Each member can borrow only "
-                                                        + "one book at a time");
-                }
+    Book book =
+        bookRepository
+            .findByIdForUpdate(request.bookId())
+            .orElseThrow(
+                () -> new ResourceNotFoundException("Book does not exist: " + request.bookId()));
 
-                Book book = bookRepository
-                                .findByIdForUpdate(request.bookId())
-                                .orElseThrow(() -> new ResourceNotFoundException(
-                                                "Book does not exist: "
-                                                                + request.bookId()));
+    if (!book.isActive()) {
+      throw new BusinessException("Book is inactive");
+    }
 
-                if (!book.isActive()) {
-                        throw new BusinessException(
-                                        "Book is inactive");
-                }
+    if (book.getAvailableQuantity() <= 0) {
+      throw new BusinessException("Book is out of stock");
+    }
 
-                if (book.getAvailableQuantity() <= 0) {
-                        throw new BusinessException(
-                                        "Book is out of stock");
-                }
+    OffsetDateTime borrowedAt = OffsetDateTime.now(ZoneOffset.UTC);
 
-                OffsetDateTime borrowedAt = OffsetDateTime.now(ZoneOffset.UTC);
+    Borrowing borrowing = new Borrowing();
+    borrowing.setMember(member);
+    borrowing.setBook(book);
+    borrowing.setStatus(BorrowingStatus.BORROWED);
+    borrowing.setBorrowedAt(borrowedAt);
+    borrowing.setDueAt(borrowedAt.plus(timeToLiveProperties.borrowing()));
+    // trừ số lượng sách có sẵn khi mượn
+    book.setAvailableQuantity(book.getAvailableQuantity() - 1);
 
-                Borrowing borrowing = new Borrowing();
-                borrowing.setMember(member);
-                borrowing.setBook(book);
-                borrowing.setStatus(
-                                BorrowingStatus.BORROWED);
-                borrowing.setBorrowedAt(borrowedAt);
-                borrowing.setDueAt(
-                                borrowedAt.plusDays(defaultLoanDays));
+    Borrowing saved = borrowingRepository.save(borrowing);
 
-                book.setAvailableQuantity(
-                                book.getAvailableQuantity() - 1);
+    return borrowingMapper.toResponse(saved);
+  }
 
-                Borrowing saved = borrowingRepository.save(borrowing);
+  @Transactional
+  public BorrowingResponse returnBook(Jwt jwt, Long borrowingId) {
+    Long userId = getUserId(jwt);
 
-                return borrowingMapper.toResponse(saved);
-        }
+    Borrowing borrowing =
+        borrowingRepository
+            .findByIdForUpdate(borrowingId)
+            .orElseThrow(
+                () -> new ResourceNotFoundException("Borrowing does not exist: " + borrowingId));
 
-        @Transactional
-        public BorrowingResponse returnBook(
-                        Jwt jwt,
-                        Long borrowingId) {
-                Long userId = getUserId(jwt);
+    boolean canReturnAny = hasAuthority(jwt, "BORROWING_RETURN_ANY");
+    boolean isOwner = borrowing.getMember().getUser().getId().equals(userId);
 
-                Borrowing borrowing = borrowingRepository
-                                .findByIdForUpdate(borrowingId)
-                                .orElseThrow(() -> new ResourceNotFoundException(
-                                                "Borrowing does not exist: "
-                                                                + borrowingId));
+    if (!canReturnAny && !isOwner) {
+      throw new AccessDeniedException("You cannot return this borrowing");
+    }
 
-                boolean isAdmin = hasRole(jwt, "ROLE_ADMIN");
-                boolean isOwner = borrowing
-                                .getMember()
-                                .getUser()
-                                .getId()
-                                .equals(userId);
+    if (borrowing.getStatus() == BorrowingStatus.RETURNED) {
+      throw new BusinessException("Book has already been returned");
+    }
 
-                if (!isAdmin && !isOwner) {
-                        throw new AccessDeniedException(
-                                        "You cannot return this borrowing");
-                }
+    Book book =
+        bookRepository
+            .findByIdForUpdate(borrowing.getBook().getId())
+            .orElseThrow(() -> new ResourceNotFoundException("Borrowed book does not exist"));
 
-                if (borrowing.getStatus() == BorrowingStatus.RETURNED) {
-                        throw new BusinessException(
-                                        "Book has already been returned");
-                }
+    if (book.getAvailableQuantity() >= book.getTotalQuantity()) {
+      throw new BusinessException("Book inventory is inconsistent");
+    }
 
-                Book book = bookRepository
-                                .findByIdForUpdate(
-                                                borrowing.getBook().getId())
-                                .orElseThrow(() -> new ResourceNotFoundException(
-                                                "Borrowed book does not exist"));
+    borrowing.setStatus(BorrowingStatus.RETURNED);
+    borrowing.setReturnedAt(OffsetDateTime.now(ZoneOffset.UTC));
 
-                if (book.getAvailableQuantity() >= book.getTotalQuantity()) {
-                        throw new BusinessException(
-                                        "Book inventory is inconsistent");
-                }
+    book.setAvailableQuantity(book.getAvailableQuantity() + 1);
 
-                borrowing.setStatus(
-                                BorrowingStatus.RETURNED);
-                borrowing.setReturnedAt(
-                                OffsetDateTime.now(ZoneOffset.UTC));
+    return borrowingMapper.toResponse(borrowing);
+  }
 
-                book.setAvailableQuantity(
-                                book.getAvailableQuantity() + 1);
+  @Transactional(readOnly = true)
+  public PageResponse<BorrowingResponse> getMyBorrowings(Jwt jwt, int page, int size) {
+    Long userId = getUserId(jwt);
 
-                return borrowingMapper.toResponse(borrowing);
-        }
+    PageRequest pageable =
+        PageRequest.of(page, Math.min(size, 10), Sort.by(Sort.Direction.DESC, "borrowedAt"));
 
-        @Transactional(readOnly = true)
-        public PageResponse<BorrowingResponse> getMyBorrowings(
-                        Jwt jwt,
-                        int page,
-                        int size) {
-                Long userId = getUserId(jwt);
+    Page<BorrowingResponse> result =
+        borrowingRepository.findByMember_User_Id(userId, pageable).map(borrowingMapper::toResponse);
 
-                PageRequest pageable = PageRequest.of(
-                                page,
-                                Math.min(size, 10),
-                                Sort.by(
-                                                Sort.Direction.DESC,
-                                                "borrowedAt"));
+    return PageResponse.from(result);
+  }
 
-                Page<BorrowingResponse> result = borrowingRepository
-                                .findByMember_User_Id(
-                                                userId,
-                                                pageable)
-                                .map(borrowingMapper::toResponse);
+  @Transactional(readOnly = true)
+  public PageResponse<BorrowingResponse> getAllBorrowings(int page, int size) {
+    PageRequest pageable =
+        PageRequest.of(page, Math.min(size, 10), Sort.by(Sort.Direction.DESC, "borrowedAt"));
 
-                return PageResponse.from(result);
-        }
+    Page<BorrowingResponse> result =
+        borrowingRepository.findAllDetailed(pageable).map(borrowingMapper::toResponse);
 
-        @Transactional(readOnly = true)
-        public PageResponse<BorrowingResponse> getAllBorrowings(
-                        int page,
-                        int size) {
-                PageRequest pageable = PageRequest.of(
-                                page,
-                                Math.min(size, 10),
-                                Sort.by(
-                                                Sort.Direction.DESC,
-                                                "borrowedAt"));
+    return PageResponse.from(result);
+  }
 
-                Page<BorrowingResponse> result = borrowingRepository
-                                .findAllDetailed(pageable)
-                                .map(borrowingMapper::toResponse);
+  private Long getUserId(Jwt jwt) {
+    Number userIdClaim = jwt.getClaim("uid");
 
-                return PageResponse.from(result);
-        }
+    if (userIdClaim == null) {
+      throw new AccessDeniedException("Invalid authenticated user");
+    }
 
-        private Long getUserId(Jwt jwt) {
-                Number userIdClaim = jwt.getClaim("uid");
+    return userIdClaim.longValue();
+  }
 
-                if (userIdClaim == null) {
-                        throw new AccessDeniedException(
-                                        "Invalid authenticated user");
-                }
+  private boolean hasAuthority(Jwt jwt, String requiredAuthority) {
+    java.util.List<String> authorities = jwt.getClaimAsStringList("authorities");
 
-                return userIdClaim.longValue();
-        }
-
-        private boolean hasRole(
-                        Jwt jwt,
-                        String requiredRole) {
-                List<String> roles = jwt.getClaimAsStringList("roles");
-
-                return roles != null
-                                && roles.contains(requiredRole);
-        }
+    return authorities != null && authorities.contains(requiredAuthority);
+  }
 }

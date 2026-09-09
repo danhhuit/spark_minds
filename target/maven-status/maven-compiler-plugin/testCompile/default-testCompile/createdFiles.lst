@@ -1,4 +1,5 @@
 com\sparkminds\library\borrowing\controller\BorrowingControllerIntegrationTest$MemberFixture.class
+com\sparkminds\library\config\GoogleOAuthUnavailableIntegrationTest.class
 com\sparkminds\library\config\FrontendIntegrationTest.class
 com\sparkminds\library\book\controller\CatalogSeedIntegrationTest.class
 com\sparkminds\library\borrowing\controller\BorrowingControllerIntegrationTest.class

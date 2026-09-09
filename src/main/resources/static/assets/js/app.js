@@ -1,10 +1,17 @@
 (() => {
     "use strict";
 
+    const AUTH_SESSION_KEY = "sparkLibrary.authSession";
+    const AUTH_EVENT_KEY = "sparkLibrary.authEvent";
+    const AUTH_CHANNEL_NAME = "sparkLibrary.auth";
     const TOKEN_KEY = "sparkLibrary.accessToken";
     const REFRESH_KEY = "sparkLibrary.refreshToken";
     const LANGUAGE_KEY = "sparkLibrary.language";
     const COVER_ASSET_VERSION = "20260825-5";
+    const authChannel = "BroadcastChannel" in window
+        ? new BroadcastChannel(AUTH_CHANNEL_NAME)
+        : null;
+    let crossTabRefreshTimer = null;
 
     /*
      * The Vietnamese copy remains the canonical copy in the templates.
@@ -32,6 +39,7 @@
         "Tiếp tục với Google": "Continue with Google",
         "Đăng nhập Google thành công": "Google sign-in successful",
         "Không thể đăng nhập bằng Google. Vui lòng thử lại.": "Unable to sign in with Google. Please try again.",
+        "Đăng nhập Google chưa được cấu hình. Hãy thêm Client ID, Client Secret và bật profile google.": "Google sign-in is not configured. Add the Client ID and Client Secret, then enable the google profile.",
         "Thành viên mới": "New member",
         "Tạo tài khoản": "Create account",
         "Chúng tôi sẽ gửi liên kết xác minh đến email của bạn.": "We will send a verification link to your email.",
@@ -92,6 +100,16 @@
         "Ngày sinh": "Date of birth",
         "Liên hệ": "Contact",
         "Thao tác": "Actions",
+        "Phân quyền": "Permissions",
+        "Quyền người dùng": "User permissions",
+        "Bật hoặc tắt từng chức năng cho tài khoản này. Quyền tắt riêng sẽ ưu tiên hơn quyền kế thừa từ role.": "Enable or disable individual features for this account. A user-specific denial overrides permissions inherited from roles.",
+        "Bật riêng": "Enabled for user",
+        "Theo role": "Inherited from role",
+        "Đã tắt riêng": "Disabled for user",
+        "Không được cấp": "Not granted",
+        "Đã bật quyền": "Permission enabled",
+        "Đã tắt quyền": "Permission disabled",
+        "Không thể cập nhật quyền": "Unable to update permission",
         "Họ và tên": "Full name",
         "Số điện thoại": "Phone number",
         "Địa chỉ": "Address",
@@ -264,7 +282,7 @@
         , "Email đăng ký": "Registered email"
         , "Gửi liên kết đặt lại mật khẩu": "Send password reset link"
         , "Hãy kiểm tra hộp thư của bạn": "Check your inbox"
-        , "Nếu email thuộc một tài khoản hợp lệ, hệ thống đã gửi liên kết có hiệu lực trong 30 phút. Kiểm tra cả thư mục spam hoặc thư rác.": "If the email belongs to a valid account, a link valid for 30 minutes has been sent. Check your spam or junk folder too."
+        , "Nếu email thuộc một tài khoản hợp lệ, hệ thống đã gửi liên kết đặt lại mật khẩu có thời hạn. Kiểm tra cả thư mục spam hoặc thư rác.": "If the email belongs to a valid account, a time-limited reset link has been sent. Check your spam or junk folder too."
         , "Mở hộp thư thử nghiệm Mailpit": "Open the Mailpit test inbox"
         , "Đã gửi hướng dẫn": "Instructions sent"
         , "Hãy kiểm tra email để tiếp tục.": "Check your email to continue."
@@ -515,6 +533,7 @@
         user: null,
         profile: null,
         isAdmin: false,
+        isSuperAdmin: false,
         locale: localStorage.getItem(LANGUAGE_KEY) === "en" ? "en" : "vi",
         currentView: "dashboard",
         categories: [],
@@ -525,6 +544,30 @@
         selectedBookId: null,
         dashboardShelfBooks: [],
         dashboardShelfIndex: 0
+    };
+
+    const PERMISSION_LABELS = {
+        BOOK_READ: ["XEM SÁCH", "VIEW BOOKS"],
+        BOOK_CREATE: ["TẠO SÁCH", "CREATE BOOK"],
+        BOOK_UPDATE: ["CẬP NHẬT SÁCH", "UPDATE BOOK"],
+        BOOK_DELETE: ["XÓA SÁCH", "DELETE BOOK"],
+        BOOK_IMPORT: ["NHẬP SÁCH TỪ CSV", "IMPORT BOOKS FROM CSV"],
+        MEMBER_READ: ["XEM THÀNH VIÊN", "VIEW MEMBERS"],
+        MEMBER_CREATE: ["TẠO THÀNH VIÊN", "CREATE MEMBER"],
+        MEMBER_UPDATE: ["CẬP NHẬT THÀNH VIÊN", "UPDATE MEMBER"],
+        MEMBER_DELETE: ["VÔ HIỆU HÓA THÀNH VIÊN", "DISABLE MEMBER"],
+        BORROWING_BORROW: ["MƯỢN SÁCH", "BORROW BOOK"],
+        BORROWING_RETURN_OWN: ["TRẢ SÁCH CỦA MÌNH", "RETURN OWN BOOK"],
+        BORROWING_RETURN_ANY: ["TRẢ SÁCH CHO MỌI NGƯỜI", "RETURN ANY BOOK"],
+        BORROWING_READ_OWN: ["XEM LỊCH SỬ CỦA MÌNH", "VIEW OWN LOANS"],
+        BORROWING_READ_ALL: ["XEM TOÀN BỘ MƯỢN TRẢ", "VIEW ALL LOANS"],
+        PROFILE_READ: ["XEM HỒ SƠ CÁ NHÂN", "VIEW OWN PROFILE"],
+        PROFILE_UPDATE: ["CẬP NHẬT HỒ SƠ", "UPDATE OWN PROFILE"],
+        SAVED_BOOK_READ: ["XEM SÁCH ĐÃ LƯU", "VIEW SAVED BOOKS"],
+        SAVED_BOOK_WRITE: ["LƯU/BỎ LƯU SÁCH", "SAVE/UNSAVE BOOKS"],
+        SYSTEM_CONFIG_READ: ["XEM CẤU HÌNH HỆ THỐNG", "VIEW SYSTEM CONFIG"],
+        SYSTEM_CONFIG_UPDATE: ["CẬP NHẬT CẤU HÌNH", "UPDATE SYSTEM CONFIG"],
+        ACCESS_CONTROL_MANAGE: ["QUẢN LÝ PHÂN QUYỀN", "MANAGE ACCESS CONTROL"]
     };
 
     const elements = {
@@ -555,8 +598,10 @@
     document.addEventListener("DOMContentLoaded", bootstrap);
 
     async function bootstrap() {
+        migrateLegacySession();
         initializeLanguage();
         bindGlobalEvents();
+        bindCrossTabSynchronization();
 
         const parameters = new URLSearchParams(window.location.search);
         if (parameters.has("socialCode")) {
@@ -568,8 +613,11 @@
         }
         if (parameters.has("oauthError")) {
             showAuth();
+            const oauthError = parameters.get("oauthError");
             setAuthMessage(
-                "Không thể đăng nhập bằng Google. Vui lòng thử lại.",
+                oauthError === "google_not_configured"
+                    ? "Đăng nhập Google chưa được cấu hình. Hãy thêm Client ID, Client Secret và bật profile google."
+                    : "Không thể đăng nhập bằng Google. Vui lòng thử lại.",
                 "error"
             );
             clearAuthQueryParameters();
@@ -593,7 +641,7 @@
             return;
         }
 
-        const accessToken = sessionStorage.getItem(TOKEN_KEY);
+        const accessToken = getAccessToken();
         if (accessToken) {
             try {
                 state.user = await api("/api/auth/me");
@@ -605,6 +653,94 @@
         }
 
         showAuth();
+    }
+
+    function migrateLegacySession() {
+        if (!readAuthSession()) {
+            const accessToken = sessionStorage.getItem(TOKEN_KEY);
+            const refreshToken = sessionStorage.getItem(REFRESH_KEY);
+            if (accessToken && refreshToken) {
+                storeTokens({ accessToken, refreshToken });
+            }
+        }
+        sessionStorage.removeItem(TOKEN_KEY);
+        sessionStorage.removeItem(REFRESH_KEY);
+    }
+
+    function bindCrossTabSynchronization() {
+        window.addEventListener("storage", (event) => {
+            if (event.key === AUTH_SESSION_KEY) {
+                synchronizeSessionFromStorage();
+                return;
+            }
+            if (event.key === AUTH_EVENT_KEY && event.newValue) {
+                try {
+                    handleCrossTabEvent(JSON.parse(event.newValue));
+                } catch (error) {
+                    // Ignore malformed events from old application versions.
+                }
+            }
+        });
+        authChannel?.addEventListener("message", (event) => {
+            handleCrossTabEvent(event.data);
+        });
+    }
+
+    function handleCrossTabEvent(event) {
+        if (!event || typeof event.type !== "string") {
+            return;
+        }
+        if (event.type === "LOGOUT" || event.type === "SESSION_UPDATED") {
+            synchronizeSessionFromStorage();
+            return;
+        }
+        if (event.type === "DATA_CHANGED" && state.user) {
+            window.clearTimeout(crossTabRefreshTimer);
+            crossTabRefreshTimer = window.setTimeout(async () => {
+                try {
+                    state.user = await api("/api/auth/me");
+                    setAuthorizationState();
+                    renderNavigation();
+                    await navigate(state.currentView);
+                } catch (error) {
+                    if (error.status === 401 || error.status === 403) {
+                        await navigate("dashboard");
+                    }
+                }
+            }, 250);
+        }
+    }
+
+    async function synchronizeSessionFromStorage() {
+        const session = readAuthSession();
+        if (!session) {
+            if (state.user) {
+                forceLogout(false);
+            }
+            return;
+        }
+        if (state.user) {
+            return;
+        }
+        try {
+            state.user = await api("/api/auth/me");
+            await enterApplication();
+        } catch (error) {
+            forceLogout(false);
+        }
+    }
+
+    function publishCrossTabEvent(type, details = {}) {
+        const event = {
+            type,
+            ...details,
+            occurredAt: Date.now(),
+            eventId: crypto.randomUUID
+                ? crypto.randomUUID()
+                : `${Date.now()}-${Math.random()}`
+        };
+        authChannel?.postMessage(event);
+        localStorage.setItem(AUTH_EVENT_KEY, JSON.stringify(event));
     }
 
     function initializeLanguage() {
@@ -1005,23 +1141,79 @@
     }
 
     function showAuthPanel(panel) {
-        document.querySelector("#login-panel")
-            .classList.toggle("hidden", panel !== "login");
-        document.querySelector("#register-panel")
-            .classList.toggle("hidden", panel !== "register");
-        elements.authMessage.classList.add("hidden");
+        const loginPanel = document.querySelector("#login-panel");
+        const registerPanel = document.querySelector("#register-panel");
+
+        if (loginPanel) {
+            loginPanel.classList.toggle("hidden", panel !== "login");
+        }
+        if (registerPanel) {
+            registerPanel.classList.toggle("hidden", panel !== "register");
+        }
+        if (elements?.authMessage) {
+            elements.authMessage.classList.add("hidden");
+        }
     }
 
     function showAuth() {
-        elements.loading.classList.add("hidden");
-        elements.appView.classList.add("hidden");
-        elements.authView.classList.remove("hidden");
+        if (elements?.loading) {
+            elements.loading.classList.add("hidden");
+        }
+        if (elements?.appView) {
+            elements.appView.classList.add("hidden");
+        }
+        if (elements?.authView) {
+            elements.authView.classList.remove("hidden");
+        }
         showAuthPanel("login");
     }
 
+    function setAuthorizationState() {
+        state.isSuperAdmin =
+            state.user?.roles?.includes("ROLE_SUPER_ADMIN") === true;
+        state.isAdmin = state.user?.roles?.includes("ROLE_ADMIN") === true
+            || state.isSuperAdmin;
+    }
+
+    function hasPermission(...permissionNames) {
+        const effectivePermissions = state.user?.permissions || [];
+        return permissionNames.some(
+            (permissionName) =>
+                effectivePermissions.includes(permissionName)
+        );
+    }
+
+    function canManageBooks() {
+        return hasPermission(
+            "BOOK_CREATE",
+            "BOOK_UPDATE",
+            "BOOK_DELETE",
+            "BOOK_IMPORT"
+        );
+    }
+
+    function canReadAllBorrowings() {
+        return hasPermission("BORROWING_READ_ALL");
+    }
+
+    function canAccessView(view) {
+        const permissionsByView = {
+            books: ["BOOK_READ"],
+            bookDetail: ["BOOK_READ"],
+            members: ["MEMBER_READ"],
+            borrowings: ["BORROWING_READ_OWN", "BORROWING_READ_ALL"],
+            system: ["SYSTEM_CONFIG_READ"],
+            account: ["PROFILE_READ"]
+        };
+        const required = permissionsByView[view];
+        return !required || hasPermission(...required);
+    }
+
     async function enterApplication() {
-        state.isAdmin = state.user.roles.includes("ROLE_ADMIN");
-        state.profile = await safeApi("/api/profile");
+        setAuthorizationState();
+        state.profile = hasPermission("PROFILE_READ")
+            ? await safeApi("/api/profile")
+            : null;
         elements.loading.classList.add("hidden");
         elements.authView.classList.add("hidden");
         elements.appView.classList.remove("hidden");
@@ -1051,23 +1243,33 @@
 
     function renderNavigation() {
         const generalItems = [
-            navItem("dashboard", t("Trang chủ")),
-            navItem("books", t("Kho sách")),
-            navItem("borrowings",
-                t(state.isAdmin ? "Mượn & trả" : "Sách của tôi"))
+            navItem("dashboard", t("Trang chủ"))
         ];
-
-        const adminItems = state.isAdmin
-            ? [
-                navItem("members", t("Thành viên")),
-                navItem("system", t("Hệ thống"))
-            ]
-            : [];
+        if (hasPermission("BOOK_READ")) {
+            generalItems.push(navItem("books", t("Kho sách")));
+        }
+        if (hasPermission("BORROWING_READ_OWN", "BORROWING_READ_ALL")) {
+            generalItems.push(
+                navItem(
+                    "borrowings",
+                    t(canReadAllBorrowings()
+                        ? "Mượn & trả"
+                        : "Sách của tôi")
+                )
+            );
+        }
+        if (hasPermission("MEMBER_READ")) {
+            generalItems.push(navItem("members", t("Thành viên")));
+        }
+        if (hasPermission("SYSTEM_CONFIG_READ")) {
+            generalItems.push(navItem("system", t("Hệ thống")));
+        }
+        if (hasPermission("PROFILE_READ")) {
+            generalItems.push(navItem("account", t("Tài khoản")));
+        }
 
         elements.sidebarNav.innerHTML = `
             ${generalItems.join("")}
-            ${adminItems.join("")}
-            ${navItem("account", t("Tài khoản"))}
         `;
 
         elements.sidebarNav.querySelectorAll("[data-view]")
@@ -1095,7 +1297,7 @@
         if (view === "bookDetail" && !state.selectedBookId) {
             view = "books";
         }
-        if (!state.isAdmin && ["members", "system"].includes(view)) {
+        if (!canAccessView(view)) {
             view = "dashboard";
         }
 
@@ -1131,22 +1333,27 @@
     }
 
     async function renderDashboard() {
-        const requests = [
-            safeApi("/api/books?page=0&size=10&active=true&sortBy=title&direction=asc"),
-            safeApi(state.isAdmin
-                ? "/api/admin/borrowings?page=0&size=5"
-                : "/api/borrowings/my?page=0&size=5")
-        ];
-
-        if (state.isAdmin) {
-            requests.push(
-                safeApi("/api/admin/members?page=0&size=1"),
-                safeApi("/api/admin/system-config")
-            );
-        }
-
+        const showAllBorrowings = canReadAllBorrowings();
+        const operationsDashboard = showAllBorrowings
+            || hasPermission("MEMBER_READ")
+            || canManageBooks();
         const [books, borrowings, members, systemConfig] =
-            await Promise.all(requests);
+            await Promise.all([
+                hasPermission("BOOK_READ")
+                    ? safeApi("/api/books?page=0&size=10&active=true&sortBy=title&direction=asc")
+                    : Promise.resolve(null),
+                showAllBorrowings
+                    ? safeApi("/api/admin/borrowings?page=0&size=5")
+                    : hasPermission("BORROWING_READ_OWN")
+                        ? safeApi("/api/borrowings/my?page=0&size=5")
+                        : Promise.resolve(null),
+                hasPermission("MEMBER_READ")
+                    ? safeApi("/api/admin/members?page=0&size=1")
+                    : Promise.resolve(null),
+                hasPermission("SYSTEM_CONFIG_READ")
+                    ? safeApi("/api/admin/system-config")
+                    : Promise.resolve(null)
+            ]);
         state.dashboardShelfBooks =
             await loadDashboardShelfBooks(books);
         state.dashboardShelfIndex = 0;
@@ -1161,7 +1368,7 @@
         const overdueLoans = (borrowings?.content || [])
             .filter((item) => item.overdue).length;
 
-        const stats = state.isAdmin
+        const stats = operationsDashboard
             ? [
                 ["Đầu sách", books?.totalElements ?? "—",
                     "Trong danh mục"],
@@ -1188,26 +1395,29 @@
                 <section class="library-hero">
                     <div class="library-hero-copy">
                         <span class="eyebrow">
-                            ${state.isAdmin
+                            ${operationsDashboard
                 ? "Kho sách & lưu thông"
                 : `Xin chào ${escapeHtml(displayName())}`}
                         </span>
-                        <h2>${state.isAdmin
+                        <h2>${operationsDashboard
                 ? "Tìm nhanh trong toàn bộ thư viện"
                 : "Bạn muốn đọc gì hôm nay?"}</h2>
-                        <p>${state.isAdmin
+                        <p>${operationsDashboard
                 ? "Tra cứu đầu sách trước khi cập nhật kho, mượn hoặc trả."
                 : "Tìm theo tên sách, tác giả hoặc mã ISBN trong bộ sưu tập."}</p>
+                        ${hasPermission("BOOK_READ") ? `
                         <form id="dashboard-search-form"
                               class="library-hero-search" role="search">
                             <input name="keyword" autocomplete="off"
                                    placeholder="Nhập tên sách, tác giả hoặc ISBN">
                             <button type="submit">Tìm trong thư viện</button>
                         </form>
+                        ` : ""}
                     </div>
                     ${dashboardHeroShelf(books?.content || [])}
                 </section>
 
+                ${hasPermission("BOOK_READ") ? `
                 <section class="shelf-section">
                     <div class="shelf-heading">
                         <div>
@@ -1241,11 +1451,13 @@
                 )}
                     </div>
                 </section>
+                ` : ""}
 
                 <section class="library-metrics">
                     ${stats.map(statCard).join("")}
                 </section>
 
+                ${hasPermission("BORROWING_READ_OWN", "BORROWING_READ_ALL") ? `
                 <section class="circulation-section">
                     <div class="shelf-heading">
                         <div>
@@ -1260,15 +1472,20 @@
                     <div class="card">
                         ${borrowingTable(
                     borrowings?.content || [],
-                    { compact: true, canReturn: false }
+                    {
+                        compact: true,
+                        canReturn: false,
+                        showBorrower: showAllBorrowings
+                    }
                 )}
                     </div>
                 </section>
+                ` : ""}
             </section>
         `;
 
         document.querySelector("#dashboard-search-form")
-            .addEventListener("submit", async (event) => {
+            ?.addEventListener("submit", async (event) => {
                 event.preventDefault();
                 state.pendingBookSearch = event.currentTarget
                     .querySelector("[name='keyword']").value.trim();
@@ -1438,27 +1655,32 @@
 
     async function renderBooksPage() {
         await ensureCategories();
+        const managingBooks = canManageBooks();
         elements.pageContent.innerHTML = `
             <section class="page-section">
                 <div class="section-heading">
                     <div>
-                        <h2>${state.isAdmin
+                        <h2>${managingBooks
                 ? "Danh mục thư viện"
                 : "Khám phá kho sách"}</h2>
-                        <p>${state.isAdmin
+                        <p>${managingBooks
                 ? "Tra cứu, cập nhật và bổ sung tài liệu vào bộ sưu tập."
                 : "Duyệt sách theo từ khóa, tác giả, danh mục và tình trạng."}</p>
                     </div>
-                    ${state.isAdmin
+                    ${hasPermission("BOOK_IMPORT", "BOOK_CREATE")
                 ? `<div class="action-row">
+                            ${hasPermission("BOOK_IMPORT") ? `
                             <button id="import-books-button"
                                     class="button button--secondary">
                                 Nhập CSV
                             </button>
+                            ` : ""}
+                            ${hasPermission("BOOK_CREATE") ? `
                             <button id="create-book-button"
                                     class="button button--primary">
                                 Thêm sách
                             </button>
+                            ` : ""}
                            </div>`
                 : ""}
                 </div>
@@ -1548,7 +1770,7 @@
             parameters.set("size", 10);
             parameters.set("sortBy", "title");
             parameters.set("direction", "asc");
-            if (!state.isAdmin) {
+            if (!canManageBooks()) {
                 parameters.set("active", "true");
             }
 
@@ -1560,7 +1782,7 @@
                 state.books.set(String(book.id), book);
             });
 
-            resultHost.innerHTML = state.isAdmin
+            resultHost.innerHTML = canManageBooks()
                 ? bookAdminTable(response)
                 : bookCatalogue(response);
             bindBookActions(response);
@@ -1617,12 +1839,14 @@
             t(book.category?.name || "Khác")
         )}</strong>
                             </div>
+                            ${hasPermission("BORROWING_BORROW") ? `
                             <button class="button button--primary button--small"
                                     data-borrow-book="${book.id}"
                                     ${book.availableQuantity < 1
-                || !book.active ? "disabled" : ""}>
+                    || !book.active ? "disabled" : ""}>
                                 Mượn sách
                             </button>
+                            ` : ""}
                         </div>
                     </article>
                 `).join("")}
@@ -1699,16 +1923,20 @@
                                                     title="Mở chi tiết">
                                                 ${icon("i-book")}
                                             </button>
+                                            ${hasPermission("BOOK_UPDATE") ? `
                                             <button class="icon-button"
                                                     data-edit-book="${book.id}"
                                                     title="Chỉnh sửa">
                                                 ${icon("i-edit")}
                                             </button>
+                                            ` : ""}
+                                            ${hasPermission("BOOK_DELETE") ? `
                                             <button class="icon-button danger"
                                                     data-delete-book="${book.id}"
                                                     title="Ngừng hoạt động">
                                                 ${icon("i-trash")}
                                             </button>
+                                            ` : ""}
                                         </span>
                                     </td>
                                 </tr>
@@ -1804,12 +2032,14 @@
 
         const [book, savedStatus] = await Promise.all([
             api(`/api/books/${bookId}`),
-            safeApi(`/api/saved-books/${bookId}/status`)
+            hasPermission("SAVED_BOOK_READ")
+                ? safeApi(`/api/saved-books/${bookId}/status`)
+                : Promise.resolve(null)
         ]);
         state.books.set(String(book.id), book);
 
         const isSaved = Boolean(savedStatus?.saved);
-        const canBorrow = !state.isAdmin
+        const canBorrow = hasPermission("BORROWING_BORROW")
             && book.active
             && book.availableQuantity > 0;
 
@@ -1848,6 +2078,7 @@
                         </p>
 
                         <div class="book-detail-actions">
+                            ${hasPermission("SAVED_BOOK_WRITE") ? `
                             <button type="button"
                                     class="button button--secondary
                                         ${isSaved ? "is-saved" : ""}"
@@ -1856,18 +2087,21 @@
                                 ${icon("i-bookmark")}
                                 ${isSaved ? "Đã lưu" : "Lưu"}
                             </button>
-                            ${state.isAdmin
+                            ` : ""}
+                            ${hasPermission("BOOK_UPDATE")
                 ? `<button type="button"
                                            class="button button--primary"
                                            data-edit-detail-book>
                                        ${icon("i-edit")} Chỉnh sửa sách
                                    </button>`
-                : `<button type="button"
+                : hasPermission("BORROWING_BORROW")
+                    ? `<button type="button"
                                            class="button button--primary"
                                            data-detail-borrow="${book.id}"
                                            ${canBorrow ? "" : "disabled"}>
                                        ${icon("i-borrow")} Mượn sách
-                                   </button>`}
+                                   </button>`
+                    : ""}
                         </div>
                     </div>
                 </div>
@@ -1884,9 +2118,9 @@
                         </div>
                         <div class="card-body">
                             <p>${escapeHtml(
-                    book.description
-                    || "Mô tả đang được cập nhật."
-                )}</p>
+                        book.description
+                        || "Mô tả đang được cập nhật."
+                    )}</p>
                         </div>
                     </article>
 
@@ -1911,20 +2145,20 @@
                             <div>
                                 <dt>Nhà xuất bản</dt>
                                 <dd>${escapeHtml(
-                    book.publisher || "—"
-                )}</dd>
+                        book.publisher || "—"
+                    )}</dd>
                             </div>
                             <div>
                                 <dt>Ngày phát hành</dt>
                                 <dd>${formatDate(
-                    book.publishedDate
-                )}</dd>
+                        book.publishedDate
+                    )}</dd>
                             </div>
                             <div>
                                 <dt>Danh mục</dt>
                                 <dd>${escapeHtml(
-                    t(book.category?.name || "Khác")
-                )}</dd>
+                        t(book.category?.name || "Khác")
+                    )}</dd>
                             </div>
                             <div>
                                 <dt>Số bản hiện có</dt>
@@ -1947,7 +2181,7 @@
             );
 
         document.querySelector("[data-toggle-saved-book]")
-            .addEventListener("click", async (event) => {
+            ?.addEventListener("click", async (event) => {
                 const button = event.currentTarget;
                 const wasSaved =
                     button.dataset.saved === "true";
@@ -2213,10 +2447,12 @@
                         <h2>Quản lý thành viên</h2>
                         <p>Tìm kiếm và cập nhật tài khoản thư viện.</p>
                     </div>
+                    ${hasPermission("MEMBER_CREATE") ? `
                     <button id="create-member-button"
                             class="button button--primary">
                         ${icon("i-plus")} Thêm thành viên
                     </button>
+                    ` : ""}
                 </div>
 
                 <form id="member-filter-form"
@@ -2286,7 +2522,7 @@
                 loadMembers(0);
             });
         document.querySelector("#create-member-button")
-            .addEventListener("click", () => openMemberModal());
+            ?.addEventListener("click", () => openMemberModal());
 
         await loadMembers(0);
     }
@@ -2339,7 +2575,6 @@
                                 <th>Mã thành viên</th>
                                 <th>Ngày sinh</th>
                                 <th>Liên hệ</th>
-                                <th>Thông tin mật khẩu</th>
                                 <th>Trạng thái</th>
                                 <th class="text-right">Thao tác</th>
                             </tr>
@@ -2368,24 +2603,30 @@
         )}</td>
                                     <td>${formatDate(member.dateOfBirth)}</td>
                                     <td>${escapeHtml(member.phone || "—")}</td>
-                                    <td>
-                                        ${passwordStatusControl(
-            member.passwordConfigured !== false
-        )}
-                                    </td>
                                     <td>${memberStatus(member)}</td>
                                     <td>
                                         <span class="table-actions">
+                                            ${hasPermission("MEMBER_UPDATE") ? `
                                             <button class="icon-button"
                                                     data-edit-member="${member.id}"
                                                     title="Chỉnh sửa">
                                                 ${icon("i-edit")}
                                             </button>
+                                            ` : ""}
+                                            ${state.isSuperAdmin ? `
+                                                <button class="button button--secondary button--small"
+                                                        data-permissions-member="${member.id}"
+                                                        title="${t("Phân quyền")}">
+                                                    ${t("Phân quyền")}
+                                                </button>
+                                            ` : ""}
+                                            ${hasPermission("MEMBER_DELETE") ? `
                                             <button class="icon-button danger"
                                                     data-delete-member="${member.id}"
                                                     title="Vô hiệu hóa">
                                                 ${icon("i-trash")}
                                             </button>
+                                            ` : ""}
                                         </span>
                                     </td>
                                 </tr>
@@ -2399,7 +2640,6 @@
     }
 
     function bindMemberActions() {
-        bindPasswordStatusToggles(document);
         document.querySelectorAll("[data-members-page]")
             .forEach((button) => {
                 button.addEventListener("click", () => {
@@ -2411,6 +2651,16 @@
                 button.addEventListener("click", () => {
                     openMemberModal(
                         state.members.get(button.dataset.editMember)
+                    );
+                });
+            });
+        document.querySelectorAll("[data-permissions-member]")
+            .forEach((button) => {
+                button.addEventListener("click", () => {
+                    openMemberPermissionsModal(
+                        state.members.get(
+                            button.dataset.permissionsMember
+                        )
                     );
                 });
             });
@@ -2562,6 +2812,131 @@
         bindPasswordStatusToggles(elements.modalRoot);
     }
 
+    async function openMemberPermissionsModal(member) {
+        if (!state.isSuperAdmin || !member) {
+            return;
+        }
+
+        try {
+            const [permissions, access] = await Promise.all([
+                api("/api/super-admin/access-control/permissions"),
+                api(
+                    `/api/super-admin/access-control/users/${member.userId}`
+                )
+            ]);
+            const direct = new Set(access.directPermissions || []);
+            const denied = new Set(access.deniedPermissions || []);
+            const effective = new Set(access.effectivePermissions || []);
+            const visiblePermissions = permissions.filter(
+                (permission) =>
+                    permission.name !== "ACCESS_CONTROL_MANAGE"
+            );
+
+            openModal({
+                title: "Quyền người dùng",
+                subtitle: member.fullName || member.email,
+                large: true,
+                showFooter: false,
+                body: `
+                    <div class="permission-help">
+                        Bật hoặc tắt từng chức năng cho tài khoản này.
+                        Quyền tắt riêng sẽ ưu tiên hơn quyền kế thừa từ role.
+                    </div>
+                    <div class="permission-grid">
+                        ${visiblePermissions.map((permission) => {
+                    const isEnabled = effective.has(permission.name);
+                    const status = denied.has(permission.name)
+                        ? "Đã tắt riêng"
+                        : direct.has(permission.name)
+                            ? "Bật riêng"
+                            : isEnabled
+                                ? "Theo role"
+                                : "Không được cấp";
+                    return `
+                                <div class="permission-item">
+                                     <div class="permission-copy">
+                                         <strong>${escapeHtml(
+                        permissionLabel(permission.name)
+                    )}</strong>
+                                        <span>${t(status)}</span>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox"
+                                               data-toggle-user-permission
+                                               data-user-id="${member.userId}"
+                                               data-permission="${escapeHtml(
+                        permission.name
+                    )}"
+                                               ${isEnabled ? "checked" : ""}>
+                                        <span class="switch-slider"></span>
+                                    </label>
+                                </div>
+                            `;
+                }).join("")}
+                    </div>
+                `
+            });
+
+            translateTree(elements.modalRoot);
+            elements.modalRoot
+                .querySelectorAll("[data-toggle-user-permission]")
+                .forEach((input) => {
+                    input.addEventListener("change", async () => {
+                        const enabled = input.checked;
+                        input.disabled = true;
+                        try {
+                            await api(
+                                `/api/super-admin/access-control/users/`
+                                + `${input.dataset.userId}/permissions/`
+                                + encodeURIComponent(
+                                    input.dataset.permission
+                                ),
+                                {
+                                    method: "PATCH",
+                                    body: JSON.stringify({ enabled })
+                                }
+                            );
+                            toast(
+                                enabled
+                                    ? "Đã bật quyền"
+                                    : "Đã tắt quyền",
+                                permissionLabel(
+                                    input.dataset.permission
+                                )
+                            );
+                            closeModal();
+                            await openMemberPermissionsModal(member);
+                        } catch (error) {
+                            input.checked = !enabled;
+                            input.disabled = false;
+                            toast(
+                                "Không thể cập nhật quyền",
+                                error.message,
+                                "error"
+                            );
+                        }
+                    });
+                });
+        } catch (error) {
+            toast(
+                "Không thể tải dữ liệu",
+                error.message,
+                "error"
+            );
+        }
+    }
+
+    function permissionLabel(permissionName) {
+        const labels = PERMISSION_LABELS[permissionName];
+        if (!labels) {
+            return permissionName;
+        }
+        const [viLabel, enLabel] = labels;
+        return state.locale === "en"
+            ? `${enLabel} (${viLabel})`
+            : `${viLabel} (${enLabel})`;
+    }
+
     function passwordStatusControl(configured) {
         const status = configured ? "Đã thiết lập" : "Chưa thiết lập";
         return `
@@ -2637,25 +3012,27 @@
     }
 
     async function renderBorrowingsPage() {
+        const showAllBorrowings = canReadAllBorrowings();
+        const showSavedBooks = hasPermission("SAVED_BOOK_READ");
         elements.pageContent.innerHTML = `
             <section class="page-section">
                 <div class="section-heading">
                     <div>
-                        <h2>${state.isAdmin
+                        <h2>${showAllBorrowings
                 ? "Hoạt động mượn trả"
                 : "Sách của tôi"}</h2>
-                        <p>${state.isAdmin
+                        <p>${showAllBorrowings
                 ? "Theo dõi toàn bộ giao dịch trong thư viện."
                 : "Theo dõi thời hạn và lịch sử mượn sách."}</p>
                     </div>
-                    ${state.isAdmin ? "" : `
+                    ${!showAllBorrowings && hasPermission("BOOK_READ") ? `
                         <button class="button button--primary"
                                 data-go-books>
                             ${icon("i-book")} Tìm sách
                         </button>
-                    `}
+                    ` : ""}
                 </div>
-                ${state.isAdmin ? "" : `
+                ${showSavedBooks ? `
                     <section class="saved-books-section">
                         <div class="shelf-heading">
                             <div>
@@ -2670,7 +3047,7 @@
                             ${pageSkeleton(2)}
                         </div>
                     </section>
-                `}
+                ` : ""}
                 <div id="borrowings-result">${pageSkeleton(3)}</div>
             </section>
         `;
@@ -2678,9 +3055,7 @@
             ?.addEventListener("click", () => navigate("books"));
         await Promise.all([
             loadBorrowings(0),
-            state.isAdmin
-                ? Promise.resolve()
-                : loadSavedBooks()
+            showSavedBooks ? loadSavedBooks() : Promise.resolve()
         ]);
     }
 
@@ -2748,7 +3123,8 @@
         const host = document.querySelector("#borrowings-result");
         host.innerHTML = pageSkeleton(3);
         try {
-            const endpoint = state.isAdmin
+            const showBorrower = canReadAllBorrowings();
+            const endpoint = showBorrower
                 ? "/api/admin/borrowings"
                 : "/api/borrowings/my";
             const response = await api(
@@ -2757,7 +3133,12 @@
             host.innerHTML = `
                 <div class="card">
                     ${borrowingTable(response.content, {
-                canReturn: !state.isAdmin,
+                canReturn: hasPermission("BORROWING_RETURN_ANY")
+                    || (
+                        !showBorrower
+                        && hasPermission("BORROWING_RETURN_OWN")
+                    ),
+                showBorrower,
                 compact: false
             })}
                     ${pagination(response, "borrowings")}
@@ -2774,7 +3155,7 @@
             return emptyState(
                 "i-borrow",
                 "Chưa có lượt mượn sách",
-                state.isAdmin
+                options.showBorrower
                     ? "Các giao dịch mới sẽ xuất hiện tại đây."
                     : "Hãy khám phá thư viện và chọn một cuốn sách."
             );
@@ -2786,7 +3167,7 @@
                     <thead>
                         <tr>
                             <th>Sách</th>
-                            ${state.isAdmin ? "<th>Người mượn</th>" : ""}
+                            ${options.showBorrower ? "<th>Người mượn</th>" : ""}
                             <th>Ngày mượn</th>
                             <th>Hạn trả</th>
                             <th>Ngày trả</th>
@@ -2807,7 +3188,7 @@
                                         <small>${escapeHtml(item.isbn)}</small>
                                     </span>
                                 </td>
-                                ${state.isAdmin ? `
+                                ${options.showBorrower ? `
                                     <td>
                                         <span class="borrower-cell">
                                             <span class="avatar avatar--person avatar--small">
@@ -2914,6 +3295,7 @@
 
     async function renderSystemPage() {
         const config = await api("/api/admin/system-config");
+        const canUpdateSystem = hasPermission("SYSTEM_CONFIG_UPDATE");
         state.maintenance = config;
         updateMaintenancePill(config.maintenanceMode);
 
@@ -2939,7 +3321,8 @@
                     </div>
                     <label class="switch" title="Bật/tắt bảo trì">
                         <input id="maintenance-switch" type="checkbox"
-                               ${config.maintenanceMode ? "checked" : ""}>
+                               ${config.maintenanceMode ? "checked" : ""}
+                               ${canUpdateSystem ? "" : "disabled"}>
                         <span class="switch-slider"></span>
                     </label>
                 </div>
@@ -2996,16 +3379,19 @@
                             <label class="field">
                                 <span>Nội dung thông báo</span>
                                 <textarea name="message" maxlength="500"
+                                    ${canUpdateSystem ? "" : "disabled"}
                                     placeholder="Hệ thống đang được bảo trì...">${escapeHtml(
             t(config.maintenanceMessage || "")
         )}</textarea>
                             </label>
+                            ${canUpdateSystem ? `
                             <div class="action-row">
                                 <button type="submit"
                                         class="button button--primary">
                                     Lưu cấu hình
                                 </button>
                             </div>
+                            ` : ""}
                             <p id="maintenance-form-error"
                                class="form-error hidden"></p>
                         </form>
@@ -3034,8 +3420,11 @@
         `;
 
         document.querySelector("#maintenance-form")
-            .addEventListener("submit", async (event) => {
+            ?.addEventListener("submit", async (event) => {
                 event.preventDefault();
+                if (!canUpdateSystem) {
+                    return;
+                }
                 const button = event.currentTarget
                     .querySelector("[type='submit']");
                 const enabled = document.querySelector(
@@ -3495,7 +3884,7 @@
                         <strong>Hãy kiểm tra hộp thư của bạn</strong>
                         <p>
                             Nếu email thuộc một tài khoản hợp lệ,
-                            hệ thống đã gửi liên kết có hiệu lực trong 30 phút.
+                            hệ thống đã gửi liên kết đặt lại mật khẩu có thời hạn.
                             Kiểm tra cả thư mục spam hoặc thư rác.
                         </p>
                         ${isLocalEnvironment
@@ -3526,9 +3915,11 @@
                         },
                         false
                     );
+
                     event.currentTarget.classList.add("hidden");
                     document.querySelector("#forgot-success")
-                        .classList.remove("hidden");
+                        ?.classList.remove("hidden");
+
                     toast(
                         "Đã gửi hướng dẫn",
                         "Hãy kiểm tra email để tiếp tục."
@@ -3588,7 +3979,7 @@
         const requestOptions = { ...options };
         const bodyIsFormData = requestOptions.body instanceof FormData;
         const headers = new Headers(requestOptions.headers || {});
-        const accessToken = sessionStorage.getItem(TOKEN_KEY);
+        const accessToken = getAccessToken();
 
         if (!bodyIsFormData && requestOptions.body
             && !headers.has("Content-Type")) {
@@ -3611,15 +4002,16 @@
         }
 
         if (response.status === 401 && allowRefresh
-            && sessionStorage.getItem(REFRESH_KEY)
+            && getRefreshToken()
             && !path.includes("/api/auth/refresh")) {
-            const refreshed = await refreshAccessToken();
+            const refreshed = await refreshAccessToken(accessToken);
             if (refreshed) {
                 return api(path, options, false);
             }
         }
 
         if (response.status === 204) {
+            publishDataChangeIfNeeded(path, requestOptions.method);
             return null;
         }
 
@@ -3651,7 +4043,17 @@
             throw error;
         }
 
+        publishDataChangeIfNeeded(path, requestOptions.method);
         return payload;
+    }
+
+    function publishDataChangeIfNeeded(path, method = "GET") {
+        const normalizedMethod = String(method || "GET").toUpperCase();
+        const mutating = ["POST", "PUT", "PATCH", "DELETE"]
+            .includes(normalizedMethod);
+        if (mutating && !path.startsWith("/api/auth/")) {
+            publishCrossTabEvent("DATA_CHANGED", { path });
+        }
     }
 
     async function safeApi(path) {
@@ -3662,8 +4064,24 @@
         }
     }
 
-    async function refreshAccessToken() {
-        const refreshToken = sessionStorage.getItem(REFRESH_KEY);
+    async function refreshAccessToken(rejectedAccessToken) {
+        if (navigator.locks?.request) {
+            return navigator.locks.request(
+                "spark-library-token-refresh",
+                () => refreshAccessTokenUnlocked(rejectedAccessToken)
+            );
+        }
+        return refreshAccessTokenUnlocked(rejectedAccessToken);
+    }
+
+    async function refreshAccessTokenUnlocked(rejectedAccessToken) {
+        const currentSession = readAuthSession();
+        if (currentSession?.accessToken
+            && rejectedAccessToken
+            && currentSession.accessToken !== rejectedAccessToken) {
+            return true;
+        }
+        const refreshToken = currentSession?.refreshToken;
         if (!refreshToken) {
             return false;
         }
@@ -3679,13 +4097,15 @@
             storeTokens(await response.json());
             return true;
         } catch (error) {
-            forceLogout();
+            if (getRefreshToken() === refreshToken) {
+                forceLogout();
+            }
             return false;
         }
     }
 
     async function logout() {
-        const refreshToken = sessionStorage.getItem(REFRESH_KEY);
+        const refreshToken = getRefreshToken();
         try {
             if (refreshToken) {
                 await api("/api/auth/logout", {
@@ -3700,11 +4120,12 @@
         }
     }
 
-    function forceLogout() {
-        clearTokens();
+    function forceLogout(broadcast = true) {
+        clearTokens(broadcast);
         state.user = null;
         state.profile = null;
         state.isAdmin = false;
+        state.isSuperAdmin = false;
         state.books.clear();
         state.members.clear();
         closeModal();
@@ -3712,13 +4133,52 @@
     }
 
     function storeTokens(tokens) {
-        sessionStorage.setItem(TOKEN_KEY, tokens.accessToken);
-        sessionStorage.setItem(REFRESH_KEY, tokens.refreshToken);
-    }
-
-    function clearTokens() {
+        if (!tokens?.accessToken || !tokens?.refreshToken) {
+            throw new Error("Authentication tokens are incomplete");
+        }
+        localStorage.setItem(
+            AUTH_SESSION_KEY,
+            JSON.stringify({
+                accessToken: tokens.accessToken,
+                refreshToken: tokens.refreshToken,
+                updatedAt: Date.now()
+            })
+        );
         sessionStorage.removeItem(TOKEN_KEY);
         sessionStorage.removeItem(REFRESH_KEY);
+        publishCrossTabEvent("SESSION_UPDATED");
+    }
+
+    function clearTokens(broadcast = true) {
+        const hadSession = Boolean(readAuthSession());
+        localStorage.removeItem(AUTH_SESSION_KEY);
+        sessionStorage.removeItem(TOKEN_KEY);
+        sessionStorage.removeItem(REFRESH_KEY);
+        if (broadcast && hadSession) {
+            publishCrossTabEvent("LOGOUT");
+        }
+    }
+
+    function readAuthSession() {
+        try {
+            const session = JSON.parse(
+                localStorage.getItem(AUTH_SESSION_KEY)
+            );
+            if (!session?.accessToken || !session?.refreshToken) {
+                return null;
+            }
+            return session;
+        } catch (error) {
+            return null;
+        }
+    }
+
+    function getAccessToken() {
+        return readAuthSession()?.accessToken || null;
+    }
+
+    function getRefreshToken() {
+        return readAuthSession()?.refreshToken || null;
     }
 
     function openModal({
@@ -4033,6 +4493,9 @@
     }
 
     function setAuthMessage(message, type) {
+        if (!elements?.authMessage) {
+            return;
+        }
         elements.authMessage.textContent = t(message);
         elements.authMessage.classList.remove("hidden");
         elements.authMessage.style.color =
@@ -4045,6 +4508,9 @@
 
     function showFormError(selector, error) {
         const element = document.querySelector(selector);
+        if (!element) {
+            return;
+        }
         element.textContent = formatApiError(error);
         element.classList.remove("hidden");
     }
@@ -4091,18 +4557,28 @@
     }
 
     function updateMaintenancePill(enabled) {
-        document.querySelector("#maintenance-pill")
-            .classList.toggle("hidden", !enabled);
+        const maintenancePill = document.querySelector("#maintenance-pill");
+        if (maintenancePill) {
+            maintenancePill.classList.toggle("hidden", !enabled);
+        }
     }
 
     function openSidebar() {
-        elements.sidebar.classList.add("open");
-        elements.sidebarOverlay.classList.add("open");
+        if (elements?.sidebar) {
+            elements.sidebar.classList.add("open");
+        }
+        if (elements?.sidebarOverlay) {
+            elements.sidebarOverlay.classList.add("open");
+        }
     }
 
     function closeSidebar() {
-        elements.sidebar.classList.remove("open");
-        elements.sidebarOverlay.classList.remove("open");
+        if (elements?.sidebar) {
+            elements.sidebar.classList.remove("open");
+        }
+        if (elements?.sidebarOverlay) {
+            elements.sidebarOverlay.classList.remove("open");
+        }
     }
 
     function displayName() {

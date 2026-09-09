@@ -7,6 +7,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -14,60 +17,45 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-
 @Component
 @RequiredArgsConstructor
-public class GoogleAuthenticationSuccessHandler
-                implements AuthenticationSuccessHandler {
+public class GoogleAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-        private static final String PROVIDER = "GOOGLE";
+  private static final String PROVIDER = "GOOGLE";
 
-        private final OAuthIdentityRepository identityRepository;
-        private final SocialLoginCodeService loginCodeService;
+  private final OAuthIdentityRepository identityRepository;
+  private final SocialLoginCodeService loginCodeService;
 
-        @Value("${app.frontend-url}")
-        private String frontendUrl;
+  @Value("${app.frontend-url}")
+  private String frontendUrl;
 
-        @Override
-        public void onAuthenticationSuccess(
-                        HttpServletRequest request,
-                        HttpServletResponse response,
-                        Authentication authentication) throws IOException, ServletException {
-                if (!(authentication.getPrincipal() instanceof OidcUser oidcUser)) {
-                        throw new ServletException(
-                                        "Google authentication principal is invalid");
-                }
+  @Override
+  public void onAuthenticationSuccess(
+      HttpServletRequest request, HttpServletResponse response, Authentication authentication)
+      throws IOException, ServletException {
+    if (!(authentication.getPrincipal() instanceof OidcUser oidcUser)) {
+      throw new ServletException("Google authentication principal is invalid");
+    }
 
-                OAuthIdentity identity = identityRepository
-                                .findByProviderAndProviderSubject(
-                                                PROVIDER,
-                                                oidcUser.getSubject())
-                                .orElseThrow(() -> new ServletException(
-                                                "Google identity was not persisted"));
+    OAuthIdentity identity =
+        identityRepository
+            .findByProviderAndProviderSubject(PROVIDER, oidcUser.getSubject())
+            .orElseThrow(() -> new ServletException("Google identity was not persisted"));
 
-                String rawCode = loginCodeService.issueFor(identity.getUser());
+    String rawCode = loginCodeService.issueFor(identity.getUser());
 
-                HttpSession session = request.getSession(false);
-                if (session != null) {
-                        session.invalidate();
-                }
+    HttpSession session = request.getSession(false);
+    if (session != null) {
+      session.invalidate();
+    }
 
-                response.sendRedirect(
-                                frontendBaseUrl()
-                                                + "/?socialCode="
-                                                + URLEncoder.encode(
-                                                                rawCode,
-                                                                StandardCharsets.UTF_8));
-        }
+    response.sendRedirect(
+        frontendBaseUrl() + "/?socialCode=" + URLEncoder.encode(rawCode, StandardCharsets.UTF_8));
+  }
 
-        private String frontendBaseUrl() {
-                return frontendUrl.endsWith("/")
-                                ? frontendUrl.substring(
-                                                0,
-                                                frontendUrl.length() - 1)
-                                : frontendUrl;
-        }
+  private String frontendBaseUrl() {
+    return frontendUrl.endsWith("/")
+        ? frontendUrl.substring(0, frontendUrl.length() - 1)
+        : frontendUrl;
+  }
 }

@@ -4,6 +4,9 @@ import com.sparkminds.library.auth.oauth.GoogleAuthenticationFailureHandler;
 import com.sparkminds.library.auth.oauth.GoogleAuthenticationSuccessHandler;
 import com.sparkminds.library.auth.oauth.GoogleOidcUserService;
 import com.sparkminds.library.security.service.CustomUserDetailsService;
+import com.sparkminds.library.systemconfig.filter.MaintenanceModeFilter;
+import com.sparkminds.library.systemconfig.service.SystemConfigService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -17,124 +20,110 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import tools.jackson.databind.ObjectMapper;
-import com.sparkminds.library.systemconfig.filter.MaintenanceModeFilter;
-import com.sparkminds.library.systemconfig.service.SystemConfigService;
-import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Bean
-    public AuthenticationManager authenticationManager(
-            CustomUserDetailsService userDetailsService,
-            PasswordEncoder passwordEncoder) {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(
-                userDetailsService);
+  @Value("${app.oauth2.google.enabled:false}")
+  private boolean googleOAuthEnabled;
 
-        provider.setPasswordEncoder(passwordEncoder);
+  @Bean
+  public AuthenticationManager authenticationManager(
+      CustomUserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+    DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
 
-        return new ProviderManager(provider);
+    provider.setPasswordEncoder(passwordEncoder);
+
+    return new ProviderManager(provider);
+  }
+
+  @Bean
+  public JwtAuthenticationConverter jwtAuthenticationConverter() {
+    JwtGrantedAuthoritiesConverter authoritiesConverter = new JwtGrantedAuthoritiesConverter();
+
+    authoritiesConverter.setAuthoritiesClaimName("authorities");
+    authoritiesConverter.setAuthorityPrefix("");
+
+    JwtAuthenticationConverter authenticationConverter = new JwtAuthenticationConverter();
+
+    authenticationConverter.setJwtGrantedAuthoritiesConverter(authoritiesConverter);
+
+    authenticationConverter.setPrincipalClaimName("sub");
+
+    return authenticationConverter;
+  }
+
+  @Bean
+  public SecurityFilterChain securityFilterChain(
+      HttpSecurity http,
+      JwtAuthenticationConverter authenticationConverter,
+      SystemConfigService systemConfigService,
+      ObjectMapper objectMapper,
+      GoogleOidcUserService googleOidcUserService,
+      GoogleAuthenticationSuccessHandler googleSuccessHandler,
+      GoogleAuthenticationFailureHandler googleFailureHandler)
+      throws Exception {
+
+    MaintenanceModeFilter maintenanceModeFilter =
+        new MaintenanceModeFilter(systemConfigService, objectMapper);
+
+    http.csrf(AbstractHttpConfigurer::disable)
+        .formLogin(AbstractHttpConfigurer::disable)
+        .httpBasic(AbstractHttpConfigurer::disable)
+        .logout(AbstractHttpConfigurer::disable)
+        .requestCache(AbstractHttpConfigurer::disable)
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+        .authorizeHttpRequests(
+            authorize ->
+                authorize
+                    .requestMatchers(
+                        "/",
+                        "/index.html",
+                        "/assets/**",
+                        "/oauth2/**",
+                        "/login/oauth2/**",
+                        "/swagger-ui/**",
+                        "/swagger-ui.html",
+                        "/v3/api-docs/**",
+                        "/actuator/health",
+                        "/error")
+                    .permitAll()
+                    .requestMatchers(
+                        HttpMethod.POST,
+                        "/api/auth/login",
+                        "/api/auth/refresh",
+                        "/api/auth/register",
+                        "/api/auth/forgot-password",
+                        "/api/auth/reset-password",
+                        "/api/auth/social/exchange")
+                    .permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/auth/verify-email")
+                    .permitAll()
+                    .requestMatchers("/api/admin/**")
+                    .authenticated()
+                    .requestMatchers("/api/super-admin/**")
+                    .hasAuthority("ACCESS_CONTROL_MANAGE")
+                    .anyRequest()
+                    .authenticated())
+        .oauth2ResourceServer(
+            oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(authenticationConverter)))
+        .addFilterAfter(maintenanceModeFilter, BearerTokenAuthenticationFilter.class);
+
+    if (googleOAuthEnabled) {
+      http.oauth2Login(
+          oauth2 ->
+              oauth2
+                  .userInfoEndpoint(
+                      userInfo -> userInfo.oidcUserService(googleOidcUserService::loadUser))
+                  .successHandler(googleSuccessHandler)
+                  .failureHandler(googleFailureHandler));
     }
 
-    @Bean
-    public JwtAuthenticationConverter jwtAuthenticationConverter() {
-        JwtGrantedAuthoritiesConverter authoritiesConverter = new JwtGrantedAuthoritiesConverter();
-
-        authoritiesConverter.setAuthoritiesClaimName("roles");
-        authoritiesConverter.setAuthorityPrefix("");
-
-        JwtAuthenticationConverter authenticationConverter = new JwtAuthenticationConverter();
-
-        authenticationConverter
-                .setJwtGrantedAuthoritiesConverter(
-                        authoritiesConverter);
-
-        authenticationConverter
-                .setPrincipalClaimName("sub");
-
-        return authenticationConverter;
-    }
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(
-            HttpSecurity http,
-            JwtAuthenticationConverter authenticationConverter,
-            SystemConfigService systemConfigService,
-            ObjectMapper objectMapper,
-            GoogleOidcUserService googleOidcUserService,
-            GoogleAuthenticationSuccessHandler googleSuccessHandler,
-            GoogleAuthenticationFailureHandler googleFailureHandler)
-            throws Exception {
-
-        MaintenanceModeFilter maintenanceModeFilter = new MaintenanceModeFilter(
-                systemConfigService,
-                objectMapper);
-
-        http
-                .csrf(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable)
-                .httpBasic(AbstractHttpConfigurer::disable)
-                .logout(AbstractHttpConfigurer::disable)
-                .requestCache(AbstractHttpConfigurer::disable)
-
-                .sessionManagement(session -> session.sessionCreationPolicy(
-                        SessionCreationPolicy.IF_REQUIRED))
-
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(
-                                "/",
-                                "/index.html",
-                                "/assets/**",
-                                "/oauth2/**",
-                                "/login/oauth2/**",
-                                "/swagger-ui/**",
-                                "/swagger-ui.html",
-                                "/v3/api-docs/**",
-                                "/actuator/health",
-                                "/error")
-                        .permitAll()
-
-                        .requestMatchers(
-                                HttpMethod.POST,
-                                "/api/auth/login",
-                                "/api/auth/refresh",
-                                "/api/auth/register",
-                                "/api/auth/forgot-password",
-                                "/api/auth/reset-password",
-                                "/api/auth/social/exchange")
-                        .permitAll()
-
-                        .requestMatchers(
-                                HttpMethod.GET,
-                                "/api/auth/verify-email")
-                        .permitAll()
-
-                        .requestMatchers("/api/admin/**")
-                        .hasRole("ADMIN")
-
-                        .anyRequest()
-                        .authenticated())
-
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(
-                        authenticationConverter)))
-
-                .oauth2Login(oauth2 -> oauth2
-                        .userInfoEndpoint(userInfo -> userInfo
-                                .oidcUserService(
-                                        googleOidcUserService::loadUser
-                                )
-                        )
-                        .successHandler(googleSuccessHandler)
-                        .failureHandler(googleFailureHandler)
-                )
-
-                .addFilterAfter(
-                        maintenanceModeFilter,
-                        BearerTokenAuthenticationFilter.class);
-
-        return http.build();
-    }
+    return http.build();
+  }
 }

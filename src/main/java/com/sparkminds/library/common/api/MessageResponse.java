@@ -1,4 +1,3 @@
 package com.sparkminds.library.common.api;
 
-public record MessageResponse(String message) {
-}
+public record MessageResponse(String message) {}

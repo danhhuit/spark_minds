@@ -21,31 +21,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/admin/borrowings")
 @RequiredArgsConstructor
 @Validated
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAuthority('BORROWING_READ_ALL')")
 @Tag(name = "Admin Borrowing Management")
 @SecurityRequirement(name = "bearerAuth")
 public class AdminBorrowingController {
 
-    private final BorrowingService borrowingService;
+  private final BorrowingService borrowingService;
 
-    @GetMapping
-    @Operation(summary = "Get all borrowings")
-    public ResponseEntity<PageResponse<BorrowingResponse>>
-    getAllBorrowings(
-            @RequestParam(defaultValue = "0")
-            @Min(0)
-            int page,
-
-            @RequestParam(defaultValue = "10")
-            @Min(1)
-            @Max(10)
-            int size
-    ) {
-        return ResponseEntity.ok(
-                borrowingService.getAllBorrowings(
-                    page,
-                    size
-                )
-        );
-    }
+  @GetMapping
+  @Operation(summary = "Get all borrowings")
+  public ResponseEntity<PageResponse<BorrowingResponse>> getAllBorrowings(
+      @RequestParam(defaultValue = "0") @Min(0) int page,
+      @RequestParam(defaultValue = "10") @Min(1) @Max(10) int size) {
+    return ResponseEntity.ok(borrowingService.getAllBorrowings(page, size));
+  }
 }

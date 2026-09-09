@@ -1,0 +1,179 @@
+databaseChangeLog:
+  - changeSet:
+      id: 017-create-permission-model
+      author: codex
+      changes:
+        - modifyDataType:
+            tableName: roles
+            columnName: name
+            newDataType: VARCHAR(30)
+
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: name
+                  value: SUPER_ADMIN
+
+        - createTable:
+            tableName: permissions
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_permissions
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: resource_name
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: action_name
+                  type: VARCHAR(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+        - addUniqueConstraint:
+            tableName: permissions
+            columnNames: name
+            constraintName: uk_permissions_name
+
+        - createTable:
+            tableName: role_permissions
+            columns:
+              - column:
+                  name: role_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: permission_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+        - addPrimaryKey:
+            tableName: role_permissions
+            columnNames: role_id, permission_id
+            constraintName: pk_role_permissions
+
+        - addForeignKeyConstraint:
+            baseTableName: role_permissions
+            baseColumnNames: role_id
+            referencedTableName: roles
+            referencedColumnNames: id
+            constraintName: fk_role_permissions_role
+            onDelete: CASCADE
+
+        - addForeignKeyConstraint:
+            baseTableName: role_permissions
+            baseColumnNames: permission_id
+            referencedTableName: permissions
+            referencedColumnNames: id
+            constraintName: fk_role_permissions_permission
+            onDelete: CASCADE
+
+        - createTable:
+            tableName: user_permissions
+            columns:
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: permission_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+        - addPrimaryKey:
+            tableName: user_permissions
+            columnNames: user_id, permission_id
+            constraintName: pk_user_permissions
+
+        - addForeignKeyConstraint:
+            baseTableName: user_permissions
+            baseColumnNames: user_id
+            referencedTableName: user_accounts
+            referencedColumnNames: id
+            constraintName: fk_user_permissions_user
+            onDelete: CASCADE
+
+        - addForeignKeyConstraint:
+            baseTableName: user_permissions
+            baseColumnNames: permission_id
+            referencedTableName: permissions
+            referencedColumnNames: id
+            constraintName: fk_user_permissions_permission
+            onDelete: CASCADE
+
+        - sql:
+            splitStatements: true
+            stripComments: true
+            sql: |
+              INSERT INTO permissions (name, resource_name, action_name, description) VALUES
+                ('BOOK_READ', 'BOOK', 'READ', 'View and search books'),
+                ('BOOK_CREATE', 'BOOK', 'CREATE', 'Create books'),
+                ('BOOK_UPDATE', 'BOOK', 'UPDATE', 'Update books'),
+                ('BOOK_DELETE', 'BOOK', 'DELETE', 'Delete books'),
+                ('BOOK_IMPORT', 'BOOK', 'IMPORT', 'Import books from CSV'),
+                ('MEMBER_READ', 'MEMBER', 'READ', 'View and search members'),
+                ('MEMBER_CREATE', 'MEMBER', 'CREATE', 'Create members'),
+                ('MEMBER_UPDATE', 'MEMBER', 'UPDATE', 'Update members'),
+                ('MEMBER_DELETE', 'MEMBER', 'DELETE', 'Deactivate members'),
+                ('BORROWING_BORROW', 'BORROWING', 'CREATE', 'Borrow a book'),
+                ('BORROWING_RETURN_OWN', 'BORROWING', 'RETURN_OWN', 'Return own borrowed book'),
+                ('BORROWING_RETURN_ANY', 'BORROWING', 'RETURN_ANY', 'Return any member borrowing'),
+                ('BORROWING_READ_OWN', 'BORROWING', 'READ_OWN', 'View own borrowing history'),
+                ('BORROWING_READ_ALL', 'BORROWING', 'READ_ALL', 'View all borrowing history'),
+                ('PROFILE_READ', 'PROFILE', 'READ', 'View own profile'),
+                ('PROFILE_UPDATE', 'PROFILE', 'UPDATE', 'Update own profile'),
+                ('SAVED_BOOK_READ', 'SAVED_BOOK', 'READ', 'View saved books'),
+                ('SAVED_BOOK_WRITE', 'SAVED_BOOK', 'WRITE', 'Add or remove saved books'),
+                ('SYSTEM_CONFIG_READ', 'SYSTEM_CONFIG', 'READ', 'View system configuration'),
+                ('SYSTEM_CONFIG_UPDATE', 'SYSTEM_CONFIG', 'UPDATE', 'Update system configuration'),
+                ('ACCESS_CONTROL_MANAGE', 'ACCESS_CONTROL', 'MANAGE', 'Manage roles and permissions');
+
+              INSERT INTO role_permissions (role_id, permission_id)
+              SELECT r.id, p.id
+              FROM roles r CROSS JOIN permissions p
+              WHERE r.name = 'SUPER_ADMIN';
+
+              INSERT INTO role_permissions (role_id, permission_id)
+              SELECT r.id, p.id
+              FROM roles r CROSS JOIN permissions p
+              WHERE r.name = 'ADMIN'
+                AND p.name IN (
+                  'BOOK_READ', 'BOOK_CREATE', 'BOOK_UPDATE', 'BOOK_DELETE', 'BOOK_IMPORT',
+                  'MEMBER_READ', 'MEMBER_CREATE', 'MEMBER_UPDATE', 'MEMBER_DELETE',
+                  'BORROWING_RETURN_ANY', 'BORROWING_READ_ALL',
+                  'PROFILE_READ', 'PROFILE_UPDATE',
+                  'SAVED_BOOK_READ', 'SAVED_BOOK_WRITE',
+                  'SYSTEM_CONFIG_READ', 'SYSTEM_CONFIG_UPDATE'
+                );
+
+              INSERT INTO role_permissions (role_id, permission_id)
+              SELECT r.id, p.id
+              FROM roles r CROSS JOIN permissions p
+              WHERE r.name = 'USER'
+                AND p.name IN (
+                  'BOOK_READ',
+                  'BORROWING_BORROW', 'BORROWING_RETURN_OWN', 'BORROWING_READ_OWN',
+                  'PROFILE_READ', 'PROFILE_UPDATE',
+                  'SAVED_BOOK_READ', 'SAVED_BOOK_WRITE'
+                );

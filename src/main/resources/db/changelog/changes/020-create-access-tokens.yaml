@@ -1,0 +1,100 @@
+databaseChangeLog:
+  - changeSet:
+      id: 020-create-access-tokens
+      author: codex
+      changes:
+        - createTable:
+            tableName: access_tokens
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_access_tokens
+                    nullable: false
+              - column:
+                  name: jti
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: token_hash
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: authorization_version
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: issued_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: expires_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: revoked
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: revoked_at
+                  type: TIMESTAMP WITH TIME ZONE
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - addUniqueConstraint:
+            tableName: access_tokens
+            columnNames: jti
+            constraintName: uk_access_tokens_jti
+
+        - addUniqueConstraint:
+            tableName: access_tokens
+            columnNames: token_hash
+            constraintName: uk_access_tokens_token_hash
+
+        - addForeignKeyConstraint:
+            baseTableName: access_tokens
+            baseColumnNames: user_id
+            referencedTableName: user_accounts
+            referencedColumnNames: id
+            constraintName: fk_access_tokens_user
+            onDelete: CASCADE
+
+        - createIndex:
+            tableName: access_tokens
+            indexName: idx_access_tokens_user_id
+            columns:
+              - column:
+                  name: user_id
+
+        - createIndex:
+            tableName: access_tokens
+            indexName: idx_access_tokens_expires_at
+            columns:
+              - column:
+                  name: expires_at
+
+        - createIndex:
+            tableName: access_tokens
+            indexName: idx_access_tokens_revoked
+            columns:
+              - column:
+                  name: revoked

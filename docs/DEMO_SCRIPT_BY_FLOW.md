@@ -136,7 +136,8 @@ application.yml
   -> CustomUserDetailsService tải UserAccount + roles
   -> JwtTokenService tạo access token có uid, sub, roles, jti
   -> RefreshTokenService tạo refresh token hash trong database
-  -> Frontend lưu token trong sessionStorage
+  -> Frontend lưu cặp token nguyên tử trong localStorage
+  -> storage event/BroadcastChannel đồng bộ phiên giữa các tab
   -> SecurityConfig/JwtAuthenticationConverter đọc roles ở request sau
 ```
 
@@ -149,10 +150,10 @@ application.yml
 | `auth/controller/AuthController.java` | Endpoint `/api/auth/login` |
 | `auth/dto/request/LoginRequest.java` | Validate username/email và password |
 | `auth/service/AuthService.java` | Authenticate, phát hành token response |
-| `security/SecurityConfig.java` | Quy tắc permit/authenticated/hasRole ADMIN |
+| `security/SecurityConfig.java` | Quy tắc permit/authenticated và đọc authority từ JWT |
 | `security/jwt/JwtTokenService.java` | Tạo JWT và claim |
 | `security/service/CustomUserDetailsService.java` | Lấy user từ DB để Spring Security xác thực |
-| `member/entity/UserAccount.java` và `Role.java` | Quan hệ tài khoản–role |
+| `member/entity/UserAccount.java`, `Role.java`, `Permission.java` | Quan hệ tài khoản–role–permission |
 
 ### Bằng chứng nên chỉ ra
 
@@ -889,7 +890,7 @@ chức năng có kiểm thử tự động.
 #### Thao tác
 
 1. Chỉ vào `db/changelog/db.changelog-master.yaml`.
-2. Giải thích thứ tự 16 changeset từ role/account đến Google OAuth.
+2. Giải thích thứ tự 19 changeset từ role/account đến Google OAuth, permission override và authorization version.
 3. Nếu cần, mở log startup để chỉ ra `Database is up to date`.
 4. Mở migration `014-seed-extended-book-catalog.yaml` để chỉ ra 50 sách mẫu.
 
@@ -956,14 +957,14 @@ Skipped: 0
 
 Nếu thời gian demo rất ngắn, trình bày theo thứ tự này:
 
-1. **30 giây**: giới thiệu kiến trúc package và hai role.
+1. **30 giây**: giới thiệu kiến trúc package, ba role và permission/action.
 2. **1 phút**: login admin, chỉ ra menu role và JWT/Swagger.
 3. **2 phút**: kho sách: search, pagination, thêm/sửa, ảnh bìa.
 4. **1 phút**: import `books-import.csv`; nêu rollback với file invalid.
 5. **1 phút**: quản lý member: search nhiều điều kiện và tạo member.
 6. **2 phút**: login User, mượn sách; quay Admin xem lịch sử; trả sách.
 7. **1 phút**: maintenance mode trả 503 và admin tắt lại.
-8. **1 phút**: Mailpit verify/reset email, i18n, 75 test, Swagger/Liquibase.
+8. **1 phút**: Mailpit verify/reset email, i18n, 78 test, Swagger/Liquibase.
 
 ## 5. Checklist trước khi trình bày
 

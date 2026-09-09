@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,37 +25,25 @@ import org.springframework.web.bind.annotation.RestController;
 @SecurityRequirement(name = "bearerAuth")
 public class ProfileController {
 
-    private final ProfileService profileService;
+  private final ProfileService profileService;
 
-    @GetMapping
-    @Operation(summary = "Get current user profile")
-    public ResponseEntity<ProfileResponse> getCurrentProfile(
-            @AuthenticationPrincipal Jwt jwt
-    ) {
-        return ResponseEntity.ok(
-                profileService.getCurrentProfile(
-                    userId(jwt)
-                )
-        );
-    }
+  @GetMapping
+  @PreAuthorize("hasAuthority('PROFILE_READ')")
+  @Operation(summary = "Get current user profile")
+  public ResponseEntity<ProfileResponse> getCurrentProfile(@AuthenticationPrincipal Jwt jwt) {
+    return ResponseEntity.ok(profileService.getCurrentProfile(userId(jwt)));
+  }
 
-    @PutMapping
-    @Operation(summary = "Update current user profile")
-    public ResponseEntity<ProfileResponse> updateCurrentProfile(
-            @AuthenticationPrincipal Jwt jwt,
-            @Valid @RequestBody
-            UpdateProfileRequest request
-    ) {
-        return ResponseEntity.ok(
-                profileService.updateCurrentProfile(
-                    userId(jwt),
-                    request
-                )
-        );
-    }
+  @PutMapping
+  @PreAuthorize("hasAuthority('PROFILE_UPDATE')")
+  @Operation(summary = "Update current user profile")
+  public ResponseEntity<ProfileResponse> updateCurrentProfile(
+      @AuthenticationPrincipal Jwt jwt, @Valid @RequestBody UpdateProfileRequest request) {
+    return ResponseEntity.ok(profileService.updateCurrentProfile(userId(jwt), request));
+  }
 
-    private Long userId(Jwt jwt) {
-        Number claim = jwt.getClaim("uid");
-        return claim.longValue();
-    }
+  private Long userId(Jwt jwt) {
+    Number claim = jwt.getClaim("uid");
+    return claim.longValue();
+  }
 }

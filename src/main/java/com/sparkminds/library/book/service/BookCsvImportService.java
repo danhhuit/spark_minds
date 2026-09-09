@@ -5,14 +5,6 @@ import com.sparkminds.library.book.dto.response.BookImportResponse;
 import com.sparkminds.library.book.entity.Category;
 import com.sparkminds.library.book.repository.CategoryRepository;
 import com.sparkminds.library.common.exception.CsvImportException;
-import lombok.RequiredArgsConstructor;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -25,366 +17,256 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
 public class BookCsvImportService {
 
-        private static final long MAX_FILE_SIZE = 5L * 1024 * 1024;
+  private static final long MAX_FILE_SIZE = 5L * 1024 * 1024;
 
-        private static final Set<String> REQUIRED_HEADERS = Set.of(
-                        "isbn",
-                        "title",
-                        "description",
-                        "publisher",
-                        "publishedDate",
-                        "totalQuantity",
-                        "category",
-                        "authors");
+  private static final Set<String> REQUIRED_HEADERS =
+      Set.of(
+          "isbn",
+          "title",
+          "description",
+          "publisher",
+          "publishedDate",
+          "totalQuantity",
+          "category",
+          "authors");
 
-        private final BookService bookService;
-        private final CategoryRepository categoryRepository;
+  private final BookService bookService;
+  private final CategoryRepository categoryRepository;
 
-        @Transactional(rollbackFor = Exception.class)
-        public BookImportResponse importBooks(
-                        MultipartFile file) {
-                validateFile(file);
+  @Transactional(rollbackFor = Exception.class)
+  public BookImportResponse importBooks(MultipartFile file) {
+    validateFile(file);
 
-                List<String> importedIsbns = new ArrayList<>();
+    List<String> importedIsbns = new ArrayList<>();
 
-                Set<String> fileIsbns = new HashSet<>();
+    Set<String> fileIsbns = new HashSet<>();
 
-                CSVFormat format = CSVFormat.DEFAULT
-                                .builder()
-                                .setHeader()
-                                .setSkipHeaderRecord(true)
-                                .setIgnoreEmptyLines(true)
-                                .setTrim(true)
-                                .get();
+    CSVFormat format =
+        CSVFormat.DEFAULT
+            .builder()
+            .setHeader()
+            .setSkipHeaderRecord(true)
+            .setIgnoreEmptyLines(true)
+            .setTrim(true)
+            .get();
 
-                try (
-                                BufferedReader reader = createUtf8Reader(file);
-                                CSVParser parser = format.parse(reader)) {
-                        validateHeaders(parser);
+    try (BufferedReader reader = createUtf8Reader(file);
+        CSVParser parser = format.parse(reader)) {
+      validateHeaders(parser);
 
-                        for (CSVRecord record : parser) {
-                                long lineNumber = record.getRecordNumber() + 1;
+      for (CSVRecord record : parser) {
+        long lineNumber = record.getRecordNumber() + 1;
 
-                                try {
-                                        CreateBookRequest request = parseRecord(
-                                                        record,
-                                                        lineNumber,
-                                                        fileIsbns);
+        try {
+          CreateBookRequest request = parseRecord(record, lineNumber, fileIsbns);
 
-                                        bookService.create(request);
+          bookService.create(request);
 
-                                        importedIsbns.add(
-                                                        request.isbn());
-                                } catch (CsvImportException exception) {
-                                        throw exception;
-                                } catch (RuntimeException exception) {
-                                        throw new CsvImportException(
-                                                        "CSV line "
-                                                                        + lineNumber
-                                                                        + ": "
-                                                                        + exception.getMessage(),
-                                                        exception);
-                                }
-                        }
-
-                        if (importedIsbns.isEmpty()) {
-                                throw new CsvImportException(
-                                                "CSV file does not contain any data rows");
-                        }
-
-                        return new BookImportResponse(
-                                        importedIsbns.size(),
-                                        List.copyOf(importedIsbns));
-                } catch (IOException exception) {
-                        throw new CsvImportException(
-                                        "Cannot read CSV file",
-                                        exception);
-                }
+          importedIsbns.add(request.isbn());
+        } catch (CsvImportException exception) {
+          throw exception;
+        } catch (RuntimeException exception) {
+          throw new CsvImportException(
+              "CSV line " + lineNumber + ": " + exception.getMessage(), exception);
         }
+      }
 
-        private BufferedReader createUtf8Reader(
-                        MultipartFile file) throws IOException {
-                BufferedReader reader = new BufferedReader(
-                                new InputStreamReader(
-                                                file.getInputStream(),
-                                                StandardCharsets.UTF_8));
+      if (importedIsbns.isEmpty()) {
+        throw new CsvImportException("CSV file does not contain any data rows");
+      }
 
-                // Bỏ UTF-8 BOM do một số phiên bản Excel tạo ra.
-                reader.mark(1);
+      return new BookImportResponse(importedIsbns.size(), List.copyOf(importedIsbns));
+    } catch (IOException exception) {
+      throw new CsvImportException("Cannot read CSV file", exception);
+    }
+  }
 
-                int firstCharacter = reader.read();
+  private BufferedReader createUtf8Reader(MultipartFile file) throws IOException {
+    BufferedReader reader =
+        new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));
 
-                if (firstCharacter != 0xFEFF) {
-                        reader.reset();
-                }
+    // Bỏ UTF-8 BOM do một số phiên bản Excel tạo ra.
+    reader.mark(1);
 
-                return reader;
-        }
+    int firstCharacter = reader.read();
 
-        private void validateFile(MultipartFile file) {
-                if (file == null || file.isEmpty()) {
-                        throw new CsvImportException(
-                                        "CSV file is required");
-                }
+    if (firstCharacter != 0xFEFF) {
+      reader.reset();
+    }
 
-                if (file.getSize() > MAX_FILE_SIZE) {
-                        throw new CsvImportException(
-                                        "CSV file size must not exceed 5 MB");
-                }
+    return reader;
+  }
 
-                String filename = file.getOriginalFilename();
+  private void validateFile(MultipartFile file) {
+    if (file == null || file.isEmpty()) {
+      throw new CsvImportException("CSV file is required");
+    }
 
-                if (filename == null
-                                || !filename.toLowerCase(Locale.ROOT)
-                                                .endsWith(".csv")) {
-                        throw new CsvImportException(
-                                        "Only .csv files are supported");
-                }
-        }
+    if (file.getSize() > MAX_FILE_SIZE) {
+      throw new CsvImportException("CSV file size must not exceed 5 MB");
+    }
 
-        private void validateHeaders(CSVParser parser) {
-                Set<String> actualHeaders = parser.getHeaderMap().keySet();
+    String filename = file.getOriginalFilename();
 
-                if (!actualHeaders.containsAll(REQUIRED_HEADERS)) {
-                        Set<String> missingHeaders = new HashSet<>(REQUIRED_HEADERS);
+    if (filename == null || !filename.toLowerCase(Locale.ROOT).endsWith(".csv")) {
+      throw new CsvImportException("Only .csv files are supported");
+    }
+  }
 
-                        missingHeaders.removeAll(actualHeaders);
+  private void validateHeaders(CSVParser parser) {
+    Set<String> actualHeaders = parser.getHeaderMap().keySet();
 
-                        throw new CsvImportException(
-                                        "CSV is missing required headers: "
-                                                        + missingHeaders);
-                }
-        }
+    if (!actualHeaders.containsAll(REQUIRED_HEADERS)) {
+      Set<String> missingHeaders = new HashSet<>(REQUIRED_HEADERS);
 
-        private CreateBookRequest parseRecord(
-                        CSVRecord record,
-                        long lineNumber,
-                        Set<String> fileIsbns) {
-                String isbn = required(
-                                record,
-                                "isbn",
-                                lineNumber).toUpperCase(Locale.ROOT);
+      missingHeaders.removeAll(actualHeaders);
 
-                validateLength(
-                                isbn,
-                                20,
-                                "isbn",
-                                lineNumber);
+      throw new CsvImportException("CSV is missing required headers: " + missingHeaders);
+    }
+  }
 
-                if (!fileIsbns.add(isbn)) {
-                        throw lineError(
-                                        lineNumber,
-                                        "Duplicate ISBN inside CSV: " + isbn);
-                }
+  private CreateBookRequest parseRecord(CSVRecord record, long lineNumber, Set<String> fileIsbns) {
+    String isbn = required(record, "isbn", lineNumber).toUpperCase(Locale.ROOT);
 
-                String title = required(
-                                record,
-                                "title",
-                                lineNumber);
+    validateLength(isbn, 20, "isbn", lineNumber);
 
-                validateLength(
-                                title,
-                                255,
-                                "title",
-                                lineNumber);
+    if (!fileIsbns.add(isbn)) {
+      throw lineError(lineNumber, "Duplicate ISBN inside CSV: " + isbn);
+    }
 
-                String description = optional(
-                                record,
-                                "description");
+    String title = required(record, "title", lineNumber);
 
-                validateLength(
-                                description,
-                                2000,
-                                "description",
-                                lineNumber);
+    validateLength(title, 255, "title", lineNumber);
 
-                String publisher = optional(
-                                record,
-                                "publisher");
+    String description = optional(record, "description");
 
-                validateLength(
-                                publisher,
-                                255,
-                                "publisher",
-                                lineNumber);
+    validateLength(description, 2000, "description", lineNumber);
 
-                LocalDate publishedDate = parsePublishedDate(
-                                optional(record, "publishedDate"),
-                                lineNumber);
+    String publisher = optional(record, "publisher");
 
-                int totalQuantity = parseQuantity(
-                                required(
-                                                record,
-                                                "totalQuantity",
-                                                lineNumber),
-                                lineNumber);
+    validateLength(publisher, 255, "publisher", lineNumber);
 
-                String categoryName = required(
-                                record,
-                                "category",
-                                lineNumber);
+    LocalDate publishedDate = parsePublishedDate(optional(record, "publishedDate"), lineNumber);
 
-                Category category = categoryRepository
-                                .findByNameIgnoreCase(categoryName)
-                                .orElseThrow(() -> lineError(
-                                                lineNumber,
-                                                "Category does not exist: "
-                                                                + categoryName));
+    int totalQuantity = parseQuantity(required(record, "totalQuantity", lineNumber), lineNumber);
 
-                if (!category.isActive()) {
-                        throw lineError(
-                                        lineNumber,
-                                        "Category is inactive: "
-                                                        + categoryName);
-                }
+    String categoryName = required(record, "category", lineNumber);
 
-                Set<String> authors = parseAuthors(
-                                required(
-                                                record,
-                                                "authors",
-                                                lineNumber),
-                                lineNumber);
+    Category category =
+        categoryRepository
+            .findByNameIgnoreCase(categoryName)
+            .orElseThrow(() -> lineError(lineNumber, "Category does not exist: " + categoryName));
 
-                return new CreateBookRequest(
-                                isbn,
-                                title,
-                                description,
-                                publisher,
-                                publishedDate,
-                                totalQuantity,
-                                category.getId(),
-                                authors);
-        }
+    if (!category.isActive()) {
+      throw lineError(lineNumber, "Category is inactive: " + categoryName);
+    }
 
-        private Set<String> parseAuthors(
-                        String value,
-                        long lineNumber) {
-                Set<String> authors = new LinkedHashSet<>();
+    Set<String> authors = parseAuthors(required(record, "authors", lineNumber), lineNumber);
 
-                for (String authorName : value.split("\\|")) {
-                        String normalizedName = authorName.trim();
+    return new CreateBookRequest(
+        isbn,
+        title,
+        description,
+        publisher,
+        publishedDate,
+        totalQuantity,
+        category.getId(),
+        authors);
+  }
 
-                        if (normalizedName.isBlank()) {
-                                continue;
-                        }
+  private Set<String> parseAuthors(String value, long lineNumber) {
+    Set<String> authors = new LinkedHashSet<>();
 
-                        validateLength(
-                                        normalizedName,
-                                        150,
-                                        "author",
-                                        lineNumber);
+    for (String authorName : value.split("\\|")) {
+      String normalizedName = authorName.trim();
 
-                        authors.add(normalizedName);
-                }
+      if (normalizedName.isBlank()) {
+        continue;
+      }
 
-                if (authors.isEmpty()) {
-                        throw lineError(
-                                        lineNumber,
-                                        "At least one author is required");
-                }
+      validateLength(normalizedName, 150, "author", lineNumber);
 
-                return authors;
-        }
+      authors.add(normalizedName);
+    }
 
-        private LocalDate parsePublishedDate(
-                        String value,
-                        long lineNumber) {
-                if (value == null) {
-                        return null;
-                }
+    if (authors.isEmpty()) {
+      throw lineError(lineNumber, "At least one author is required");
+    }
 
-                try {
-                        LocalDate date = LocalDate.parse(value);
+    return authors;
+  }
 
-                        if (date.isAfter(LocalDate.now())) {
-                                throw lineError(
-                                                lineNumber,
-                                                "Published date cannot be in the future");
-                        }
+  private LocalDate parsePublishedDate(String value, long lineNumber) {
+    if (value == null) {
+      return null;
+    }
 
-                        return date;
-                } catch (DateTimeParseException exception) {
-                        throw lineError(
-                                        lineNumber,
-                                        "publishedDate must use yyyy-MM-dd format");
-                }
-        }
+    try {
+      LocalDate date = LocalDate.parse(value);
 
-        private int parseQuantity(
-                        String value,
-                        long lineNumber) {
-                try {
-                        int quantity = Integer.parseInt(value);
+      if (date.isAfter(LocalDate.now())) {
+        throw lineError(lineNumber, "Published date cannot be in the future");
+      }
 
-                        if (quantity < 0) {
-                                throw lineError(
-                                                lineNumber,
-                                                "totalQuantity cannot be negative");
-                        }
+      return date;
+    } catch (DateTimeParseException exception) {
+      throw lineError(lineNumber, "publishedDate must use yyyy-MM-dd format");
+    }
+  }
 
-                        return quantity;
-                } catch (NumberFormatException exception) {
-                        throw lineError(
-                                        lineNumber,
-                                        "totalQuantity must be an integer");
-                }
-        }
+  private int parseQuantity(String value, long lineNumber) {
+    try {
+      int quantity = Integer.parseInt(value);
 
-        private String required(
-                        CSVRecord record,
-                        String column,
-                        long lineNumber) {
-                String value = optional(record, column);
+      if (quantity < 0) {
+        throw lineError(lineNumber, "totalQuantity cannot be negative");
+      }
 
-                if (value == null) {
-                        throw lineError(
-                                        lineNumber,
-                                        column + " is required");
-                }
+      return quantity;
+    } catch (NumberFormatException exception) {
+      throw lineError(lineNumber, "totalQuantity must be an integer");
+    }
+  }
 
-                return value;
-        }
+  private String required(CSVRecord record, String column, long lineNumber) {
+    String value = optional(record, column);
 
-        private String optional(
-                        CSVRecord record,
-                        String column) {
-                String value = record.get(column);
+    if (value == null) {
+      throw lineError(lineNumber, column + " is required");
+    }
 
-                if (value == null || value.isBlank()) {
-                        return null;
-                }
+    return value;
+  }
 
-                return value.trim();
-        }
+  private String optional(CSVRecord record, String column) {
+    String value = record.get(column);
 
-        private void validateLength(
-                        String value,
-                        int maximumLength,
-                        String field,
-                        long lineNumber) {
-                if (value != null
-                                && value.length() > maximumLength) {
-                        throw lineError(
-                                        lineNumber,
-                                        field
-                                                        + " must contain at most "
-                                                        + maximumLength
-                                                        + " characters");
-                }
-        }
+    if (value == null || value.isBlank()) {
+      return null;
+    }
 
-        private CsvImportException lineError(
-                        long lineNumber,
-                        String message) {
-                return new CsvImportException(
-                                "CSV line "
-                                                + lineNumber
-                                                + ": "
-                                                + message);
-        }
+    return value.trim();
+  }
+
+  private void validateLength(String value, int maximumLength, String field, long lineNumber) {
+    if (value != null && value.length() > maximumLength) {
+      throw lineError(lineNumber, field + " must contain at most " + maximumLength + " characters");
+    }
+  }
+
+  private CsvImportException lineError(long lineNumber, String message) {
+    return new CsvImportException("CSV line " + lineNumber + ": " + message);
+  }
 }

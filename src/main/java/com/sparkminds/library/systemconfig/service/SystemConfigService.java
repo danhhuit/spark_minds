@@ -13,60 +13,54 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class SystemConfigService {
 
-    private static final long SYSTEM_CONFIG_ID = 1L;
+  private static final long SYSTEM_CONFIG_ID = 1L;
 
-    private final SystemConfigRepository systemConfigRepository;
+  private final SystemConfigRepository systemConfigRepository;
 
-    @Transactional(readOnly = true)
-    public SystemConfigResponse getCurrentConfig() {
-        return toResponse(getConfigEntity());
+  @Transactional(readOnly = true)
+  public SystemConfigResponse getCurrentConfig() {
+    return toResponse(getConfigEntity());
+  }
+
+  @Transactional
+  public SystemConfigResponse updateMaintenanceMode(Jwt jwt, MaintenanceUpdateRequest request) {
+    SystemConfig config = getConfigEntity();
+
+    config.setMaintenanceMode(request.enabled());
+
+    if (request.message() != null && !request.message().isBlank()) {
+      config.setMaintenanceMessage(request.message().trim());
     }
 
-    @Transactional
-    public SystemConfigResponse updateMaintenanceMode(
-            Jwt jwt,
-            MaintenanceUpdateRequest request) {
-        SystemConfig config = getConfigEntity();
+    config.setUpdatedBy(jwt.getSubject());
 
-        config.setMaintenanceMode(request.enabled());
+    SystemConfig savedConfig = systemConfigRepository.save(config);
 
-        if (request.message() != null
-                && !request.message().isBlank()) {
-            config.setMaintenanceMessage(
-                    request.message().trim());
-        }
+    return toResponse(savedConfig);
+  }
 
-        config.setUpdatedBy(jwt.getSubject());
+  @Transactional(readOnly = true)
+  public boolean isMaintenanceMode() {
+    return getConfigEntity().isMaintenanceMode();
+  }
 
-        SystemConfig savedConfig = systemConfigRepository.save(config);
+  @Transactional(readOnly = true)
+  public String getMaintenanceMessage() {
+    return getConfigEntity().getMaintenanceMessage();
+  }
 
-        return toResponse(savedConfig);
-    }
+  private SystemConfig getConfigEntity() {
+    return systemConfigRepository
+        .findById(SYSTEM_CONFIG_ID)
+        .orElseThrow(() -> new IllegalStateException("System configuration was not initialized"));
+  }
 
-    @Transactional(readOnly = true)
-    public boolean isMaintenanceMode() {
-        return getConfigEntity().isMaintenanceMode();
-    }
-
-    @Transactional(readOnly = true)
-    public String getMaintenanceMessage() {
-        return getConfigEntity().getMaintenanceMessage();
-    }
-
-    private SystemConfig getConfigEntity() {
-        return systemConfigRepository
-                .findById(SYSTEM_CONFIG_ID)
-                .orElseThrow(() -> new IllegalStateException(
-                        "System configuration was not initialized"));
-    }
-
-    private SystemConfigResponse toResponse(
-            SystemConfig config) {
-        return new SystemConfigResponse(
-                config.getId(),
-                config.isMaintenanceMode(),
-                config.getMaintenanceMessage(),
-                config.getUpdatedBy(),
-                config.getUpdatedAt());
-    }
+  private SystemConfigResponse toResponse(SystemConfig config) {
+    return new SystemConfigResponse(
+        config.getId(),
+        config.isMaintenanceMode(),
+        config.getMaintenanceMessage(),
+        config.getUpdatedBy(),
+        config.getUpdatedAt());
+  }
 }

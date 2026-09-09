@@ -1,4 +1,13 @@
+D:\sparkminds\src\src\main\java\com\sparkminds\library\accesscontrol\controller\AccessControlController.java
+D:\sparkminds\src\src\main\java\com\sparkminds\library\accesscontrol\dto\PermissionResponse.java
+D:\sparkminds\src\src\main\java\com\sparkminds\library\accesscontrol\dto\RoleAccessResponse.java
+D:\sparkminds\src\src\main\java\com\sparkminds\library\accesscontrol\dto\TogglePermissionRequest.java
+D:\sparkminds\src\src\main\java\com\sparkminds\library\accesscontrol\dto\UpdatePermissionsRequest.java
+D:\sparkminds\src\src\main\java\com\sparkminds\library\accesscontrol\dto\UpdateRolesRequest.java
+D:\sparkminds\src\src\main\java\com\sparkminds\library\accesscontrol\dto\UserAccessResponse.java
+D:\sparkminds\src\src\main\java\com\sparkminds\library\accesscontrol\service\AccessControlService.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\controller\AuthController.java
+D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\controller\TokenInspectionController.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\dto\request\ChangeEmailRequest.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\dto\request\ChangePasswordRequest.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\dto\request\ForgotPasswordRequest.java
@@ -9,7 +18,9 @@ D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\dto\request\ResetPas
 D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\dto\request\SocialLoginExchangeRequest.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\dto\request\VerifyEmailChangeRequest.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\dto\response\CurrentUserResponse.java
+D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\dto\response\TokenInfoResponse.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\dto\response\TokenResponse.java
+D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\entity\AccessToken.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\entity\EmailChangeVerification.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\entity\EmailVerificationToken.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\entity\OAuthIdentity.java
@@ -19,7 +30,9 @@ D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\entity\RevokedToken.
 D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\entity\SocialLoginCode.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\oauth\GoogleAuthenticationFailureHandler.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\oauth\GoogleAuthenticationSuccessHandler.java
+D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\oauth\GoogleOAuthUnavailableController.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\oauth\GoogleOidcUserService.java
+D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\repository\AccessTokenRepository.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\repository\EmailChangeVerificationRepository.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\repository\EmailVerificationTokenRepository.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\repository\OAuthIdentityRepository.java
@@ -27,6 +40,7 @@ D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\repository\PasswordR
 D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\repository\RefreshTokenRepository.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\repository\RevokedTokenRepository.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\repository\SocialLoginCodeRepository.java
+D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\service\AccessTokenService.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\service\AuthService.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\service\EmailChangeService.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\service\PasswordService.java
@@ -34,6 +48,8 @@ D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\service\RefreshToken
 D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\service\RegistrationService.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\service\RevokedTokenService.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\service\SocialLoginCodeService.java
+D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\service\TokenHashService.java
+D:\sparkminds\src\src\main\java\com\sparkminds\library\auth\service\TokenInspectionService.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\book\controller\BookController.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\book\controller\BookImportController.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\book\dto\request\BookSearchRequest.java
@@ -86,6 +102,8 @@ D:\sparkminds\src\src\main\java\com\sparkminds\library\config\JwtConfig.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\config\JwtProperties.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\config\OpenApiConfig.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\config\PasswordConfig.java
+D:\sparkminds\src\src\main\java\com\sparkminds\library\config\TimeToLiveProperties.java
+D:\sparkminds\src\src\main\java\com\sparkminds\library\config\TomcatServerConfig.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\LibraryManagementApplication.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\mail\service\MailService.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\member\controller\MemberController.java
@@ -94,11 +112,14 @@ D:\sparkminds\src\src\main\java\com\sparkminds\library\member\dto\request\Member
 D:\sparkminds\src\src\main\java\com\sparkminds\library\member\dto\request\UpdateMemberRequest.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\member\dto\response\MemberResponse.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\member\entity\MemberProfile.java
+D:\sparkminds\src\src\main\java\com\sparkminds\library\member\entity\Permission.java
+D:\sparkminds\src\src\main\java\com\sparkminds\library\member\entity\PermissionName.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\member\entity\Role.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\member\entity\RoleName.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\member\entity\UserAccount.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\member\mapper\MemberMapper.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\member\repository\MemberProfileRepository.java
+D:\sparkminds\src\src\main\java\com\sparkminds\library\member\repository\PermissionRepository.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\member\repository\RoleRepository.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\member\repository\UserAccountRepository.java
 D:\sparkminds\src\src\main\java\com\sparkminds\library\member\service\MemberService.java

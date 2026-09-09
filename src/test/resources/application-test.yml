@@ -24,11 +24,25 @@ spring:
     port: 1025
 
 app:
+  server:
+    tomcat-protocol: org.apache.coyote.http11.Http11Nio2Protocol
+
+  oauth2:
+    google:
+      enabled: true
+
   jwt:
     issuer: library-management-test
     secret: MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDE=
-    access-token-minutes: 15
-    refresh-token-days: 7
+
+  time-to-live:
+    access-token-seconds: 900
+    refresh-token-seconds: 604800
+    email-verification-seconds: 86400
+    password-reset-seconds: 1800
+    email-change-verification-seconds: 600
+    social-login-code-seconds: 120
+    borrowing-seconds: 1209600
 
   admin:
     username: admin

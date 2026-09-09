@@ -1,7 +1,15 @@
 package com.sparkminds.library.auth.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.sparkminds.library.integration.AbstractIntegrationTest;
+import com.sparkminds.library.auth.entity.AccessToken;
+import com.sparkminds.library.auth.repository.AccessTokenRepository;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.HttpHeaders;
@@ -9,152 +17,154 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import tools.jackson.databind.JsonNode;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @ActiveProfiles("test")
-@SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.MOCK
-)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @Transactional
-class TokenLifecycleIntegrationTest
-        extends AbstractIntegrationTest {
+class TokenLifecycleIntegrationTest extends AbstractIntegrationTest {
 
-    @Test
-    void refreshRotatesTokenAndOldRefreshTokenCannotBeReused()
-            throws Exception {
-        JsonNode loginTokens = loginAsAdmin();
-        String oldRefreshToken =
-                loginTokens.get("refreshToken").asText();
+  @Autowired private AccessTokenRepository accessTokenRepository;
 
-        MvcResult refreshResult = mockMvc.perform(
-                        post("/api/auth/refresh")
-                                .contentType(
-                                        MediaType.APPLICATION_JSON
-                                )
-                                .content(refreshJson(
-                                        oldRefreshToken
-                                )))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.accessToken")
-                        .isNotEmpty())
-                .andExpect(jsonPath("$.refreshToken")
-                        .isNotEmpty())
-                .andReturn();
+  @Autowired private JwtDecoder jwtDecoder;
 
-        JsonNode rotatedTokens = objectMapper.readTree(
-                refreshResult.getResponse()
-                        .getContentAsString()
-        );
+  @Test
+  void loginStoresHashedAccessTokenMetadata() throws Exception {
+    JsonNode tokens = loginAsAdmin();
+    String rawAccessToken = tokens.get("accessToken").asText();
+    String jti = jwtDecoder.decode(rawAccessToken).getId();
 
-        String newAccessToken =
-                rotatedTokens.get("accessToken").asText();
-        String newRefreshToken =
-                rotatedTokens.get("refreshToken").asText();
+    AccessToken stored =
+        accessTokenRepository
+            .findAll()
+            .stream()
+            .filter(token -> token.getJti().equals(jti))
+            .findFirst()
+            .orElseThrow();
 
-        org.assertj.core.api.Assertions.assertThat(
-                newRefreshToken
-        ).isNotEqualTo(oldRefreshToken);
+    org.assertj.core.api.Assertions.assertThat(stored.getTokenHash())
+        .hasSize(64)
+        .doesNotContain(rawAccessToken);
+    org.assertj.core.api.Assertions.assertThat(stored.getUser().getUsername()).isEqualTo("admin");
+    org.assertj.core.api.Assertions.assertThat(stored.isRevoked()).isFalse();
+    org.assertj.core.api.Assertions.assertThat(stored.getIssuedAt()).isNotNull();
+    org.assertj.core.api.Assertions.assertThat(stored.getExpiresAt()).isAfter(stored.getIssuedAt());
+  }
 
-        mockMvc.perform(get("/api/auth/me")
-                        .header(
-                                HttpHeaders.AUTHORIZATION,
-                                bearer(newAccessToken)
-                        ))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.username")
-                        .value("admin"));
+  @Test
+  void refreshRotatesTokenAndOldRefreshTokenCannotBeReused() throws Exception {
+    JsonNode loginTokens = loginAsAdmin();
+    String oldRefreshToken = loginTokens.get("refreshToken").asText();
 
-        mockMvc.perform(post("/api/auth/refresh")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(refreshJson(
-                                oldRefreshToken
-                        )))
-                .andExpect(status().isUnauthorized());
-    }
+    MvcResult refreshResult =
+        mockMvc
+            .perform(
+                post("/api/auth/refresh")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(refreshJson(oldRefreshToken)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.accessToken").isNotEmpty())
+            .andExpect(jsonPath("$.refreshToken").isNotEmpty())
+            .andReturn();
 
-    @Test
-    void logoutRevokesBothAccessAndRefreshTokens()
-            throws Exception {
-        JsonNode tokens = loginAsAdmin();
-        String accessToken =
-                tokens.get("accessToken").asText();
-        String refreshToken =
-                tokens.get("refreshToken").asText();
+    JsonNode rotatedTokens =
+        objectMapper.readTree(refreshResult.getResponse().getContentAsString());
 
-        mockMvc.perform(post("/api/auth/logout")
-                        .header(
-                                HttpHeaders.AUTHORIZATION,
-                                bearer(accessToken)
-                        )
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(refreshJson(refreshToken)))
-                .andExpect(status().isNoContent());
+    String newAccessToken = rotatedTokens.get("accessToken").asText();
+    String newRefreshToken = rotatedTokens.get("refreshToken").asText();
 
-        mockMvc.perform(get("/api/auth/me")
-                        .header(
-                                HttpHeaders.AUTHORIZATION,
-                                bearer(accessToken)
-                        ))
-                .andExpect(status().isUnauthorized());
+    org.assertj.core.api.Assertions.assertThat(newRefreshToken).isNotEqualTo(oldRefreshToken);
 
-        mockMvc.perform(post("/api/auth/refresh")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(refreshJson(refreshToken)))
-                .andExpect(status().isUnauthorized());
-    }
+    mockMvc
+        .perform(get("/api/auth/me").header(HttpHeaders.AUTHORIZATION, bearer(newAccessToken)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.username").value("admin"));
 
-    @Test
-    void invalidOrBlankRefreshTokenIsRejected()
-            throws Exception {
-        mockMvc.perform(post("/api/auth/refresh")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(refreshJson(
-                                "not-a-valid-refresh-token"
-                        )))
-                .andExpect(status().isUnauthorized());
+    mockMvc
+        .perform(
+            post("/api/auth/refresh")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(refreshJson(oldRefreshToken)))
+        .andExpect(status().isUnauthorized());
+  }
 
-        mockMvc.perform(post("/api/auth/refresh")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(refreshJson("")))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath(
-                        "$.fieldErrors.refreshToken"
-                ).exists());
-    }
+  @Test
+  void logoutRevokesBothAccessAndRefreshTokens() throws Exception {
+    JsonNode tokens = loginAsAdmin();
+    String accessToken = tokens.get("accessToken").asText();
+    String refreshToken = tokens.get("refreshToken").asText();
+    String jti = jwtDecoder.decode(accessToken).getId();
 
-    private JsonNode loginAsAdmin() throws Exception {
-        MvcResult result = mockMvc.perform(
-                        post("/api/auth/login")
-                                .contentType(
-                                        MediaType.APPLICATION_JSON
-                                )
-                                .content("""
+    mockMvc
+        .perform(
+            post("/api/auth/logout")
+                .header(HttpHeaders.AUTHORIZATION, bearer(accessToken))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(refreshJson(refreshToken)))
+        .andExpect(status().isNoContent());
+
+    AccessToken stored =
+        accessTokenRepository
+            .findAll()
+            .stream()
+            .filter(token -> token.getJti().equals(jti))
+            .findFirst()
+            .orElseThrow();
+    org.assertj.core.api.Assertions.assertThat(stored.isRevoked()).isTrue();
+    org.assertj.core.api.Assertions.assertThat(stored.getRevokedAt()).isNotNull();
+
+    mockMvc
+        .perform(get("/api/auth/me").header(HttpHeaders.AUTHORIZATION, bearer(accessToken)))
+        .andExpect(status().isUnauthorized());
+
+    mockMvc
+        .perform(
+            post("/api/auth/refresh")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(refreshJson(refreshToken)))
+        .andExpect(status().isUnauthorized());
+  }
+
+  @Test
+  void invalidOrBlankRefreshTokenIsRejected() throws Exception {
+    mockMvc
+        .perform(
+            post("/api/auth/refresh")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(refreshJson("not-a-valid-refresh-token")))
+        .andExpect(status().isUnauthorized());
+
+    mockMvc
+        .perform(
+            post("/api/auth/refresh")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(refreshJson("")))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.fieldErrors.refreshToken").exists());
+  }
+
+  private JsonNode loginAsAdmin() throws Exception {
+    MvcResult result =
+        mockMvc
+            .perform(
+                post("/api/auth/login")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(
+                        """
                                         {
                                           "usernameOrEmail": "admin",
                                           "password": "admin"
                                         }
                                         """))
-                .andExpect(status().isOk())
-                .andReturn();
+            .andExpect(status().isOk())
+            .andReturn();
 
-        return objectMapper.readTree(
-                result.getResponse().getContentAsString()
-        );
-    }
+    return objectMapper.readTree(result.getResponse().getContentAsString());
+  }
 
-    private String refreshJson(String refreshToken)
-            throws Exception {
-        return objectMapper.writeValueAsString(
-                java.util.Map.of(
-                        "refreshToken",
-                        refreshToken
-                )
-        );
-    }
+  private String refreshJson(String refreshToken) throws Exception {
+    return objectMapper.writeValueAsString(java.util.Map.of("refreshToken", refreshToken));
+  }
 }

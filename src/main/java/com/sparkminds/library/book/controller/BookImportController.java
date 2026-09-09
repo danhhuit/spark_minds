@@ -22,14 +22,12 @@ import org.springframework.web.multipart.MultipartFile;
 @SecurityRequirement(name = "bearerAuth")
 public class BookImportController {
 
-    private final BookCsvImportService bookCsvImportService;
+  private final BookCsvImportService bookCsvImportService;
 
-    @PostMapping(value = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Import books from CSV")
-    public ResponseEntity<BookImportResponse> importBooks(
-            @RequestPart("file") MultipartFile file) {
-        return ResponseEntity.ok(
-                bookCsvImportService.importBooks(file));
-    }
+  @PostMapping(value = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @PreAuthorize("hasAuthority('BOOK_IMPORT')")
+  @Operation(summary = "Import books from CSV")
+  public ResponseEntity<BookImportResponse> importBooks(@RequestPart("file") MultipartFile file) {
+    return ResponseEntity.ok(bookCsvImportService.importBooks(file));
+  }
 }

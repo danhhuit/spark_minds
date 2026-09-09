@@ -10,8 +10,8 @@ Phạm vi: toàn bộ mã nguồn trong `src/main`, migration trong
 - 22 nhóm yêu cầu đạt.
 - 7 nhóm đạt một phần và nên hoàn thiện thêm.
 - Không có chức năng nghiệp vụ cốt lõi nào hoàn toàn chưa được triển khai.
-- Bộ test đầy đủ đã chạy lại sau khi bổ sung kiểm tra i18n:
-  75/75 test đạt, không có failure, error hoặc skipped test.
+- Bộ test đầy đủ đã chạy lại sau khi bổ sung RBAC và cấu hình TTL:
+  78/78 test đạt, không có failure, error hoặc skipped test.
 - Giao diện admin đã được kiểm tra trực tiếp bằng Chrome ở cả tiếng Việt và
   tiếng Anh qua 6 trang: Trang chủ, Kho sách, Mượn & trả, Thành viên,
   Hệ thống và Tài khoản.
@@ -31,7 +31,7 @@ Ký hiệu:
 | 3 | Spring Security + JWT | **ĐẠT** | `SecurityConfig.java`, `JwtConfig.java`, `JwtTokenService.java` |
 | 4 | Logout chặn lại access token đã logout | **ĐẠT** | `AuthService.logout`, `RevokedTokenService`, `RevokedTokenValidator` |
 | 5 | Đăng ký email/pass và xác minh email trước login | **ĐẠT** | `RegisterRequest`, `RegistrationService`, `MailService` |
-| 6 | Phân quyền tách biệt Admin/User | **MỘT PHẦN** | API admin được khóa tốt; API mượn/trả chưa có `hasRole('USER')` |
+| 6 | Phân quyền Admin/User/Super Admin | **ĐẠT** | Controller kiểm tra permission/action; role và user đều có thể được gán quyền |
 | 7 | Search sách + phân trang tối đa 10 + Specification | **ĐẠT** | `BookController`, `BookService`, `BookSpecification` |
 | 8 | REST CRUD sách + validation | **ĐẠT** | `BookController`, DTO create/update, `BookService` |
 | 9 | Import CSV dưới 5 MB, chỉ CSV, rollback | **ĐẠT** | `BookImportController`, `BookCsvImportService`, multipart config |
@@ -51,7 +51,7 @@ Ký hiệu:
 | 23 | AOP | **ĐẠT** | `ControllerLoggingAspect` |
 | 24 | Refresh token tự tạo token mới | **ĐẠT** | Backend rotate token; frontend tự retry khi 401 |
 | 25 | JUnit cho API | **ĐẠT** | 13 nhóm integration test, bao phủ API chính |
-| 26 | Liquibase migration | **ĐẠT** | 16 changeset trong master changelog |
+| 26 | Liquibase migration | **ĐẠT** | 19 changeset trong master changelog |
 | 27 | API documentation | **ĐẠT** | Springdoc/OpenAPI + Swagger UI |
 | 28 | Clean code, convention, comment | **MỘT PHẦN** | Cấu trúc package tốt; còn import/format chưa đồng nhất |
 | 29 | Giao diện web | **ĐẠT** | SPA responsive trong `static`, có màn hình theo role |
@@ -65,12 +65,13 @@ Luồng:
 
 1. `AdminDataInitializer` đọc cấu hình `app.admin.*`.
 2. Nếu chưa có username admin, hệ thống tạo tài khoản, mã hóa password,
-   gán role `ADMIN`, bật account và đánh dấu email đã xác minh.
+   gán role `ADMIN` và `SUPER_ADMIN`, bật account và xác minh email.
 3. `POST /api/auth/login` nhận `LoginRequest`.
 4. `AuthService` gọi `AuthenticationManager`, tạo JWT access token và
    refresh token.
-5. `JwtAuthenticationConverter` đọc claim `roles`.
-6. `SecurityConfig` khóa `/api/admin/**` bằng role `ADMIN`.
+5. `JwtAuthenticationConverter` đọc claim `authorities`, gồm role và permission.
+6. `@PreAuthorize` kiểm tra permission/action tại từng endpoint.
+7. Super Admin quản lý role và permission qua `/api/super-admin/access-control`.
 
 File liên quan:
 
@@ -82,14 +83,9 @@ File liên quan:
 - `src/main/java/com/sparkminds/library/security/jwt/JwtTokenService.java`
 - `src/main/java/com/sparkminds/library/security/service/CustomUserDetailsService.java`
 
-Điểm còn thiếu nếu chấm phân quyền thật chặt:
-
-- `BorrowingController`, `ProfileController` và `SavedBookController` chỉ yêu
-  cầu authenticated, chưa yêu cầu riêng `ROLE_USER`.
-- Vì vậy ADMIN vẫn có thể gọi một số API vốn được mô tả là của User, dù giao
-  diện admin không hiện nút mượn sách.
-- Nên thêm `@PreAuthorize("hasRole('USER')")` cho thao tác mượn/lưu sách nếu
-  đề bắt buộc hai role không được dùng chéo.
+Quyền hiệu lực của user là permission từ toàn bộ role cộng permission được cấp
+trực tiếp. `SUPER_ADMIN` có toàn bộ quyền và giữ riêng
+`ACCESS_CONTROL_MANAGE`.
 
 ### 3.2. Logout và refresh token
 
@@ -421,7 +417,7 @@ Khoảng trống không thuộc đề gốc nhưng liên quan tính năng mới:
 
 ### 3.14. Liquibase và API docs
 
-Liquibase master gồm 16 changeset:
+Liquibase master gồm 19 changeset:
 
 - roles, accounts, profile;
 - auth token, email verify, password reset, email change;
@@ -429,6 +425,9 @@ Liquibase master gồm 16 changeset:
 - system config, saved books;
 - seed 50 sách;
 - Google OAuth identity và social login code.
+- Super Admin, permission, role-permission và user-permission.
+- permission deny theo từng user để tắt quyền kế thừa từ role.
+- authorization version để vô hiệu hóa JWT mang permission cũ.
 
 OpenAPI:
 

@@ -48,6 +48,7 @@ com\sparkminds\library\common\exception\InvalidPasswordResetTokenException.class
 com\sparkminds\library\auth\entity\OAuthIdentity.class
 com\sparkminds\library\auth\oauth\GoogleAuthenticationSuccessHandler.class
 com\sparkminds\library\auth\dto\request\ForgotPasswordRequest.class
+com\sparkminds\library\auth\oauth\GoogleOAuthUnavailableController.class
 com\sparkminds\library\auth\repository\RefreshTokenRepository.class
 com\sparkminds\library\common\logging\ControllerLoggingAspect.class
 com\sparkminds\library\member\repository\UserAccountRepository.class
